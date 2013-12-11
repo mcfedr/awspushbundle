@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
                         scalarNode("region")->isRequired()->cannotBeEmpty()->end()->
                     end()->
                 end()->
-                arrayNode("platforms")->end()->
+                variableNode("platforms")->end()->
             end()->
         end();
 
