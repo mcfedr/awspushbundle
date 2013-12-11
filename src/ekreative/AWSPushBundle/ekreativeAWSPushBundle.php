@@ -1,6 +1,6 @@
 <?php
 
-namespace ekreative\PushBundle;
+namespace ekreative\AWSPushBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
