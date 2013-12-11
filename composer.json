@@ -1,0 +1,22 @@
+{
+    "name": "mcfedr/awspushbundle",
+    "type": "symfony-bundle",
+    "description": "A set of services to simplify using AWS to send push notifications",
+    "keywords": ["push", "notification", "bundle", "gcm", "c2dm", "ios", "apns"],
+    "require": {
+        "php": ">=5.4.0",
+        "aws/aws-sdk-php": "~2.4",
+        "symfony/symfony": "~2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fred Cox",
+            "email": "mcfedr@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-0": { "ekreative\\AWSPushBundle": "src/" }
+    }
+}
