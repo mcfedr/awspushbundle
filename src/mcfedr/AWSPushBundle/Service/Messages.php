@@ -74,7 +74,8 @@ class Messages {
             }
             catch(\Exception $e) {
                 $this->logger->error("Failed to push to {$endpoint['EndpointArn']}", [
-                    'Message' => $message
+                    'Message' => $message,
+                    'Exception' => $e
                 ]);
             }
         }
