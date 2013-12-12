@@ -26,4 +26,3 @@ Basically have a look at how the APIController does its stuff
 1. Send messages
 
         $this->get('mcfedr_aws_push.devices')->messages->broadcast($message)
-    
