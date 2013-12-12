@@ -82,13 +82,13 @@ class APIController extends Controller
      * @return Devices
      */
     private function getPushDevices() {
-        return $this->get('push_devices');
+        return $this->get('mcfedr_aws_push.devices');
     }
 
     /**
      * @return Messages
      */
     private function getPushMessages() {
-        return $this->get('push_messages');
+        return $this->get('mcfedr_aws_push.messages');
     }
 }

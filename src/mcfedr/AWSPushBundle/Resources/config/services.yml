@@ -5,18 +5,18 @@ parameters:
     mcfedr_aws_push.aws.region: ''
 
 services:
-    push_devices:
+    mcfedr_aws_push.devices:
         class: mcfedr\AWSPushBundle\Service\Devices
         arguments:
-          - "@sns_client"
+          - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
-    push_messages:
+    mcfedr_aws_push.messages:
         class: mcfedr\AWSPushBundle\Service\Messages
         arguments:
-          - "@sns_client"
+          - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
           - "@logger"
-    sns_client:
+    mcfedr_aws_push.sns_client:
         class: Aws\Sns\SnsClient
         factory_class: Aws\Sns\SnsClient
         factory_method: factory
