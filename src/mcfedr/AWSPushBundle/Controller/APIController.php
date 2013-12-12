@@ -30,8 +30,8 @@ class APIController extends Controller
         }
 
         try {
-            if($this->getPushDevices()->registerDevice($data['deviceID'], $data['platform'])) {
-                return new Response('Device registered', 200);
+            if(($arn = $this->getPushDevices()->registerDevice($data['deviceID'], $data['platform']))) {
+                return new Response("Device registered $arn", 200);
             }
         }
         catch(PlatformNotConfiguredException $e) {
