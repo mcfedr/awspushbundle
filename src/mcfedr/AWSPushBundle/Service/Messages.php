@@ -41,12 +41,14 @@ class Messages {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
+        $messageData = json_encode($message, JSON_UNESCAPED_UNICODE);
+
         if($platform) {
-            $this->broadcastToPlatform($message, $platform);
+            $this->broadcastToPlatform($messageData, $platform);
         }
         else {
             foreach($this->arns as $platform => $arn) {
-                $this->broadcastToPlatform($message, $platform);
+                $this->broadcastToPlatform($messageData, $platform);
             }
         }
     }
@@ -54,18 +56,24 @@ class Messages {
     /**
      * Send a message to one device
      *
-     * @param Message $message
+     * @param Message|string $message
      * @param string $deviceEndpoint
      */
-    public function send(Message $message, $deviceEndpoint) {
+    public function send($message, $deviceEndpoint) {
         $this->sns->publish([
             'TargetArn' => $deviceEndpoint,
-            'Message' => json_encode($message),
+            'Message' => $message instanceof $message ? json_encode($message, JSON_UNESCAPED_UNICODE) : $message,
             'MessageStructure' => 'json'
         ]);
     }
 
-    private function broadcastToPlatform(Message $message, $platform) {
+    /**
+     * Send a message to all devices on a platform
+     *
+     * @param Message|string $message
+     * @param string $platform
+     */
+    private function broadcastToPlatform($message, $platform) {
         foreach($this->sns->getListEndpointsByPlatformApplicationIterator([
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpoint) {

@@ -3,6 +3,8 @@
 namespace mcfedr\AWSPushBundle\Message;
 
 
+use mcfedr\AWSPushBundle\Exception\MessageTooLongException;
+
 class Message implements \JsonSerializable {
     /**
      * @var string
@@ -22,7 +24,12 @@ class Message implements \JsonSerializable {
     /**
      * @var array
      */
-    private $custom = array();
+    private $custom = [];
+
+    /**
+     * @var array
+     */
+    private $gcmData;
 
     /**
      * @var string
@@ -141,30 +148,64 @@ class Message implements \JsonSerializable {
         return $this->ttl;
     }
 
+    /**
+     * @param array $gcmData
+     */
+    public function setGcmData($gcmData) {
+        $this->gcmData = $gcmData;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGcmData() {
+        return $this->gcmData;
+    }
+
     public function jsonSerialize() {
-        $apns = json_encode(array_merge([
-            'aps' => [
-                'alert' => $this->text,
-                'badge' => $this->badge,
-                'sound' => $this->sound
-            ]
-        ], $this->custom));
+        $apnsData = $this->getApnsData($this->text);
+        if(($apnsDataLength = strlen($apnsData)) > 256) {
+            $cut = $apnsDataLength - 256;
+            $textLength = strlen($this->text);
+            if($textLength > $cut) {
+                $apnsData = $this->getApnsData(mb_strcut($this->text, 0, $textLength - $cut, 'utf8'));
+            }
+            else {
+                throw new MessageTooLongException("You message for APNS is too long $apnsData");
+            }
+        }
 
         return [
             'default' => $this->text,
-            'APNS' => $apns,
-            'APNS_SANDBOX' => $apns,
-            'ADM' => $apns,
+            'APNS' => $apnsData,
+            'APNS_SANDBOX' => $apnsData,
+            'ADM' => $apnsData,
             'GCM' => json_encode([
                 'collapse_key' => $this->collapseKey,
                 'time_to_live' => $this->ttl,
                 'delay_while_idle' => $this->delayWhileIdle,
-                'data' => $this->custom
-            ])
+                'data' => array_merge($this->gcmData ? $this->gcmData : ['text' => $this->text], $this->custom)
+            ], JSON_UNESCAPED_UNICODE)
         ];
     }
 
     public function __toString() {
         return json_encode($this);
     }
-} 
+
+    private function getApnsData($text) {
+        $apns = [
+            'aps' => [
+                'alert' => $text
+            ]
+        ];
+        if($this->badge) {
+            $apns['aps']['badge'] = $this->badge;
+        }
+        if($this->sound) {
+            $apns['aps']['sound'] = $this->sound;
+        }
+
+        return json_encode(array_merge($apns, $this->custom), JSON_UNESCAPED_UNICODE);
+    }
+}
