@@ -1,6 +1,6 @@
 <?php
 
-namespace ekreative\AWSPushBundle\DependencyInjection;
+namespace mcfedr\AWSPushBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ekreative_aws_push')->
+        $rootNode = $treeBuilder->root('mcfedr_aws_push')->
             children()->
                 arrayNode("aws")->
                     children()->

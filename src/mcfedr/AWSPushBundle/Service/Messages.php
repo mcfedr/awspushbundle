@@ -1,10 +1,10 @@
 <?php
 
-namespace ekreative\AWSPushBundle\Service;
+namespace mcfedr\AWSPushBundle\Service;
 
 use Aws\Sns\SnsClient;
-use ekreative\AWSPushBundle\Exception\PlatformNotConfiguredException;
-use ekreative\AWSPushBundle\Message\Message;
+use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
+use mcfedr\AWSPushBundle\Message\Message;
 
 class Messages {
 
@@ -34,7 +34,7 @@ class Messages {
      *
      * @param Message $message
      * @param string $platform
-     * @throws \ekreative\AWSPushBundle\Exception\PlatformNotConfiguredException
+     * @throws \mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException
      */
     public function broadcast(Message $message, $platform = null) {
         if($platform != null && !isset($this->arns[$platform])) {

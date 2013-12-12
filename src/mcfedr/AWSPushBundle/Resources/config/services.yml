@@ -1,0 +1,27 @@
+parameters:
+    mcfedr_aws_push.platforms: []
+    mcfedr_aws_push.aws.key: ''
+    mcfedr_aws_push.aws.secret: ''
+    mcfedr_aws_push.aws.region: ''
+
+services:
+    push_devices:
+        class: mcfedr\AWSPushBundle\Service\Devices
+        arguments:
+          - "@sns_client"
+          - "%mcfedr_aws_push.platforms%"
+    push_messages:
+        class: mcfedr\AWSPushBundle\Service\Messages
+        arguments:
+          - "@sns_client"
+          - "%mcfedr_aws_push.platforms%"
+          - "@logger"
+    sns_client:
+        class: Aws\Sns\SnsClient
+        factory_class: Aws\Sns\SnsClient
+        factory_method: factory
+        arguments:
+          -
+            key: "%mcfedr_aws_push.aws.key%"
+            secret: "%mcfedr_aws_push.aws.secret%"
+            region: "%mcfedr_aws_push.aws.region%"

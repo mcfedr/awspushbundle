@@ -1,6 +1,6 @@
 <?php
 
-namespace ekreative\AWSPushBundle\DependencyInjection;
+namespace mcfedr\AWSPushBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ekreativeAWSPushExtension extends Extension
+class mcfedrAWSPushExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -25,9 +25,9 @@ class ekreativeAWSPushExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('ekreative_aws_push.platforms', $config['platforms']);
-        $container->setParameter('ekreative_aws_push.aws.key', $config['aws']['key']);
-        $container->setParameter('ekreative_aws_push.aws.secret', $config['aws']['secret']);
-        $container->setParameter('ekreative_aws_push.aws.region', $config['aws']['region']);
+        $container->setParameter('mcfedr_aws_push.platforms', $config['platforms']);
+        $container->setParameter('mcfedr_aws_push.aws.key', $config['aws']['key']);
+        $container->setParameter('mcfedr_aws_push.aws.secret', $config['aws']['secret']);
+        $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
     }
 }

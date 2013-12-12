@@ -6,7 +6,7 @@
  * Time: 14:02
  */
 
-namespace ekreative\AWSPushBundle\Exception;
+namespace mcfedr\AWSPushBundle\Exception;
 
 
 class PlatformNotConfiguredException extends \Exception {

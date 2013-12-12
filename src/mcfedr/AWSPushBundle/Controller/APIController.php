@@ -1,11 +1,11 @@
 <?php
 
-namespace ekreative\AWSPushBundle\Controller;
+namespace mcfedr\AWSPushBundle\Controller;
 
-use ekreative\AWSPushBundle\Exception\PlatformNotConfiguredException;
-use ekreative\AWSPushBundle\Message\Message;
-use ekreative\AWSPushBundle\Service\Devices;
-use ekreative\AWSPushBundle\Service\Messages;
+use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
+use mcfedr\AWSPushBundle\Message\Message;
+use mcfedr\AWSPushBundle\Service\Devices;
+use mcfedr\AWSPushBundle\Service\Messages;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -82,13 +82,13 @@ class APIController extends Controller
      * @return Devices
      */
     private function getPushDevices() {
-        return $this->get('pushDevices');
+        return $this->get('push_devices');
     }
 
     /**
      * @return Messages
      */
     private function getPushMessages() {
-        return $this->get('pushMessages');
+        return $this->get('push_messages');
     }
 }

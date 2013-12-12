@@ -1,9 +1,9 @@
 <?php
 
-namespace ekreative\AWSPushBundle\Service;
+namespace mcfedr\AWSPushBundle\Service;
 
 use Aws\Sns\SnsClient;
-use ekreative\AWSPushBundle\Exception\PlatformNotConfiguredException;
+use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
 
 class Devices {
 
@@ -33,7 +33,7 @@ class Devices {
      * @param string $deviceId device token
      * @param string $platform platform on which to register
      * @return string the endpoint ARN for this device
-     * @throws \ekreative\AWSPushBundle\Exception\PlatformNotConfiguredException
+     * @throws \mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException
      */
     public function registerDevice($deviceId, $platform) {
         if(!isset($this->arns[$platform])) {

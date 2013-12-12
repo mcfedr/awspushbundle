@@ -1,6 +1,6 @@
 <?php
 
-namespace ekreative\AWSPushBundle\Message;
+namespace mcfedr\AWSPushBundle\Message;
 
 
 class Message implements \JsonSerializable {

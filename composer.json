@@ -17,6 +17,6 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-0": { "ekreative\\AWSPushBundle": "src/" }
+        "psr-0": { "mcfedr\\AWSPushBundle": "src/" }
     }
 }
