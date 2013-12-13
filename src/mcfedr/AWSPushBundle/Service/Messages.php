@@ -77,13 +77,22 @@ class Messages {
         foreach($this->sns->getListEndpointsByPlatformApplicationIterator([
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpoint) {
-            try {
-                $this->send($message, $endpoint['EndpointArn']);
+            if($endpoint['Attributes']['Enabled'] == "true") {
+                try {
+                    $this->send($message, $endpoint['EndpointArn']);
+                }
+                catch(\Exception $e) {
+                    $this->logger->error("Failed to push to {$endpoint['EndpointArn']}", [
+                        'Message' => $message,
+                        'Exception' => $e,
+                        'Endpoint' => $endpoint
+                    ]);
+                }
             }
-            catch(\Exception $e) {
-                $this->logger->error("Failed to push to {$endpoint['EndpointArn']}", [
+            else {
+                $this->logger->info("Disabled endpoint {$endpoint['EndpointArn']}", [
                     'Message' => $message,
-                    'Exception' => $e
+                    'Endpoint' => $endpoint
                 ]);
             }
         }
