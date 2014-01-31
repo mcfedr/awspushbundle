@@ -4,7 +4,7 @@ A convenient bundle for registering devices and then pushing to them using amazo
 
 ## Config
 
-Put something like this in your config. The arns in the platforms section should be the reconfigured app arns in SNS.
+Put something like this in your config. The arns in the platforms section should be the preconfigured app arns in SNS.
 
     mcfedr_aws_push:
         platforms:
