@@ -19,22 +19,22 @@ class APIController extends Controller
      * @Route("/devices")
      * @Method({"POST"})
      */
-    public function registerDeviceAction(Request $request) {
+    public function registerDeviceAction(Request $request)
+    {
         $data = $this->handleJSONRequest($request);
-        if($data instanceof Response) {
+        if ($data instanceof Response) {
             return $data;
         }
 
-        if(!isset($data['deviceID']) || !isset($data['platform'])) {
+        if (!isset($data['deviceID']) || !isset($data['platform'])) {
             return new Response('Missing parameters', 400);
         }
 
         try {
-            if(($arn = $this->getPushDevices()->registerDevice($data['deviceID'], $data['platform']))) {
+            if (($arn = $this->getPushDevices()->registerDevice($data['deviceID'], $data['platform']))) {
                 return new Response("Device registered $arn", 200);
             }
-        }
-        catch(PlatformNotConfiguredException $e) {
+        } catch (PlatformNotConfiguredException $e) {
             return new Response('Unknown platform', 400);
         }
 
@@ -45,34 +45,37 @@ class APIController extends Controller
      * @Route("/broadcast")
      * @Method({"POST"})
      */
-    public function broadcastAction(Request $request) {
+    public function broadcastAction(Request $request)
+    {
         $data = $this->handleJSONRequest($request);
-        if($data instanceof Response) {
+        if ($data instanceof Response) {
             return $data;
         }
 
-        if(!isset($data['message'])) {
+        if (!isset($data['message'])) {
             return new Response('You must send a message', 400);
         }
 
         try {
             $m = new Message($data['message']);
-            $m->setCustom([
-                'message' => $data['message']
-            ]);
+            $m->setCustom(
+                [
+                    'message' => $data['message']
+                ]
+            );
             $this->getPushMessages()->broadcast($m, isset($data['platform']) ? $data['platform'] : null);
             return new Response('Message sent', 200);
-        }
-        catch(PlatformNotConfiguredException $e) {
+        } catch (PlatformNotConfiguredException $e) {
             return new Response('Unknown platform', 400);
         }
 
         return new Response('Unknown error', 500);
     }
 
-    private function handleJSONRequest(Request $request) {
+    private function handleJSONRequest(Request $request)
+    {
         $data = json_decode($request->getContent(), true);
-        if($data === null) {
+        if ($data === null) {
             return new Response("Invalid Request JSON", 400);
         }
         return $data;
@@ -81,14 +84,16 @@ class APIController extends Controller
     /**
      * @return Devices
      */
-    private function getPushDevices() {
+    private function getPushDevices()
+    {
         return $this->get('mcfedr_aws_push.devices');
     }
 
     /**
      * @return Messages
      */
-    private function getPushMessages() {
+    private function getPushMessages()
+    {
         return $this->get('mcfedr_aws_push.messages');
     }
 }

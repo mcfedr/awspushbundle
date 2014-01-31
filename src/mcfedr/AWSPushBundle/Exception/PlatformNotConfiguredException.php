@@ -9,6 +9,6 @@
 namespace mcfedr\AWSPushBundle\Exception;
 
 
-class PlatformNotConfiguredException extends \Exception {
-
+class PlatformNotConfiguredException extends \Exception
+{
 }

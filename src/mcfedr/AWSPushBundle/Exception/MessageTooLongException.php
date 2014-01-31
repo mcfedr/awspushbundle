@@ -9,6 +9,6 @@
 namespace mcfedr\AWSPushBundle\Exception;
 
 
-class MessageTooLongException extends \Exception {
-
-} 
+class MessageTooLongException extends \Exception
+{
+}
