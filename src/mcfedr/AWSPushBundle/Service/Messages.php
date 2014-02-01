@@ -5,6 +5,7 @@ namespace mcfedr\AWSPushBundle\Service;
 use Aws\Sns\SnsClient;
 use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
 use mcfedr\AWSPushBundle\Message\Message;
+use Psr\Log\LoggerInterface;
 
 class Messages
 {
