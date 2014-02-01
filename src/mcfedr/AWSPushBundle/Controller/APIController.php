@@ -27,15 +27,45 @@ class APIController extends Controller
         }
 
         if (!isset($data['deviceID']) || !isset($data['platform'])) {
+            $this->get('logger')->error(
+                'Missing parameters',
+                [
+                    'data' => $data
+                ]
+            );
             return new Response('Missing parameters', 400);
         }
 
         try {
             if (($arn = $this->getPushDevices()->registerDevice($data['deviceID'], $data['platform']))) {
-                return new Response("Device registered $arn", 200);
+                $this->get('logger')->info(
+                    'Device registered',
+                    [
+                        'arn' => $arn,
+                        'device' => $data['deviceID'],
+                        'platform' => $data['platform']
+                    ]
+                );
+                return new Response('Device registered', 200);
             }
         } catch (PlatformNotConfiguredException $e) {
+            $this->get('logger')->error(
+                'Unknown platform',
+                [
+                    'e' => $e,
+                    'platform' => $data['platform']
+                ]
+            );
             return new Response('Unknown platform', 400);
+        } catch (\Exception $e) {
+            $this->get('logger')->error(
+                'Exception registering device',
+                [
+                    'e' => $e,
+                    'device' => $data['deviceID'],
+                    'platform' => $data['platform']
+                ]
+            );
         }
 
         return new Response('Unknown error', 500);
@@ -74,8 +104,15 @@ class APIController extends Controller
 
     private function handleJSONRequest(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $content = $request->getContent();
+        $data = json_decode($content, true);
         if ($data === null) {
+            $this->get('logger')->error(
+                'Invalid JSON',
+                [
+                    'content' => $content
+                ]
+            );
             return new Response("Invalid Request JSON", 400);
         }
         return $data;
