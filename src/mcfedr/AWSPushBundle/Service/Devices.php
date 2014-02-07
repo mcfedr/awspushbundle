@@ -19,11 +19,6 @@ class Devices
     private $arns;
 
     /**
-     * @var  LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @param SnsClient $client
      * @param array $platformARNS
      */

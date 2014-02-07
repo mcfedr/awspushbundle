@@ -3,6 +3,7 @@ parameters:
     mcfedr_aws_push.aws.key: ''
     mcfedr_aws_push.aws.secret: ''
     mcfedr_aws_push.aws.region: ''
+    mcfedr_aws_push.debug: false
 
 services:
     mcfedr_aws_push.devices:
@@ -16,6 +17,7 @@ services:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
           - "@logger"
+          - "%mcfedr_aws_push.debug%"
     mcfedr_aws_push.sns_client:
         class: Aws\Sns\SnsClient
         factory_class: Aws\Sns\SnsClient

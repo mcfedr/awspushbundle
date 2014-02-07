@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
                     end()->
                 end()->
                 variableNode("platforms")->end()->
+                booleanNode("debug")->defaultFalse()->end()->
             end()->
         end();
 

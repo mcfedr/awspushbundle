@@ -26,15 +26,22 @@ class Messages
     private $logger;
 
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * @param SnsClient $client
      * @param array $platformARNS
      * @param LoggerInterface $logger
+     * @param bool $debug
      */
-    public function __construct(SnsClient $client, $platformARNS, LoggerInterface $logger)
+    public function __construct(SnsClient $client, $platformARNS, LoggerInterface $logger, $debug)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;
         $this->logger = $logger;
+        $this->debug = $debug;
     }
 
     /**
@@ -69,6 +76,13 @@ class Messages
      */
     public function send($message, $deviceEndpoint)
     {
+        if($this->debug) {
+            $this->logger->debug("Message would have been sent to $deviceEndpoint", [
+                'Message' => $message
+            ]);
+            return;
+        }
+
         $this->sns->publish(
             [
                 'TargetArn' => $deviceEndpoint,
