@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class APIController extends Controller
 {
@@ -77,6 +78,10 @@ class APIController extends Controller
      */
     public function broadcastAction(Request $request)
     {
+        if (!$this->get('security.context')->isGranted('MCFEDR_AWS_BROADCAST')) {
+            throw new AccessDeniedException();
+        }
+
         $data = $this->handleJSONRequest($request);
         if ($data instanceof Response) {
             return $data;
