@@ -78,7 +78,7 @@ class APIController extends Controller
      */
     public function broadcastAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('MCFEDR_AWS_BROADCAST')) {
+        if (!$this->get('security.context')->isGranted('ROLE_MCFEDR_AWS_BROADCAST')) {
             throw new AccessDeniedException();
         }
 
