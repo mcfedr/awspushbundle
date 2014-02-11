@@ -2,6 +2,9 @@
 
 A convenient bundle for registering devices and then pushing to them using amazons SNS service.
 
+[![Latest Stable Version](https://poser.pugx.org/mcfedr/awspushbundle/v/stable.png)](https://packagist.org/packages/mcfedr/awspushbundle)
+[![License](https://poser.pugx.org/mcfedr/awspushbundle/license.png)](https://packagist.org/packages/mcfedr/awspushbundle)
+
 ## Config
 
 Put something like this in your config. The arns in the platforms section should be the preconfigured app arns in SNS.
