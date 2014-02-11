@@ -102,6 +102,12 @@ class APIController extends Controller
         return new Response('Unknown error', 500);
     }
 
+    /**
+     * Try to parse a json request
+     *
+     * @param Request $request
+     * @return mixed|Response
+     */
     private function handleJSONRequest(Request $request)
     {
         $content = $request->getContent();
