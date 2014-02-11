@@ -77,7 +77,7 @@ class Messages
     public function send($message, $deviceEndpoint)
     {
         if($this->debug) {
-            $this->logger->debug("Message would have been sent to $deviceEndpoint", [
+            $this->logger->notice("Message would have been sent to $deviceEndpoint", [
                 'Message' => $message
             ]);
             return;
@@ -100,6 +100,13 @@ class Messages
      */
     private function broadcastToPlatform($message, $platform)
     {
+        if($this->debug) {
+            $this->logger->notice("Message would have been sent to $platform", [
+                    'Message' => $message
+                ]);
+            return;
+        }
+
         foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
                      [
                          'PlatformApplicationArn' => $this->arns[$platform]
