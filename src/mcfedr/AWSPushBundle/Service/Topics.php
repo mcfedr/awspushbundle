@@ -73,19 +73,20 @@ class Topics
     public function broadcast(Message $message, $topicName)
     {
         $messages = $this->messages;
+        $messageData = json_encode($message, JSON_UNESCAPED_UNICODE);
 
         $this->iterateTopics(
             $topicName,
-            function (Topic $topic) use ($message, $messages, $topicName) {
+            function (Topic $topic) use ($messageData, $messages, $topicName) {
                 try {
-                    $messages->send($message, $topic->getArn());
+                    $messages->send($messageData, $topic->getArn());
                 } catch (\Exception $e) {
                     $this->logger->error(
                         "Failed to push to $topicName",
                         [
-                            'Message' => $message,
-                            'Exception' => $e,
-                            'Topic' => $topic
+                            'messageData' => $messageData,
+                            'exception' => $e,
+                            'topic' => $topic
                         ]
                     );
                 }
