@@ -4,6 +4,7 @@ parameters:
     mcfedr_aws_push.aws.secret: ''
     mcfedr_aws_push.aws.region: ''
     mcfedr_aws_push.debug: false
+    mcfedr_aws_push.topic_name: ''
 
 services:
     mcfedr_aws_push.devices:
@@ -11,6 +12,7 @@ services:
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
+
     mcfedr_aws_push.messages:
         class: mcfedr\AWSPushBundle\Service\Messages
         arguments:
@@ -18,6 +20,36 @@ services:
           - "%mcfedr_aws_push.platforms%"
           - "@logger"
           - "%mcfedr_aws_push.debug%"
+
+    mcfedr_aws_push.topics:
+        class: mcfedr\AWSPushBundle\Service\Topics
+        arguments:
+          - "@mcfedr_aws_push.sns_client"
+          - "@logger"
+          - "@mcfedr_aws_push.messages"
+          - "%kernel.cache_dir%"
+
+    mcfedr_aws_push.api:
+        class: mcfedr\AWSPushBundle\Controller\APIController
+        arguments:
+          - "@mcfedr_aws_push.devices"
+          - "@mcfedr_aws_push.messages"
+          - "@mcfedr_aws_push.topics"
+          - "%mcfedr_aws_push.topic_name%"
+          - "@logger"
+          - "@security.context"
+
+    mcfedr_aws_push.command.subscribe:
+        class: mcfedr\AWSPushBundle\Command\SubscribeTopicsCommand
+        arguments:
+          - "@mcfedr_aws_push.topics"
+          - "%mcfedr_aws_push.topic_name%"
+          - "@mcfedr_aws_push.sns_client"
+          - "%mcfedr_aws_push.platforms%"
+          - "@logger"
+        tags:
+          -  { name: console.command }
+
     mcfedr_aws_push.sns_client:
         class: Aws\Sns\SnsClient
         factory_class: Aws\Sns\SnsClient

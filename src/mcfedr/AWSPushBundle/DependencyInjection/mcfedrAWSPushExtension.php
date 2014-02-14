@@ -30,5 +30,9 @@ class mcfedrAWSPushExtension extends Extension
         $container->setParameter('mcfedr_aws_push.aws.secret', $config['aws']['secret']);
         $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
         $container->setParameter('mcfedr_aws_push.debug', $config['debug']);
+
+        if (isset($config['topic_name'])) {
+            $container->setParameter('mcfedr_aws_push.topic_name', $config['topic_name']);
+        }
     }
 }

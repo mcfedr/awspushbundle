@@ -2,20 +2,86 @@
 
 namespace mcfedr\AWSPushBundle\Controller;
 
+use Aws\Sns\Exception\SubscriptionLimitExceededException;
+use Aws\Sns\Exception\TopicLimitExceededException;
 use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
 use mcfedr\AWSPushBundle\Message\Message;
 use mcfedr\AWSPushBundle\Service\Devices;
 use mcfedr\AWSPushBundle\Service\Messages;
+use mcfedr\AWSPushBundle\Service\Topics;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/**
+ * This should server as an example of how to use the services
+ * provided by this bundle.
+ * In some simple cases it may be enough to use this controller.
+ *
+ * @package mcfedr\AWSPushBundle\Controller
+ * @Route(service="mcfedr_aws_push.api")
+ */
 class APIController extends Controller
 {
+    /**
+     * @var Devices
+     */
+    private $devices;
+
+    /**
+     * @var Messages
+     */
+    private $messages;
+
+    /**
+     * @var Topics
+     */
+    private $topics;
+
+    /**
+     * @var string
+     */
+    private $topicName;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @param Devices $devices
+     * @param Messages $messages
+     * @param Topics $topics
+     * @param string $topicName
+     * @param LoggerInterface $logger
+     * @param SecurityContextInterface $securityContext
+     */
+    function __construct(
+        Devices $devices,
+        Messages $messages,
+        Topics $topics,
+        $topicName,
+        LoggerInterface $logger,
+        SecurityContextInterface $securityContext
+    ) {
+        $this->devices = $devices;
+        $this->messages = $messages;
+        $this->topics = $topics;
+        $this->topicName = $topicName;
+        $this->logger = $logger;
+        $this->securityContext = $securityContext;
+    }
+
     /**
      * @Route("/devices")
      * @Method({"POST"})
@@ -28,7 +94,7 @@ class APIController extends Controller
         }
 
         if (!isset($data['deviceID']) || !isset($data['platform'])) {
-            $this->get('logger')->error(
+            $this->logger->error(
                 'Missing parameters',
                 [
                     'data' => $data
@@ -38,8 +104,8 @@ class APIController extends Controller
         }
 
         try {
-            if (($arn = $this->getPushDevices()->registerDevice($data['deviceID'], $data['platform']))) {
-                $this->get('logger')->info(
+            if (($arn = $this->devices->registerDevice($data['deviceID'], $data['platform']))) {
+                $this->logger->info(
                     'Device registered',
                     [
                         'arn' => $arn,
@@ -47,10 +113,37 @@ class APIController extends Controller
                         'platform' => $data['platform']
                     ]
                 );
+
+                if ($this->topicName) {
+                    try {
+                        $this->topics->registerDeviceOnTopic($arn, $this->topicName);
+                    } catch (SubscriptionLimitExceededException $e) {
+                        $this->logger->error(
+                            'Failed to subscription device to topic',
+                            [
+                                'deviceArn' => $arn,
+                                'topicName' => $this->topicName,
+                                'exception' => $e
+                            ]
+                        );
+                        return new Response('Failed to subscribe device to topic', 500);
+                    } catch (TopicLimitExceededException $e) {
+                        $this->logger->error(
+                            'Failed to create topic for device',
+                            [
+                                'deviceArn' => $arn,
+                                'topicName' => $this->topicName,
+                                'exception' => $e
+                            ]
+                        );
+                        return new Response('Failed to create topic for device', 500);
+                    }
+                }
+
                 return new Response('Device registered', 200);
             }
         } catch (PlatformNotConfiguredException $e) {
-            $this->get('logger')->error(
+            $this->logger->error(
                 'Unknown platform',
                 [
                     'e' => $e,
@@ -59,7 +152,7 @@ class APIController extends Controller
             );
             return new Response('Unknown platform', 400);
         } catch (\Exception $e) {
-            $this->get('logger')->error(
+            $this->logger->error(
                 'Exception registering device',
                 [
                     'e' => $e,
@@ -78,7 +171,7 @@ class APIController extends Controller
      */
     public function broadcastAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_MCFEDR_AWS_BROADCAST')) {
+        if (!$this->securityContext->isGranted('ROLE_MCFEDR_AWS_BROADCAST')) {
             throw new AccessDeniedException();
         }
 
@@ -92,19 +185,25 @@ class APIController extends Controller
         }
 
         try {
-            $m = new Message($data['message']);
-            $m->setCustom(
+            $message = new Message($data['message']);
+            $message->setCustom(
                 [
                     'message' => $data['message']
                 ]
             );
-            $this->getPushMessages()->broadcast($m, isset($data['platform']) ? $data['platform'] : null);
+
+            $platform = isset($data['platform']) ? $data['platform'] : null;
+
+            if ($this->topicName && !$platform) {
+                $this->topics->broadcast($message, $this->topicName);
+            } else {
+                $this->messages->broadcast($message, $platform);
+            }
+
             return new Response('Message sent', 200);
         } catch (PlatformNotConfiguredException $e) {
             return new Response('Unknown platform', 400);
         }
-
-        return new Response('Unknown error', 500);
     }
 
     /**
@@ -118,7 +217,7 @@ class APIController extends Controller
         $content = $request->getContent();
         $data = json_decode($content, true);
         if ($data === null) {
-            $this->get('logger')->error(
+            $this->logger->error(
                 'Invalid JSON',
                 [
                     'content' => $content
@@ -127,21 +226,5 @@ class APIController extends Controller
             return new Response("Invalid Request JSON", 400);
         }
         return $data;
-    }
-
-    /**
-     * @return Devices
-     */
-    private function getPushDevices()
-    {
-        return $this->get('mcfedr_aws_push.devices');
-    }
-
-    /**
-     * @return Messages
-     */
-    private function getPushMessages()
-    {
-        return $this->get('mcfedr_aws_push.messages');
     }
 }

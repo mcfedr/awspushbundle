@@ -69,15 +69,15 @@ class Messages
     }
 
     /**
-     * Send a message to one device
+     * Send a message to an endpoint
      *
      * @param Message|string $message
-     * @param string $deviceEndpoint
+     * @param string $endpointArn
      */
-    public function send($message, $deviceEndpoint)
+    public function send($message, $endpointArn)
     {
         if($this->debug) {
-            $this->logger->notice("Message would have been sent to $deviceEndpoint", [
+            $this->logger->notice("Message would have been sent to $endpointArn", [
                 'Message' => $message
             ]);
             return;
@@ -85,7 +85,7 @@ class Messages
 
         $this->sns->publish(
             [
-                'TargetArn' => $deviceEndpoint,
+                'TargetArn' => $endpointArn,
                 'Message' => $message instanceof $message ? json_encode($message, JSON_UNESCAPED_UNICODE) : $message,
                 'MessageStructure' => 'json'
             ]

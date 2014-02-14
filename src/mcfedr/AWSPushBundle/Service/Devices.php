@@ -34,7 +34,7 @@ class Devices
      * @param string $deviceId device token
      * @param string $platform platform on which to register
      * @return string the endpoint ARN for this device
-     * @throws \mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException
+     * @throws PlatformNotConfiguredException
      */
     public function registerDevice($deviceId, $platform)
     {
