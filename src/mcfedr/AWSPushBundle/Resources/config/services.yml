@@ -50,6 +50,24 @@ services:
         tags:
           -  { name: console.command }
 
+    mcfedr_aws_push.command.enable:
+        class: mcfedr\AWSPushBundle\Command\EnableAllCommand
+        arguments:
+          - "@mcfedr_aws_push.sns_client"
+          - "%mcfedr_aws_push.platforms%"
+          - "@logger"
+        tags:
+          -  { name: console.command }
+
+    mcfedr_aws_push.command.remove:
+        class: mcfedr\AWSPushBundle\Command\RemoveDisabledCommand
+        arguments:
+          - "@mcfedr_aws_push.sns_client"
+          - "%mcfedr_aws_push.platforms%"
+          - "@logger"
+        tags:
+          -  { name: console.command }
+
     mcfedr_aws_push.sns_client:
         class: Aws\Sns\SnsClient
         factory_class: Aws\Sns\SnsClient
