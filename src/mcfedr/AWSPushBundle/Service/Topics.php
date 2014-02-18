@@ -37,17 +37,24 @@ class Topics
     private $currentTopics = [];
 
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * @param SnsClient $client
      * @param LoggerInterface $logger
      * @param Messages $messages
      * @param $cacheDir
+     * @param $debug
      */
-    public function __construct(SnsClient $client, LoggerInterface $logger, Messages $messages, $cacheDir)
+    public function __construct(SnsClient $client, LoggerInterface $logger, Messages $messages, $cacheDir, $debug)
     {
         $this->sns = $client;
         $this->logger = $logger;
         $this->messages = $messages;
         $this->cacheDir = $cacheDir;
+        $this->debug = $debug;
     }
 
     /**
@@ -72,6 +79,13 @@ class Topics
      */
     public function broadcast(Message $message, $topicName)
     {
+        if($this->debug) {
+            $this->logger->notice("Message would have been sent to $topicName", [
+                'Message' => $message
+            ]);
+            return;
+        }
+
         $messages = $this->messages;
         $messageData = json_encode($message, JSON_UNESCAPED_UNICODE);
 

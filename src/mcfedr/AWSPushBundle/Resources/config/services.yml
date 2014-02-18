@@ -28,6 +28,7 @@ services:
           - "@logger"
           - "@mcfedr_aws_push.messages"
           - "%kernel.cache_dir%"
+          - "%mcfedr_aws_push.debug%"
 
     mcfedr_aws_push.api:
         class: mcfedr\AWSPushBundle\Controller\APIController
