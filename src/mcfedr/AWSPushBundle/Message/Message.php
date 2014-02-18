@@ -188,6 +188,7 @@ class Message implements \JsonSerializable
         $apnsData = $this->getApnsData($this->text);
         if (($apnsDataLength = strlen($apnsData)) > 256) {
             $cut = $apnsDataLength - 256;
+            //Note that strlen returns the byte length of the string
             $textLength = strlen($this->text);
             if ($textLength > $cut) {
                 $apnsData = $this->getApnsData(mb_strcut($this->text, 0, $textLength - $cut, 'utf8'));
