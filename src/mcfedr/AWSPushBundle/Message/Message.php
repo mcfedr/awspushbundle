@@ -207,7 +207,7 @@ class Message implements \JsonSerializable
                     'collapse_key' => $this->collapseKey,
                     'time_to_live' => $this->ttl,
                     'delay_while_idle' => $this->delayWhileIdle,
-                    'data' => array_merge($this->gcmData ? $this->gcmData : ['text' => $this->text], $this->custom)
+                    'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['text' => $this->text], $this->custom)
                 ],
                 JSON_UNESCAPED_UNICODE
             )
@@ -239,6 +239,35 @@ class Message implements \JsonSerializable
             $apns['aps']['sound'] = $this->sound;
         }
 
-        return json_encode(array_merge($apns, $this->custom), JSON_UNESCAPED_UNICODE);
+        return json_encode($this->arrayMergeDeep($apns, $this->custom), JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Merge arrays, deeply
+     *
+     * @param array$array1
+     * @param array $array2
+     * @return array
+     */
+    private function arrayMergeDeep($array1, $array2)
+    {
+        $result = [];
+        foreach (func_get_args() as $array) {
+            foreach ($array as $key => $value) {
+                // Renumber integer keys as array_merge_recursive() does. Note that PHP
+                // automatically converts array keys that are integer strings (e.g., '1')
+                // to integers.
+                if (is_integer($key)) {
+                    $result[] = $value;
+                } elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+                    // Recurse when both values are arrays.
+                    $result[$key] = $this->arrayMergeDeep($result[$key], $value);
+                } else {
+                    // Otherwise, use the latter value, overriding any previous value.
+                    $result[$key] = $value;
+                }
+            }
+        }
+        return $result;
     }
 }
