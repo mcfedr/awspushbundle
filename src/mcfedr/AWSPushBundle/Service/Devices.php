@@ -45,7 +45,10 @@ class Devices
         $res = $this->sns->CreatePlatformEndpoint(
             [
                 'PlatformApplicationArn' => $this->arns[$platform],
-                'Token' => $deviceId
+                'Token' => $deviceId,
+                'Attributes' => [
+                    'Enabled' => 'true'
+                ]
             ]
         );
 
