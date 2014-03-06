@@ -117,16 +117,6 @@ class APIController extends Controller
                 if ($this->topicName) {
                     try {
                         $this->topics->registerDeviceOnTopic($arn, $this->topicName);
-                    } catch (SubscriptionLimitExceededException $e) {
-                        $this->logger->error(
-                            'Failed to subscription device to topic',
-                            [
-                                'deviceArn' => $arn,
-                                'topicName' => $this->topicName,
-                                'exception' => $e
-                            ]
-                        );
-                        return new Response('Failed to subscribe device to topic', 500);
                     } catch (TopicLimitExceededException $e) {
                         $this->logger->error(
                             'Failed to create topic for device',

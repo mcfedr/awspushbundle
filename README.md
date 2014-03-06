@@ -69,8 +69,23 @@ Alternative usage, using topics to send messages to lots of devices
 If you later add a topic_name to the configuration you can run the `mcfedr:aws:subscribe` command to add your existing
 devices to the topic.
 
+## Commands
 
-## Default Controller
+There are some commands to help manage the devices
+
+1. `mcfedr:aws:enable`
+
+    This will reenable all the devices
+
+1. `mcfedr:aws:remove`
+
+    This will remove any disabled devices. Its a good idea to do something like this regularly to remove old devices
+
+1. `mcfedr:aws:subscribe`
+
+    This will subscribe all devices to a topic, useful when introducing a topic
+
+## API Controller
 
 There is a controller included which makes basic usage of the bundle very easy
 
