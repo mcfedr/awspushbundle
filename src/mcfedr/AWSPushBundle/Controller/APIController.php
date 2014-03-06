@@ -186,12 +186,6 @@ class APIController extends Controller
 
         try {
             $message = new Message($data['message']);
-            $message->setCustom(
-                [
-                    'message' => $data['message']
-                ]
-            );
-
             $platform = isset($data['platform']) ? $data['platform'] : null;
 
             if ($this->topicName && !$platform) {
