@@ -7,42 +7,65 @@ use mcfedr\AWSPushBundle\Exception\MessageTooLongException;
 
 class Message implements \JsonSerializable
 {
+    const GCM_NO_COLLAPSE = 'do_not_collapse';
+
     /**
      * @var string
      */
     private $text;
 
     /**
+     * APNS only
+     *
      * @var int
      */
     private $badge;
 
     /**
+     * APNS only
+     *
      * @var string
      */
     private $sound;
 
     /**
+     * This is the data to send to all services
+     *
      * @var array
      */
     private $custom = [];
 
     /**
+     * If set, will be sent to GCM, otherwise ['message' => $text] will be sent as part of the data
+     *
      * @var array
      */
     private $gcmData;
 
     /**
-     * @var string
+     * If set, will be sent to ADM, otherwise ['message' => $text] will be sent as part of the data
+     *
+     * @var array
      */
-    private $collapseKey = 'do_not_collapse';
+    private $admData;
 
     /**
+     * GCM and ADM only
+     *
+     * @var string
+     */
+    private $collapseKey = self::GCM_NO_COLLAPSE;
+
+    /**
+     * GCM only
+     *
      * @var int
      */
     private $ttl;
 
     /**
+     * GCM only
+     *
      * @var boolean
      */
     private $delayWhileIdle = false;
@@ -183,15 +206,33 @@ class Message implements \JsonSerializable
         return $this->gcmData;
     }
 
+    /**
+     * @param array $admData
+     * @return Message
+     */
+    public function setAdmData($admData)
+    {
+        $this->admData = $admData;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdmData()
+    {
+        return $this->admData;
+    }
+
     public function jsonSerialize()
     {
-        $apnsData = $this->getApnsData($this->text);
+        $apnsData = $this->getApnsJson($this->text);
         if (($apnsDataLength = strlen($apnsData)) > 256) {
             $cut = $apnsDataLength - 256;
             //Note that strlen returns the byte length of the string
             $textLength = strlen($this->text);
             if ($textLength > $cut) {
-                $apnsData = $this->getApnsData(mb_strcut($this->text, 0, $textLength - $cut, 'utf8'));
+                $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut, 'utf8'));
             } else {
                 throw new MessageTooLongException("You message for APNS is too long $apnsData");
             }
@@ -201,16 +242,8 @@ class Message implements \JsonSerializable
             'default' => $this->text,
             'APNS' => $apnsData,
             'APNS_SANDBOX' => $apnsData,
-            'ADM' => $apnsData,
-            'GCM' => json_encode(
-                [
-                    'collapse_key' => $this->collapseKey,
-                    'time_to_live' => $this->ttl,
-                    'delay_while_idle' => $this->delayWhileIdle,
-                    'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['text' => $this->text], $this->custom)
-                ],
-                JSON_UNESCAPED_UNICODE
-            )
+            'ADM' => $this->getAdmJson(),
+            'GCM' => $this->getGcmJson()
         ];
     }
 
@@ -225,7 +258,7 @@ class Message implements \JsonSerializable
      * @param string $text
      * @return string
      */
-    private function getApnsData($text)
+    private function getApnsJson($text)
     {
         $apns = [
             'aps' => [
@@ -240,6 +273,42 @@ class Message implements \JsonSerializable
         }
 
         return json_encode($this->arrayMergeDeep($apns, $this->custom), JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Get the json to send via Amazon Device Messaging
+     *
+     * @return string
+     */
+    private function getAdmJson()
+    {
+        $adm = [
+            'data' => $this->arrayMergeDeep($this->admData ? $this->admData : ['message' => $this->text], $this->custom)
+        ];
+
+        if ($this->collapseKey != self::GCM_NO_COLLAPSE) {
+            $adm['consolidationKey'] = $this->collapseKey;
+        }
+
+        return json_encode($adm, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Get the json to send via Google Cloud Messaging
+     *
+     * @return string
+     */
+    private function getGcmJson()
+    {
+        return json_encode(
+            [
+                'collapse_key' => $this->collapseKey,
+                'time_to_live' => $this->ttl,
+                'delay_while_idle' => $this->delayWhileIdle,
+                'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['message' => $this->text], $this->custom)
+            ],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
