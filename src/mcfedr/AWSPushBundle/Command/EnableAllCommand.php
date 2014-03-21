@@ -29,7 +29,7 @@ class EnableAllCommand extends Command
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    function __construct(SnsClient $sns, $arns, LoggerInterface $logger)
+    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger)
     {
         parent::__construct();
 

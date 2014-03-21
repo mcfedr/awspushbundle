@@ -66,7 +66,7 @@ class APIController extends Controller
      * @param LoggerInterface $logger
      * @param SecurityContextInterface $securityContext
      */
-    function __construct(
+    public function __construct(
         Devices $devices,
         Messages $messages,
         Topics $topics,
