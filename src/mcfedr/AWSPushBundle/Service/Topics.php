@@ -34,7 +34,7 @@ class Topics
     /**
      * @var array
      */
-    private $currentTopics = [];
+    private $topics = [];
 
     /**
      * @var bool
@@ -63,12 +63,29 @@ class Topics
      *
      * @param string $deviceArn
      * @param string $topicName The base name of the topics to use
-     * @throws SubscriptionLimitExceededException
      * @throws TopicLimitExceededException
      */
     public function registerDeviceOnTopic($deviceArn, $topicName)
     {
-        $this->registerDevice($deviceArn, $this->getCurrentTopic($topicName));
+        $lastTopic = null;
+        if (!$this->iterateTopics(
+            $topicName,
+            function (Topic $topic) use ($deviceArn, &$lastTopic) {
+                $lastTopic = $topic;
+                try {
+                    $this->registerDevice($deviceArn, $topic);
+                    return true;
+                } catch (SubscriptionLimitExceededException $e) {
+                    return false;
+                }
+            }
+        )
+        ) {
+            $this->registerDevice(
+                $deviceArn,
+                $this->createNextTopic($lastTopic->getName(), $lastTopic->getNumber() + 1)
+            );
+        }
     }
 
     /**
@@ -79,10 +96,13 @@ class Topics
      */
     public function broadcast(Message $message, $topicName)
     {
-        if($this->debug) {
-            $this->logger->notice("Message would have been sent to $topicName", [
-                'Message' => $message
-            ]);
+        if ($this->debug) {
+            $this->logger->notice(
+                "Message would have been sent to $topicName",
+                [
+                    'Message' => $message
+                ]
+            );
             return;
         }
 
@@ -115,87 +135,17 @@ class Topics
      * @internal
      * @param string $deviceArn
      * @param Topic $topic
-     * @param bool $retry
      * @throws SubscriptionLimitExceededException
      */
-    private function registerDevice($deviceArn, Topic $topic, $retry = false)
+    private function registerDevice($deviceArn, Topic $topic)
     {
-        try {
-            $this->sns->subscribe(
-                [
-                    'TopicArn' => $topic->getArn(),
-                    'Protocol' => 'application',
-                    'Endpoint' => $deviceArn
-                ]
-            );
-        } catch (SubscriptionLimitExceededException $e) {
-            if ($retry) {
-                throw $e;
-            } else {
-                $this->registerDevice(
-                    $deviceArn,
-                    $this->createNextTopic($topic->getName(), $topic->getNumber() + 1),
-                    true
-                );
-            }
-        }
-    }
-
-    /**
-     * Find the highest numbered topic in the group
-     *
-     * @param string $topicName
-     * @throws TopicLimitExceededException
-     * @return Topic
-     */
-    private function getCurrentTopic($topicName)
-    {
-        if (isset($this->currentTopics[$topicName])) {
-            return $this->currentTopics[$topicName];
-        }
-
-        $file = $this->getCacheFile($topicName);
-        if (file_exists($file)) {
-            $this->logger->debug(
-                'Reading cached topic',
-                [
-                    'file' => $file
-                ]
-            );
-            if (($topicJson = file_get_contents($file)) && $topic = json_decode($topicJson, true)) {
-                $this->currentTopics[$topicName] = new Topic($topic['number'], $topic['arn'], $topic['name']);
-                return $this->currentTopics[$topicName];
-            } else {
-                $this->logger->warning(
-                    'Failed to read topic cache',
-                    [
-                        'topicName' => $topicName,
-                        'file' => $file,
-                        'topicJson' => $topicJson
-                    ]
-                );
-            }
-        }
-
-        $current = null;
-
-        $this->iterateTopics(
-            $topicName,
-            function (Topic $topic) use (&$current) {
-                if (!$current || $topic->getNumber() > $current->getNumber()) {
-                    $current = $topic;
-                }
-            }
+        $this->sns->subscribe(
+            [
+                'TopicArn' => $topic->getArn(),
+                'Protocol' => 'application',
+                'Endpoint' => $deviceArn
+            ]
         );
-
-        if (!$current) {
-            return $this->createNextTopic($topicName, 0);
-        }
-
-        $this->currentTopics[$topicName] = $current;
-        $this->cacheTopic($current);
-
-        return $current;
     }
 
     /**
@@ -214,33 +164,86 @@ class Topics
             ]
         );
 
-        $this->currentTopics[$topicName] = new Topic($number, $response['TopicArn'], $topicName);
-        $this->cacheTopic($this->currentTopics[$topicName]);
+        $topic = new Topic($number, $response['TopicArn'], $topicName);
+        $this->topics[$topicName][] = $topic;
+        $this->cacheTopic($topicName);
 
-        return $this->currentTopics[$topicName];
+        return $topic;
     }
 
     /**
      * @param string $topicName
-     * @param callable $callback
+     * @param callable $callback can return true to break from the loop
+     * @return bool true if a call to callback returned true
      */
     private function iterateTopics($topicName, callable $callback)
     {
+        if (!isset($this->topics[$topicName])
+            && ($cacheFile = $this->getCacheFile($topicName))
+            && file_exists($cacheFile)
+        ) {
+            $this->logger->debug(
+                'Reading cached topic',
+                [
+                    'file' => $cacheFile
+                ]
+            );
+            if (($topicJson = file_get_contents($cacheFile))
+                && ($topics = json_decode($topicJson, true))
+            ) {
+                $this->topics[$topicName] = array_map(
+                    function ($topic) {
+                        return new Topic($topic['number'], $topic['arn'], $topic['name']);
+                    },
+                    $topics
+                );
+            } else {
+                $this->logger->warning(
+                    'Failed to read topic cache',
+                    [
+                        'topicName' => $topicName,
+                        'file' => $cacheFile,
+                        'topicJson' => $topicJson
+                    ]
+                );
+            }
+        }
+
+        if (isset($this->topics[$topicName])) {
+            foreach ($this->topics[$topicName] as $topic) {
+                if ($callback($topic)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        $this->topics[$topicName] = [];
         $topicNameClean = preg_quote($topicName, '/');
+        $ret = false;
 
         foreach ($this->sns->getListTopicsIterator() as $topicArn) {
             if (preg_match("/:$topicNameClean(\d*)$/", $topicArn, $matches)) {
-                $callback(new Topic($matches[1] == '' ? 0 : (int)$matches[1], $topicArn, $topicName));
+                $topic = new Topic($matches[1] == '' ? 0 : (int)$matches[1], $topicArn, $topicName);
+                $this->topics[$topicName][] = $topic;
+                if (!$ret && $callback($topic)) {
+                    $ret = true;
+                }
             }
         }
+
+        $this->cacheTopic($topicName);
+
+        return $ret;
     }
 
-    private function cacheTopic(Topic $topic)
+    private function cacheTopic($topicName)
     {
         $this->logger->debug(
             'Caching topic',
             [
-                'topic' => $topic
+                'topicName' => $topicName
             ]
         );
 
@@ -249,12 +252,12 @@ class Topics
             mkdir($this->getCacheDir(), 0777, true);
         }
 
-        $file = $this->getCacheFile($topic->getName());
-        if (!file_put_contents($file, json_encode($topic))) {
+        $file = $this->getCacheFile($topicName);
+        if (!file_put_contents($file, json_encode($this->topics[$topicName]))) {
             $this->logger->error(
                 'Failed to write topic cache',
                 [
-                    'topic' => $topic,
+                    'topicName' => $topicName,
                     'file' => $file
                 ]
             );

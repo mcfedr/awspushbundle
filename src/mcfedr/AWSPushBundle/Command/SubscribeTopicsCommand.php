@@ -8,6 +8,7 @@ use mcfedr\AWSPushBundle\Service\Topics;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SubscribeTopicsCommand extends Command
@@ -46,13 +47,13 @@ class SubscribeTopicsCommand extends Command
      */
     public function __construct(Topics $topics, $topicName, SnsClient $sns, $arns, LoggerInterface $logger)
     {
-        parent::__construct();
-
         $this->topics = $topics;
         $this->topicName = $topicName;
         $this->sns = $sns;
         $this->arns = $arns;
         $this->logger = $logger;
+
+        parent::__construct();
     }
 
 
@@ -60,14 +61,15 @@ class SubscribeTopicsCommand extends Command
     {
         $this
             ->setName('mcfedr:aws:subscribe')
-            ->setDescription('Subscribe existing devices to the topic');
+            ->setDescription('Subscribe existing devices to the topic')
+            ->addOption('topic', null, InputOption::VALUE_REQUIRED, 'The topic to subscribe devices to', $this->topicName);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
             foreach ($this->arns as $platform => $arn) {
-                $this->subscribePlatform($platform);
+                $this->subscribePlatform($platform, $input->getOption('topic'));
             }
         } catch (SubscriptionLimitExceededException $e) {
             $this->logger->error(
@@ -86,7 +88,7 @@ class SubscribeTopicsCommand extends Command
         }
     }
 
-    private function subscribePlatform($platform)
+    private function subscribePlatform($platform, $topic)
     {
         foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
                      [
@@ -97,11 +99,11 @@ class SubscribeTopicsCommand extends Command
                 'Subscribing device to topic',
                 [
                     'device' => $endpoint['EndpointArn'],
-                    'topic' => $this->topicName,
+                    'topic' => $topic,
                     'platform' => $platform
                 ]
             );
-            $this->topics->registerDeviceOnTopic($endpoint['EndpointArn'], $this->topicName);
+            $this->topics->registerDeviceOnTopic($endpoint['EndpointArn'], $topic);
         }
     }
 }
