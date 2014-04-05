@@ -260,7 +260,7 @@ class Message implements \JsonSerializable
             //Note that strlen returns the byte length of the string
             $textLength = strlen($this->text);
             if ($textLength > $cut) {
-                $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut, 'utf8'));
+                $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
             } else {
                 throw new MessageTooLongException("You message for APNS is too long $apnsData");
             }
