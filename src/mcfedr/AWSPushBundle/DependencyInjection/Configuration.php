@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                         thenInvalid('Not a valid topic name')->
                     end()->
                 end()->
+                scalarNode("cache")->end()->
             end()->
         end();
 

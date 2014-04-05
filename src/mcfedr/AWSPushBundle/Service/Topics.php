@@ -4,6 +4,7 @@ namespace mcfedr\AWSPushBundle\Service;
 use Aws\Sns\Exception\SubscriptionLimitExceededException;
 use Aws\Sns\Exception\TopicLimitExceededException;
 use Aws\Sns\SnsClient;
+use Doctrine\Common\Cache\Cache;
 use mcfedr\AWSPushBundle\Message\Message;
 use mcfedr\AWSPushBundle\Topic\Topic;
 use Psr\Log\LoggerInterface;
@@ -27,14 +28,9 @@ class Topics
     private $messages;
 
     /**
-     * @var string
+     * @var Cache
      */
-    private $cacheDir;
-
-    /**
-     * @var array
-     */
-    private $topics = [];
+    protected $cache;
 
     /**
      * @var bool
@@ -45,15 +41,16 @@ class Topics
      * @param SnsClient $client
      * @param LoggerInterface $logger
      * @param Messages $messages
-     * @param $cacheDir
+     * @param \Doctrine\Common\Cache\Cache $cache
      * @param $debug
+     * @internal param $cacheDir
      */
-    public function __construct(SnsClient $client, LoggerInterface $logger, Messages $messages, $cacheDir, $debug)
+    public function __construct(SnsClient $client, LoggerInterface $logger, Messages $messages, Cache $cache, $debug)
     {
         $this->sns = $client;
         $this->logger = $logger;
         $this->messages = $messages;
-        $this->cacheDir = $cacheDir;
+        $this->cache = $cache;
         $this->debug = $debug;
     }
 
@@ -165,8 +162,16 @@ class Topics
         );
 
         $topic = new Topic($number, $response['TopicArn'], $topicName);
-        $this->topics[$topicName][] = $topic;
-        $this->cacheTopic($topicName);
+
+        if ($this->cache) {
+            $cacheKey = $this->getCacheKey($topicName);
+            $topics = $this->cache->fetch($cacheKey);
+            if (!$topics) {
+                $topics = [];
+            }
+            $topics[] = $topic;
+            $this->cache->save($cacheKey, $topics);
+        }
 
         return $topic;
     }
@@ -176,101 +181,43 @@ class Topics
      * @param callable $callback can return true to break from the loop
      * @return bool true if a call to callback returned true
      */
-    private function iterateTopics($topicName, callable $callback)
+    public function iterateTopics($topicName, callable $callback)
     {
-        if (!isset($this->topics[$topicName])
-            && ($cacheFile = $this->getCacheFile($topicName))
-            && file_exists($cacheFile)
-        ) {
-            $this->logger->debug(
-                'Reading cached topic',
-                [
-                    'file' => $cacheFile
-                ]
-            );
-            if (($topicJson = file_get_contents($cacheFile))
-                && ($topics = json_decode($topicJson, true))
-            ) {
-                $this->topics[$topicName] = array_map(
-                    function ($topic) {
-                        return new Topic($topic['number'], $topic['arn'], $topic['name']);
-                    },
-                    $topics
-                );
-            } else {
-                $this->logger->warning(
-                    'Failed to read topic cache',
-                    [
-                        'topicName' => $topicName,
-                        'file' => $cacheFile,
-                        'topicJson' => $topicJson
-                    ]
-                );
-            }
-        }
-
-        if (isset($this->topics[$topicName])) {
-            foreach ($this->topics[$topicName] as $topic) {
-                if ($callback($topic)) {
-                    return true;
+        if ($this->cache) {
+            $topics = $this->cache->fetch($this->getCacheKey($topicName));
+            if ($topics) {
+                foreach ($topics as $topic) {
+                    if ($callback($topic)) {
+                        return true;
+                    }
                 }
-            }
 
-            return false;
+                return false;
+            }
         }
 
-        $this->topics[$topicName] = [];
-        $topicNameClean = preg_quote($topicName, '/');
+        $topics = [];
+        $topicNameQuoted = preg_quote($topicName, '/');
         $ret = false;
 
         foreach ($this->sns->getListTopicsIterator() as $topicArn) {
-            if (preg_match("/:$topicNameClean(\d*)$/", $topicArn, $matches)) {
+            if (preg_match("/:$topicNameQuoted(\d*)$/", $topicArn, $matches)) {
                 $topic = new Topic($matches[1] == '' ? 0 : (int)$matches[1], $topicArn, $topicName);
-                $this->topics[$topicName][] = $topic;
+                $topics[] = $topic;
                 if (!$ret && $callback($topic)) {
                     $ret = true;
                 }
             }
         }
 
-        $this->cacheTopic($topicName);
+        if ($this->cache) {
+            $this->cache->save($this->getCacheKey($topicName), $topics);
+        }
 
         return $ret;
     }
 
-    private function cacheTopic($topicName)
-    {
-        $this->logger->debug(
-            'Caching topic',
-            [
-                'topicName' => $topicName
-            ]
-        );
-
-        $dir = $this->getCacheDir();
-        if (!file_exists($dir)) {
-            mkdir($this->getCacheDir(), 0777, true);
-        }
-
-        $file = $this->getCacheFile($topicName);
-        if (!file_put_contents($file, json_encode($this->topics[$topicName]))) {
-            $this->logger->error(
-                'Failed to write topic cache',
-                [
-                    'topicName' => $topicName,
-                    'file' => $file
-                ]
-            );
-        }
-    }
-
-    private function getCacheDir()
-    {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . 'mcfedr_aws_push';
-    }
-
-    private function getCacheFile($topicName)
-    {
-        return $this->getCacheDir() . DIRECTORY_SEPARATOR . $topicName;
+    private function getCacheKey($topicName) {
+        return "'mcfedr_aws_push.$topicName";
     }
 }
