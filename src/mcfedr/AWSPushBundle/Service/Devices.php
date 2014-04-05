@@ -2,6 +2,7 @@
 
 namespace mcfedr\AWSPushBundle\Service;
 
+use Aws\Sns\Exception\InvalidParameterException;
 use Aws\Sns\SnsClient;
 use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
 
@@ -42,15 +43,32 @@ class Devices
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
-        $res = $this->sns->CreatePlatformEndpoint(
-            [
-                'PlatformApplicationArn' => $this->arns[$platform],
-                'Token' => $deviceId,
-                'Attributes' => [
-                    'Enabled' => 'true'
+        try {
+            $res = $this->sns->createPlatformEndpoint(
+                [
+                    'PlatformApplicationArn' => $this->arns[$platform],
+                    'Token' => $deviceId,
+                    'Attributes' => [
+                        'Enabled' => 'true'
+                    ]
                 ]
-            ]
-        );
+            );
+        } catch (InvalidParameterException $e) {
+            preg_match('/Endpoint (.+?) already/', $e->getMessage(), $matches);
+            if (isset($matches[1])) {
+                $this->sns->setEndpointAttributes(
+                    [
+                        'EndpointArn' => $matches[1],
+                        'Attributes' => [
+                            'Enabled' => 'true'
+                        ]
+                    ]
+                );
+                return $matches[1];
+            } else {
+                throw $e;
+            }
+        }
 
         return $res['EndpointArn'];
     }
