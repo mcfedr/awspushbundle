@@ -80,7 +80,7 @@ class Topics
         ) {
             $this->registerDevice(
                 $deviceArn,
-                $this->createNextTopic($lastTopic->getName(), $lastTopic->getNumber() + 1)
+                $this->createNextTopic($topicName, $lastTopic ? $lastTopic->getNumber() + 1 : 0)
             );
         }
     }
