@@ -300,7 +300,10 @@ class Message implements \JsonSerializable
             $apns['aps']['sound'] = $this->sound;
         }
 
-        return json_encode($this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []), JSON_UNESCAPED_UNICODE);
+        return json_encode(
+            $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []),
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -333,7 +336,10 @@ class Message implements \JsonSerializable
                 'collapse_key' => $this->collapseKey,
                 'time_to_live' => $this->ttl,
                 'delay_while_idle' => $this->delayWhileIdle,
-                'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['message' => $this->text], $this->custom)
+                'data' => $this->arrayMergeDeep(
+                    $this->gcmData ? $this->gcmData : ['message' => $this->text],
+                    $this->custom
+                )
             ],
             JSON_UNESCAPED_UNICODE
         );
@@ -342,7 +348,7 @@ class Message implements \JsonSerializable
     /**
      * Merge arrays, deeply
      *
-     * @param array$array1
+     * @param array $array1
      * @param array $array2
      * @return array
      */

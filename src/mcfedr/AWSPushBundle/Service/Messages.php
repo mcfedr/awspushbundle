@@ -76,10 +76,13 @@ class Messages
      */
     public function send($message, $endpointArn)
     {
-        if($this->debug) {
-            $this->logger->notice("Message would have been sent to $endpointArn", [
-                'Message' => $message
-            ]);
+        if ($this->debug) {
+            $this->logger->notice(
+                "Message would have been sent to $endpointArn",
+                [
+                    'Message' => $message
+                ]
+            );
             return;
         }
 
@@ -100,18 +103,21 @@ class Messages
      */
     private function broadcastToPlatform($message, $platform)
     {
-        if($this->debug) {
-            $this->logger->notice("Message would have been sent to $platform", [
+        if ($this->debug) {
+            $this->logger->notice(
+                "Message would have been sent to $platform",
+                [
                     'Message' => $message
-                ]);
+                ]
+            );
             return;
         }
 
         foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-                     [
-                         'PlatformApplicationArn' => $this->arns[$platform]
-                     ]
-                 ) as $endpoint) {
+            [
+                'PlatformApplicationArn' => $this->arns[$platform]
+            ]
+        ) as $endpoint) {
             if ($endpoint['Attributes']['Enabled'] == "true") {
                 try {
                     $this->send($message, $endpoint['EndpointArn']);

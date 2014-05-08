@@ -43,21 +43,25 @@ class mcfedrAWSPushExtension extends Extension
             $cacheName = 'mcfedr_aws_push.cache';
             $container->setDefinition(
                 $cacheName,
-                new Definition('Doctrine\Common\Cache\FilesystemCache', [
-                    "%kernel.cache_dir%/mcfedr_aws_push"
-                ])
+                new Definition(
+                    'Doctrine\Common\Cache\FilesystemCache', [
+                        "%kernel.cache_dir%/mcfedr_aws_push"
+                    ]
+                )
             );
         }
 
         $container->setDefinition(
             'mcfedr_aws_push.topics',
-            new Definition('mcfedr\AWSPushBundle\Service\Topics', [
-                new Reference('mcfedr_aws_push.sns_client'),
-                new Reference('logger'),
-                new Reference('mcfedr_aws_push.messages'),
-                new Reference($cacheName),
-                $container->getParameter('mcfedr_aws_push.debug')
-            ])
+            new Definition(
+                'mcfedr\AWSPushBundle\Service\Topics', [
+                    new Reference('mcfedr_aws_push.sns_client'),
+                    new Reference('logger'),
+                    new Reference('mcfedr_aws_push.messages'),
+                    new Reference($cacheName),
+                    $container->getParameter('mcfedr_aws_push.debug')
+                ]
+            )
         );
     }
 }

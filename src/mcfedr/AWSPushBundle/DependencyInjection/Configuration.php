@@ -18,29 +18,29 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mcfedr_aws_push')->
-            children()->
-                arrayNode("aws")->
-                    children()->
-                        scalarNode("key")->isRequired()->cannotBeEmpty()->end()->
-                        scalarNode("secret")->isRequired()->cannotBeEmpty()->end()->
-                        scalarNode("region")->isRequired()->cannotBeEmpty()->end()->
-                    end()->
-                end()->
-                variableNode("platforms")->end()->
-                booleanNode("debug")->defaultFalse()->end()->
-                scalarNode("topic_name")->
-                    cannotBeEmpty()->
-                    validate()->
-                        ifTrue(function($value) {
+        $rootNode = $treeBuilder->root('mcfedr_aws_push')
+            ->children()
+                ->arrayNode("aws")
+                    ->children()
+                        ->scalarNode("key")->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode("secret")->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode("region")->isRequired()->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
+                ->variableNode("platforms")->end()
+                ->booleanNode("debug")->defaultFalse()->end()
+                ->scalarNode("topic_name")
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->ifTrue(function($value) {
                             return !preg_match('/^[a-zA-Z0-9_-]{0,256}$/', $value);
-                        })->
-                        thenInvalid('Not a valid topic name')->
-                    end()->
-                end()->
-                scalarNode("cache")->end()->
-            end()->
-        end();
+                        })
+                        ->thenInvalid('Not a valid topic name')
+                    ->end()
+                ->end()
+                ->scalarNode("cache")->end()
+            ->end()
+        ->end();
 
 
         // Here you should define the parameters that are allowed to

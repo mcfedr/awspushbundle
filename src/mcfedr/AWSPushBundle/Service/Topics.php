@@ -217,7 +217,8 @@ class Topics
         return $ret;
     }
 
-    private function getCacheKey($topicName) {
+    private function getCacheKey($topicName)
+    {
         return "'mcfedr_aws_push.$topicName";
     }
 }
