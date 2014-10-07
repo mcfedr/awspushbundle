@@ -7,7 +7,8 @@ use mcfedr\AWSPushBundle\Exception\MessageTooLongException;
 class Message implements \JsonSerializable
 {
     const GCM_NO_COLLAPSE = 'do_not_collapse';
-    const APNS_MAX_LENGTH = 256;
+    const APNS_MAX_LENGTH = 2048;
+    const GCM_MAX_LENGTH = 4096;
 
     /**
      * The text is automatically trimmed when sending to APNS
@@ -266,12 +267,24 @@ class Message implements \JsonSerializable
             }
         }
 
+        $gcmData = $this->getGcmJson($this->text);
+        if (($gcmDataLength = strlen($gcmData)) > static::GCM_MAX_LENGTH) {
+            $cut = $gcmDataLength - static::GCM_MAX_LENGTH;
+            //Note that strlen returns the byte length of the string
+            $textLength = strlen($this->text);
+            if ($textLength > $cut) {
+                $gcmData = $this->getGcmJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+            } else {
+                throw new MessageTooLongException("You message for GCM is too long $gcmData");
+            }
+        }
+
         return [
             'default' => $this->text,
             'APNS' => $apnsData,
             'APNS_SANDBOX' => $apnsData,
             'ADM' => $this->getAdmJson(),
-            'GCM' => $this->getGcmJson()
+            'GCM' => $gcmData
         ];
     }
 
@@ -324,16 +337,17 @@ class Message implements \JsonSerializable
     /**
      * Get the json to send via Google Cloud Messaging
      *
+     * @param string $text
      * @return string
      */
-    private function getGcmJson()
+    private function getGcmJson($text)
     {
         return json_encode(
             [
                 'collapse_key' => $this->collapseKey,
                 'time_to_live' => $this->ttl,
                 'delay_while_idle' => $this->delayWhileIdle,
-                'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['message' => $this->text], $this->custom)
+                'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['message' => $text], $this->custom)
             ],
             JSON_UNESCAPED_UNICODE
         );
