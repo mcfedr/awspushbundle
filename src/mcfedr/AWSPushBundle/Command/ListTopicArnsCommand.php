@@ -59,13 +59,18 @@ class ListTopicArnsCommand extends Command
         $table = $this->getApplication()->getHelperSet()->get('table');
         $table->setHeaders(['Number', 'Name', 'Arn']);
 
-        $this->topics->iterateTopics($input->getOption('topic'), function (Topic $topic) use ($table) {
-            $table->addRow([
-                $topic->getNumber(),
-                $topic->getName(),
-                $topic->getArn()
-            ]);
-        });
+        $this->topics->iterateTopics(
+            $input->getOption('topic'),
+            function (Topic $topic) use ($table) {
+                $table->addRow(
+                    [
+                        $topic->getNumber(),
+                        $topic->getName(),
+                        $topic->getArn()
+                    ]
+                );
+            }
+        );
 
         $table->render($output);
     }

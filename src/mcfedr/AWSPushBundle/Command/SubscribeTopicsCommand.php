@@ -62,7 +62,13 @@ class SubscribeTopicsCommand extends Command
         $this
             ->setName('mcfedr:aws:subscribe')
             ->setDescription('Subscribe existing devices to the topic')
-            ->addOption('topic', null, InputOption::VALUE_REQUIRED, 'The topic to subscribe devices to', $this->topicName);
+            ->addOption(
+                'topic',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The topic to subscribe devices to',
+                $this->topicName
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -91,10 +97,10 @@ class SubscribeTopicsCommand extends Command
     private function subscribePlatform($platform, $topic)
     {
         foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-                     [
-                         'PlatformApplicationArn' => $this->arns[$platform]
-                     ]
-                 ) as $endpoint) {
+            [
+                'PlatformApplicationArn' => $this->arns[$platform]
+            ]
+        ) as $endpoint) {
             $this->logger->info(
                 'Subscribing device to topic',
                 [

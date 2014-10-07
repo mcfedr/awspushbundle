@@ -87,7 +87,8 @@ There are some commands to help manage the devices
 
 ## API Controller
 
-There is a controller included which makes basic usage of the bundle very easy
+There is a controller included which makes basic usage of the bundle very easy. You may or may not want to use it,
+you might find it most useful as an example.
 
 ### Routing
 

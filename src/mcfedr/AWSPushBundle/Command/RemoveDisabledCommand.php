@@ -62,10 +62,10 @@ class RemoveDisabledCommand extends Command
     private function removeFromPlatform($platform)
     {
         foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-                     [
-                         'PlatformApplicationArn' => $this->arns[$platform]
-                     ]
-                 ) as $endpoint) {
+            [
+                'PlatformApplicationArn' => $this->arns[$platform]
+            ]
+        ) as $endpoint) {
             if ($endpoint['Attributes']['Enabled'] == "false") {
                 try {
                     $this->sns->deleteEndpoint(
