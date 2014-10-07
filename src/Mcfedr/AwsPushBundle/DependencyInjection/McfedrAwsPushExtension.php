@@ -1,6 +1,6 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\DependencyInjection;
+namespace Mcfedr\AwsPushBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -54,7 +54,7 @@ class mcfedrAWSPushExtension extends Extension
         $container->setDefinition(
             'mcfedr_aws_push.topics',
             new Definition(
-                'mcfedr\AWSPushBundle\Service\Topics', [
+                'Mcfedr\AwsPushBundle\Service\Topics', [
                     new Reference('mcfedr_aws_push.sns_client'),
                     new Reference('logger'),
                     new Reference('mcfedr_aws_push.messages'),

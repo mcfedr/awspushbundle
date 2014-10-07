@@ -1,10 +1,10 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\Service;
+namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\Exception\InvalidParameterException;
 use Aws\Sns\SnsClient;
-use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
+use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 
 class Devices
 {

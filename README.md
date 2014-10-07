@@ -19,7 +19,7 @@ Include the bundle in your AppKernel
     {
         $bundles = array(
             ...
-            new mcfedr\AWSPushBundle\mcfedrAWSPushBundle()
+            new Mcfedr\AwsPushBundle\McfedrAwsPushBundle()
 
 ## Config
 
@@ -95,7 +95,7 @@ you might find it most useful as an example.
 If you want to use the default controller you need to setup the routing
 
     mcfedr_aws_push:
-        resource: "@mcfedrAWSPushBundle/Controller/"
+        resource: "@McfedrAwsPushBundle/Controller/"
         type:     annotation
         prefix:   /
 

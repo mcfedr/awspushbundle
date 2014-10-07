@@ -1,6 +1,6 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\DependencyInjection;
+namespace Mcfedr\AwsPushBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

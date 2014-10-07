@@ -1,10 +1,10 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\Service;
+namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\SnsClient;
-use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
-use mcfedr\AWSPushBundle\Message\Message;
+use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
+use Mcfedr\AwsPushBundle\Message\Message;
 use Psr\Log\LoggerInterface;
 
 class Messages
@@ -49,7 +49,7 @@ class Messages
      *
      * @param Message $message
      * @param string $platform
-     * @throws \mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException
+     * @throws \Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException
      */
     public function broadcast(Message $message, $platform = null)
     {

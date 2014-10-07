@@ -1,14 +1,14 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\Controller;
+namespace Mcfedr\AwsPushBundle\Controller;
 
 use Aws\Sns\Exception\SubscriptionLimitExceededException;
 use Aws\Sns\Exception\TopicLimitExceededException;
-use mcfedr\AWSPushBundle\Exception\PlatformNotConfiguredException;
-use mcfedr\AWSPushBundle\Message\Message;
-use mcfedr\AWSPushBundle\Service\Devices;
-use mcfedr\AWSPushBundle\Service\Messages;
-use mcfedr\AWSPushBundle\Service\Topics;
+use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
+use Mcfedr\AwsPushBundle\Message\Message;
+use Mcfedr\AwsPushBundle\Service\Devices;
+use Mcfedr\AwsPushBundle\Service\Messages;
+use Mcfedr\AwsPushBundle\Service\Topics;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  * provided by this bundle.
  * In some simple cases it may be enough to use this controller.
  *
- * @package mcfedr\AWSPushBundle\Controller
+ * @package Mcfedr\AwsPushBundle\Controller
  * @Route(service="mcfedr_aws_push.api")
  */
 class APIController extends Controller

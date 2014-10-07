@@ -1,10 +1,10 @@
 <?php
-namespace mcfedr\AWSPushBundle\Topic;
+namespace Mcfedr\AwsPushBundle\Topic;
 
 /**
  * Represents a member of a topic group
  *
- * @package mcfedr\AWSPushBundle\Topic
+ * @package Mcfedr\AwsPushBundle\Topic
  */
 class Topic implements \JsonSerializable
 {

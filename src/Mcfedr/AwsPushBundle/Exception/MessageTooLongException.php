@@ -6,7 +6,7 @@
  * Time: 22:00
  */
 
-namespace mcfedr\AWSPushBundle\Exception;
+namespace Mcfedr\AwsPushBundle\Exception;
 
 
 class MessageTooLongException extends \Exception

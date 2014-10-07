@@ -6,7 +6,7 @@
  * Time: 14:02
  */
 
-namespace mcfedr\AWSPushBundle\Exception;
+namespace Mcfedr\AwsPushBundle\Exception;
 
 
 class PlatformNotConfiguredException extends \Exception

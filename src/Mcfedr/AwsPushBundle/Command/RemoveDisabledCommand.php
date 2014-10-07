@@ -1,5 +1,5 @@
 <?php
-namespace mcfedr\AWSPushBundle\Command;
+namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
 use Psr\Log\LoggerInterface;

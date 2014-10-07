@@ -3,10 +3,10 @@
  * Created by mcfedr on 05/04/2014 16:13
  */
 
-namespace mcfedr\AWSPushBundle\Command;
+namespace Mcfedr\AwsPushBundle\Command;
 
-use mcfedr\AWSPushBundle\Service\Topics;
-use mcfedr\AWSPushBundle\Topic\Topic;
+use Mcfedr\AwsPushBundle\Service\Topics;
+use Mcfedr\AwsPushBundle\Topic\Topic;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableHelper;
@@ -74,4 +74,4 @@ class ListTopicArnsCommand extends Command
 
         $table->render($output);
     }
-} 
+}

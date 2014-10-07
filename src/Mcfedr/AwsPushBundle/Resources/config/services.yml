@@ -8,13 +8,13 @@ parameters:
 
 services:
     mcfedr_aws_push.devices:
-        class: mcfedr\AWSPushBundle\Service\Devices
+        class: Mcfedr\AwsPushBundle\Service\Devices
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
 
     mcfedr_aws_push.messages:
-        class: mcfedr\AWSPushBundle\Service\Messages
+        class: Mcfedr\AwsPushBundle\Service\Messages
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -22,7 +22,7 @@ services:
           - "%mcfedr_aws_push.debug%"
 
     mcfedr_aws_push.api:
-        class: mcfedr\AWSPushBundle\Controller\APIController
+        class: Mcfedr\AwsPushBundle\Controller\APIController
         arguments:
           - "@mcfedr_aws_push.devices"
           - "@mcfedr_aws_push.messages"
@@ -32,7 +32,7 @@ services:
           - "@security.context"
 
     mcfedr_aws_push.command.subscribe:
-        class: mcfedr\AWSPushBundle\Command\SubscribeTopicsCommand
+        class: Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand
         arguments:
           - "@mcfedr_aws_push.topics"
           - "%mcfedr_aws_push.topic_name%"
@@ -43,7 +43,7 @@ services:
           -  { name: console.command }
 
     mcfedr_aws_push.command.enable:
-        class: mcfedr\AWSPushBundle\Command\EnableAllCommand
+        class: Mcfedr\AwsPushBundle\Command\EnableAllCommand
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -52,7 +52,7 @@ services:
           -  { name: console.command }
 
     mcfedr_aws_push.command.remove:
-        class: mcfedr\AWSPushBundle\Command\RemoveDisabledCommand
+        class: Mcfedr\AwsPushBundle\Command\RemoveDisabledCommand
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -61,7 +61,7 @@ services:
           -  { name: console.command }
 
     mcfedr_aws_push.command.subscribe:
-          class: mcfedr\AWSPushBundle\Command\ListTopicArnsCommand
+          class: Mcfedr\AwsPushBundle\Command\ListTopicArnsCommand
           arguments:
             - "@mcfedr_aws_push.topics"
             - "%mcfedr_aws_push.topic_name%"

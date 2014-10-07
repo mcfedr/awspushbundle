@@ -1,12 +1,12 @@
 <?php
-namespace mcfedr\AWSPushBundle\Service;
+namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\Exception\SubscriptionLimitExceededException;
 use Aws\Sns\Exception\TopicLimitExceededException;
 use Aws\Sns\SnsClient;
 use Doctrine\Common\Cache\Cache;
-use mcfedr\AWSPushBundle\Message\Message;
-use mcfedr\AWSPushBundle\Topic\Topic;
+use Mcfedr\AwsPushBundle\Message\Message;
+use Mcfedr\AwsPushBundle\Topic\Topic;
 use Psr\Log\LoggerInterface;
 
 class Topics

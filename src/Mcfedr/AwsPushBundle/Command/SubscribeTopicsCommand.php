@@ -1,10 +1,10 @@
 <?php
-namespace mcfedr\AWSPushBundle\Command;
+namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\Exception\SubscriptionLimitExceededException;
 use Aws\Sns\Exception\TopicLimitExceededException;
 use Aws\Sns\SnsClient;
-use mcfedr\AWSPushBundle\Service\Topics;
+use Mcfedr\AwsPushBundle\Service\Topics;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

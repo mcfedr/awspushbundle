@@ -1,8 +1,8 @@
 <?php
 
-namespace mcfedr\AWSPushBundle\Message;
+namespace Mcfedr\AwsPushBundle\Message;
 
-use mcfedr\AWSPushBundle\Exception\MessageTooLongException;
+use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 
 class Message implements \JsonSerializable
 {
