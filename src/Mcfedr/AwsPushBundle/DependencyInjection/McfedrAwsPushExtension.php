@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class mcfedrAWSPushExtension extends Extension
+class McfedrAwsPushExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -33,35 +33,8 @@ class mcfedrAWSPushExtension extends Extension
         $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
         $container->setParameter('mcfedr_aws_push.debug', $config['debug']);
 
-        if (isset($config['topic_name'])) {
-            $container->setParameter('mcfedr_aws_push.topic_name', $config['topic_name']);
+        if (isset($config['topic_arn'])) {
+            $container->setParameter('mcfedr_aws_push.topic_arn', $config['topic_arn']);
         }
-
-        if (isset($config['cache'])) {
-            $cacheName = $config['cache'];
-        } else {
-            $cacheName = 'mcfedr_aws_push.cache';
-            $container->setDefinition(
-                $cacheName,
-                new Definition(
-                    'Doctrine\Common\Cache\FilesystemCache', [
-                        "%kernel.cache_dir%/mcfedr_aws_push"
-                    ]
-                )
-            );
-        }
-
-        $container->setDefinition(
-            'mcfedr_aws_push.topics',
-            new Definition(
-                'Mcfedr\AwsPushBundle\Service\Topics', [
-                    new Reference('mcfedr_aws_push.sns_client'),
-                    new Reference('logger'),
-                    new Reference('mcfedr_aws_push.messages'),
-                    new Reference($cacheName),
-                    $container->getParameter('mcfedr_aws_push.debug')
-                ]
-            )
-        );
     }
 }

@@ -46,7 +46,7 @@ class APIController extends Controller
     /**
      * @var string
      */
-    private $topicName;
+    private $topicArn;
 
     /**
      * @var LoggerInterface
@@ -62,7 +62,7 @@ class APIController extends Controller
      * @param Devices $devices
      * @param Messages $messages
      * @param Topics $topics
-     * @param string $topicName
+     * @param string $topicArn
      * @param LoggerInterface $logger
      * @param SecurityContextInterface $securityContext
      */
@@ -70,14 +70,14 @@ class APIController extends Controller
         Devices $devices,
         Messages $messages,
         Topics $topics,
-        $topicName,
+        $topicArn,
         LoggerInterface $logger,
         SecurityContextInterface $securityContext
     ) {
         $this->devices = $devices;
         $this->messages = $messages;
         $this->topics = $topics;
-        $this->topicName = $topicName;
+        $this->topicArn = $topicArn;
         $this->logger = $logger;
         $this->securityContext = $securityContext;
     }
@@ -114,15 +114,15 @@ class APIController extends Controller
                     ]
                 );
 
-                if ($this->topicName) {
+                if ($this->topicArn) {
                     try {
-                        $this->topics->registerDeviceOnTopic($arn, $this->topicName);
+                        $this->topics->registerDeviceOnTopic($arn, $this->topicArn);
                     } catch (TopicLimitExceededException $e) {
                         $this->logger->error(
                             'Failed to create topic for device',
                             [
                                 'deviceArn' => $arn,
-                                'topicName' => $this->topicName,
+                                'topicArn' => $this->topicArn,
                                 'exception' => $e
                             ]
                         );
@@ -178,8 +178,8 @@ class APIController extends Controller
             $message = new Message($data['message']);
             $platform = isset($data['platform']) ? $data['platform'] : null;
 
-            if ($this->topicName && !$platform) {
-                $this->topics->broadcast($message, $this->topicName);
+            if ($this->topicArn && !$platform) {
+                $this->topics->broadcast($message, $this->topicArn);
             } else {
                 $this->messages->broadcast($message, $platform);
             }

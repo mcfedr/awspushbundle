@@ -29,16 +29,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->variableNode("platforms")->end()
                 ->booleanNode("debug")->defaultFalse()->end()
-                ->scalarNode("topic_name")
-                    ->cannotBeEmpty()
-                    ->validate()
-                        ->ifTrue(function($value) {
-                            return !preg_match('/^[a-zA-Z0-9_-]{0,256}$/', $value);
-                        })
-                        ->thenInvalid('Not a valid topic name')
-                    ->end()
+                ->scalarNode("topic_arn")->cannotBeEmpty()->end()
                 ->end()
-                ->scalarNode("cache")->end()
             ->end()
         ->end();
 

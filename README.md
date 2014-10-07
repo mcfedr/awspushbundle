@@ -29,7 +29,7 @@ Put something like this in your config. The arns in the platforms section should
         platforms:
             ios: 'arn:aws:sns:....'
             android: 'arn:aws:sns:....'
-        topic_name: 'my_topic'
+        topic_arn: 'arn:aws:sns:...'
         aws:
             key: 'my key'
             secret: 'my secret'
@@ -60,11 +60,11 @@ Alternative usage, using topics to send messages to lots of devices
 
 1. Register the device on the topic
 
-        $this->get('mcfedr_aws_push.topics')->registerDeviceOnTopic($arn, $topicName)
+        $this->get('mcfedr_aws_push.topics')->registerDeviceOnTopic($arn, $topicArn)
 
 1. Send messages
 
-        $this->get('mcfedr_aws_push.topics')->broadcast($message, $topicName)
+        $this->get('mcfedr_aws_push.topics')->broadcast($message, $topicArn)
 
 If you later add a topic_name to the configuration you can run the `mcfedr:aws:subscribe` command to add your existing
 devices to the topic.

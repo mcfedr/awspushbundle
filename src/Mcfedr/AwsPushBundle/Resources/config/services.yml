@@ -4,7 +4,7 @@ parameters:
     mcfedr_aws_push.aws.secret: ''
     mcfedr_aws_push.aws.region: ''
     mcfedr_aws_push.debug: false
-    mcfedr_aws_push.topic_name: ''
+    mcfedr_aws_push.topic_arn: ''
 
 services:
     mcfedr_aws_push.devices:
@@ -21,13 +21,21 @@ services:
           - "@logger"
           - "%mcfedr_aws_push.debug%"
 
+    mcfedr_aws_push.topics:
+        class: Mcfedr\AwsPushBundle\Service\Topics
+        arguments:
+            - "@mcfedr_aws_push.sns_client"
+            - "@logger"
+            - "@mcfedr_aws_push.messages"
+            - "%mcfedr_aws_push.debug%"
+
     mcfedr_aws_push.api:
         class: Mcfedr\AwsPushBundle\Controller\APIController
         arguments:
           - "@mcfedr_aws_push.devices"
           - "@mcfedr_aws_push.messages"
           - "@mcfedr_aws_push.topics"
-          - "%mcfedr_aws_push.topic_name%"
+          - "%mcfedr_aws_push.topic_arn%"
           - "@logger"
           - "@security.context"
 
@@ -35,7 +43,7 @@ services:
         class: Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand
         arguments:
           - "@mcfedr_aws_push.topics"
-          - "%mcfedr_aws_push.topic_name%"
+          - "%mcfedr_aws_push.topic_arn%"
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
           - "@logger"
@@ -64,7 +72,7 @@ services:
           class: Mcfedr\AwsPushBundle\Command\ListTopicArnsCommand
           arguments:
             - "@mcfedr_aws_push.topics"
-            - "%mcfedr_aws_push.topic_name%"
+            - "%mcfedr_aws_push.topic_arn%"
             - "@logger"
           tags:
             -  { name: console.command }

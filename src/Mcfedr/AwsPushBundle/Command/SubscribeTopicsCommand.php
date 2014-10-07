@@ -21,7 +21,7 @@ class SubscribeTopicsCommand extends Command
     /**
      * @var string
      */
-    private $topicName;
+    private $topicArn;
 
     /**
      * @var SnsClient
@@ -40,15 +40,15 @@ class SubscribeTopicsCommand extends Command
 
     /**
      * @param Topics $topics
-     * @param string $topicName
+     * @param string $topicArn
      * @param SnsClient $sns
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(Topics $topics, $topicName, SnsClient $sns, $arns, LoggerInterface $logger)
+    public function __construct(Topics $topics, $topicArn, SnsClient $sns, $arns, LoggerInterface $logger)
     {
         $this->topics = $topics;
-        $this->topicName = $topicName;
+        $this->topicArn = $topicArn;
         $this->sns = $sns;
         $this->arns = $arns;
         $this->logger = $logger;
@@ -67,7 +67,7 @@ class SubscribeTopicsCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'The topic to subscribe devices to',
-                $this->topicName
+                $this->topicArn
             );
     }
 
