@@ -4,24 +4,24 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6590d911a547aade2fb21bf53f0558f7",
+    "hash": "997f1f39bb4f7a29fff20011193c93c3",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "2.6.16",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "36434f2cd96ea78844478d897fb568a1866bce5a"
+                "reference": "0db559ed31748770bff88a55c56d8a84208851a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/36434f2cd96ea78844478d897fb568a1866bce5a",
-                "reference": "36434f2cd96ea78844478d897fb568a1866bce5a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0db559ed31748770bff88a55c56d8a84208851a3",
+                "reference": "0db559ed31748770bff88a55c56d8a84208851a3",
                 "shasum": ""
             },
             "require": {
-                "guzzle/guzzle": ">=3.7.0,<=3.9.9",
+                "guzzle/guzzle": ">=3.7,<4",
                 "php": ">=5.3.3"
             },
             "require-dev": {
@@ -41,7 +41,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6.x-dev"
+                    "dev-master": "2.7.x-dev"
                 }
             },
             "autoload": {
@@ -71,7 +71,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2014-09-11 22:10:11"
+            "time": "2014-10-08 17:59:12"
         },
         {
             "name": "doctrine/annotations",

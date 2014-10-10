@@ -18,6 +18,6 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-0": { "Mcfedr\\AWSPushBundle": "src/" }
+        "psr-0": { "Mcfedr\\AwsPushBundle": "src/" }
     }
 }

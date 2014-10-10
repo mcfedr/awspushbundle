@@ -1,4 +1,4 @@
-# AWS Push Bundle
+# Aws Push Bundle
 
 A convenient bundle for registering devices and then pushing to them using amazons SNS service.
 
