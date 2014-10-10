@@ -30,7 +30,6 @@ class Configuration implements ConfigurationInterface
                 ->variableNode("platforms")->end()
                 ->booleanNode("debug")->defaultFalse()->end()
                 ->scalarNode("topic_arn")->cannotBeEmpty()->end()
-                ->end()
             ->end()
         ->end();
 
