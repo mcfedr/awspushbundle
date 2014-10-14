@@ -89,7 +89,7 @@ class Messages
         $this->sns->publish(
             [
                 'TargetArn' => $endpointArn,
-                'Message' => $message instanceof $message ? json_encode($message, JSON_UNESCAPED_UNICODE) : $message,
+                'Message' => $message instanceof Message ? json_encode($message, JSON_UNESCAPED_UNICODE) : $message,
                 'MessageStructure' => 'json'
             ]
         );
