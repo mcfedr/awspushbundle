@@ -8,18 +8,12 @@ use Mcfedr\AwsPushBundle\Form\BroadcastType;
 use Mcfedr\AwsPushBundle\Form\DeviceType;
 use Mcfedr\AwsPushBundle\Form\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Form\Model\Device;
-use Mcfedr\AwsPushBundle\Service\Devices;
-use Mcfedr\AwsPushBundle\Service\Messages;
-use Mcfedr\AwsPushBundle\Service\Topics;
 use Mcfedr\JsonForm\Controller\JsonController;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * This should server as an example of how to use the services
