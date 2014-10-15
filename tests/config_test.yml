@@ -1,0 +1,38 @@
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    router:
+        resource: "%kernel.root_dir%/routing.yml"
+        strict_requirements: ~
+    validation:      { enable_annotations: true }
+    secret: 'fake_secret'
+    form: ~
+
+mcfedr_aws_push:
+    platforms:
+        test: 'platform'
+    aws:
+        key: 'key'
+        secret: 'secret'
+        region: 'region'
+    topic_arn: 'topic'
+
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+    providers:
+        in_memory:
+            memory:
+                users:
+                    admin: { password: password, roles: 'ROLE_MCFEDR_AWS_BROADCAST' }
+    firewalls:
+        default:
+            pattern: ^/
+            anonymous: ~
+            http_basic: ~
+
+monolog:
+    handlers:
+        main:
+            type: console

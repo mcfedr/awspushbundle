@@ -36,7 +36,7 @@ class Messages
      * @param LoggerInterface $logger
      * @param bool $debug
      */
-    public function __construct(SnsClient $client, $platformARNS, LoggerInterface $logger, $debug)
+    public function __construct(SnsClient $client, $platformARNS, $debug, LoggerInterface $logger = null)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;
@@ -77,7 +77,7 @@ class Messages
     public function send($message, $endpointArn)
     {
         if ($this->debug) {
-            $this->logger->notice(
+            $this->logger && $this->logger->notice(
                 "Message would have been sent to $endpointArn",
                 [
                     'Message' => $message
@@ -104,7 +104,7 @@ class Messages
     private function broadcastToPlatform($message, $platform)
     {
         if ($this->debug) {
-            $this->logger->notice(
+            $this->logger && $this->logger->notice(
                 "Message would have been sent to $platform",
                 [
                     'Message' => $message
@@ -122,7 +122,7 @@ class Messages
                 try {
                     $this->send($message, $endpoint['EndpointArn']);
                 } catch (\Exception $e) {
-                    $this->logger->error(
+                    $this->logger && $this->logger->error(
                         "Failed to push to {$endpoint['EndpointArn']}",
                         [
                             'Message' => $message,
@@ -132,7 +132,7 @@ class Messages
                     );
                 }
             } else {
-                $this->logger->info(
+                $this->logger && $this->logger->info(
                     "Disabled endpoint {$endpoint['EndpointArn']}",
                     [
                         'Message' => $message,

@@ -29,7 +29,7 @@ class RemoveDisabledCommand extends Command
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger)
+    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger = null)
     {
         parent::__construct();
 
@@ -49,7 +49,7 @@ class RemoveDisabledCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach ($this->arns as $platform => $arn) {
-            $this->logger->info("Removing from $platform");
+            $this->logger && $this->logger->info("Removing from $platform");
             $this->removeFromPlatform($platform);
         }
     }
@@ -73,9 +73,9 @@ class RemoveDisabledCommand extends Command
                             'EndpointArn' => $endpoint['EndpointArn']
                         ]
                     );
-                    $this->logger->info("Removed {$endpoint['EndpointArn']}");
+                    $this->logger && $this->logger->info("Removed {$endpoint['EndpointArn']}");
                 } catch (\Exception $e) {
-                    $this->logger->error(
+                    $this->logger && $this->logger->error(
                         "Failed to remove endpoint {$endpoint['EndpointArn']}",
                         [
                             'exception' => $e,

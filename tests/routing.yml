@@ -1,0 +1,4 @@
+mcfedr_aws_push:
+    resource: "@McfedrAwsPushBundle/Controller/"
+    type:     annotation
+    prefix:   /

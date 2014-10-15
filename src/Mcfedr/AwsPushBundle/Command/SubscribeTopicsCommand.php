@@ -45,7 +45,7 @@ class SubscribeTopicsCommand extends Command
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(Topics $topics, $topicArn, SnsClient $sns, $arns, LoggerInterface $logger)
+    public function __construct(Topics $topics, $topicArn, SnsClient $sns, $arns, LoggerInterface $logger = null)
     {
         $this->topics = $topics;
         $this->topicArn = $topicArn;
@@ -78,14 +78,14 @@ class SubscribeTopicsCommand extends Command
                 $this->subscribePlatform($platform, $input->getOption('topic'));
             }
         } catch (SubscriptionLimitExceededException $e) {
-            $this->logger->error(
+            $this->logger && $this->logger->error(
                 'Failed to subscription to topic',
                 [
                     'exception' => $e
                 ]
             );
         } catch (TopicLimitExceededException $e) {
-            $this->logger->error(
+            $this->logger && $this->logger->error(
                 'Failed to create topic',
                 [
                     'exception' => $e
@@ -101,7 +101,7 @@ class SubscribeTopicsCommand extends Command
                 'PlatformApplicationArn' => $this->arns[$platform]
             ]
         ) as $endpoint) {
-            $this->logger->info(
+            $this->logger && $this->logger->info(
                 'Subscribing device to topic',
                 [
                     'device' => $endpoint['EndpointArn'],

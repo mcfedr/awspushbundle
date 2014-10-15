@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Aws Push Bundle Test Suite">
+            <directory>tests/Mcfedr/AwsPushBundle/Tests/</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html" target="build/coverage"/>
+        <log type="coverage-xml" target="build/coverage/xml" />
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-crap4j" target="build/logs/crap4j.xml"/>
+        <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
+
+    <php>
+        <server name="KERNEL_DIR" value="tests/" />
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/Mcfedr/AwsPushBundle/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

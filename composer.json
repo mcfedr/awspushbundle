@@ -1,13 +1,15 @@
 {
     "name": "mcfedr/awspushbundle",
     "type": "symfony-bundle",
-    "description": "A set of services to simplify using AWS to send push notifications",
+    "description": "A set of services to simplify using Aws to send push notifications",
     "keywords": ["push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns"],
     "require": {
         "php": ">=5.4.0",
         "aws/aws-sdk-php": "~2.4",
         "symfony/symfony": "~2.3",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "mcfedr/json-form": "~2.0",
+        "sensio/framework-extra-bundle": "~3.0"
     },
     "license": "MIT",
     "authors": [
@@ -17,7 +19,20 @@
         }
     ],
     "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "~4.3",
+        "theseer/phpdox": "~0.7",
+        "phploc/phploc": "~2.0",
+        "pdepend/pdepend": "~2.0",
+        "phpmd/phpmd": "~2.1",
+        "squizlabs/php_codesniffer": "~1.5",
+        "sebastian/phpcpd": "~2.0",
+        "symfony/monolog-bundle": "~2.6"
+    },
     "autoload": {
-        "psr-0": { "Mcfedr\\AwsPushBundle": "src/" }
+        "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
     }
 }

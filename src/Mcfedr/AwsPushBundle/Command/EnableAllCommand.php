@@ -29,7 +29,7 @@ class EnableAllCommand extends Command
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger)
+    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger = null)
     {
         parent::__construct();
 
@@ -49,7 +49,7 @@ class EnableAllCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach ($this->arns as $platform => $arn) {
-            $this->logger->info("Enabling $platform");
+            $this->logger && $this->logger->info("Enabling $platform");
             $this->enablePlatform($platform);
         }
     }
@@ -76,9 +76,9 @@ class EnableAllCommand extends Command
                             ]
                         ]
                     );
-                    $this->logger->info("Enabled {$endpoint['EndpointArn']}");
+                    $this->logger && $this->logger->info("Enabled {$endpoint['EndpointArn']}");
                 } catch (\Exception $e) {
-                    $this->logger->error(
+                    $this->logger && $this->logger->error(
                         "Failed to push set attributes on {$endpoint['EndpointArn']}",
                         [
                             'exception' => $e,

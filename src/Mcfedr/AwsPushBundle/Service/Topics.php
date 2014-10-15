@@ -35,7 +35,7 @@ class Topics
      * @param Messages $messages
      * @param $debug
      */
-    public function __construct(SnsClient $client, LoggerInterface $logger, Messages $messages, $debug)
+    public function __construct(SnsClient $client, Messages $messages, $debug, LoggerInterface $logger = null)
     {
         $this->sns = $client;
         $this->logger = $logger;
@@ -71,7 +71,7 @@ class Topics
     public function broadcast(Message $message, $topicArn)
     {
         if ($this->debug) {
-            $this->logger->notice(
+            $this->logger && $this->logger->notice(
                 "Message would have been sent to $topicArn",
                 [
                     'Message' => $message
