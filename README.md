@@ -38,7 +38,7 @@ Put something like this in your config. The arns in the platforms section should
 
 ## Usage
 
-Basically have a look at how the APIController does its stuff
+Basically have a look at how the ApiController does its stuff
 
 1. Register the device token
 
@@ -86,7 +86,7 @@ There are some commands to help manage the devices
 
     This will subscribe all devices to a topic, useful when introducing a topic
 
-## API Controller
+## Api Controller
 
 There is a controller included which makes basic usage of the bundle very easy. You may or may not want to use it,
 you might find it most useful as an example.
