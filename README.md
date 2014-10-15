@@ -4,6 +4,7 @@ A convenient bundle for registering devices and then pushing to them using amazo
 
 [![Latest Stable Version](https://poser.pugx.org/mcfedr/awspushbundle/v/stable.png)](https://packagist.org/packages/mcfedr/awspushbundle)
 [![License](https://poser.pugx.org/mcfedr/awspushbundle/license.png)](https://packagist.org/packages/mcfedr/awspushbundle)
+[![Build Status](https://travis-ci.org/mcfedr/awspushbundle.svg?branch=master)](https://travis-ci.org/mcfedr/awspushbundle)
 
 ## Install
 
@@ -107,13 +108,22 @@ The controller provides two urls, both expect a JSON POST body
 
         POST /devices
         {
-            "deviceId": "a push token",
-            "platform": "the platform name in your config file"
+            "device": {
+                "deviceId": "a push token",
+                "platform": "the platform name in your config file"
+            }
         }
 
-1. The second is a way to send a broadcast message
+1. The second is a way to send a broadcast message. If you are using a topic for all devices then don't send the platform
+parameter.
 
         POST /broadcast
         {
-            "message": "The plain text message to send"
+            "broadcast": {
+                "platform": "ios"
+                "message": {
+                    "text": "The plain text message to send",
+                    "badge": 1
+                }
+            }
         }
