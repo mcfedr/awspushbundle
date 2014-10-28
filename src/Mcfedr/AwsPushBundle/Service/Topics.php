@@ -6,6 +6,10 @@ use Aws\Sns\SnsClient;
 use Mcfedr\AwsPushBundle\Message\Message;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @deprecated Use the SnsClient directly to deal with topics
+ * @see SnsClient
+ */
 class Topics
 {
 
@@ -50,6 +54,8 @@ class Topics
      * @param string $deviceArn
      * @param string $topicArn The base name of the topics to use
      * @throws SubscriptionLimitExceededException
+     * @deprecated use SnsClient directly to subscribe
+     * @see SnsClient::subscribe
      */
     public function registerDeviceOnTopic($deviceArn, $topicArn)
     {
@@ -67,6 +73,8 @@ class Topics
      *
      * @param Message $message
      * @param string $topicArn
+     * @deprecated Use Messages send method and pass the topicArn as the destination
+     * @see Messages::send
      */
     public function broadcast(Message $message, $topicArn)
     {
