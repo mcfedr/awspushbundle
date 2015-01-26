@@ -301,12 +301,9 @@ class Message implements \JsonSerializable
      */
     private function getApnsJson($text)
     {
-        $apns = [
-            'aps' => [
-                'alert' => $text
-            ]
-        ];
-        if ($this->badge) {
+        $apns = $text ? ['aps' => ['alert' => $text]] : ['aps' => []];
+
+        if (!is_null($this->badge)) {
             $apns['aps']['badge'] = $this->badge;
         }
         if ($this->sound) {
