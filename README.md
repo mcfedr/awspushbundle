@@ -130,4 +130,4 @@ parameter.
 
 ## API documentation
 
-You can see the full [API documentation](http://mcfedr.github.io/awspushbundle/) on github pages.
+You can see the full [API documentation](https://mcfedr.github.io/awspushbundle/) on github pages.
