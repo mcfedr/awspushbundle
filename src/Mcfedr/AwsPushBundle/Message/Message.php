@@ -27,6 +27,14 @@ class Message implements \JsonSerializable
 
     /**
      * APNS only
+     * Provide this key with a value of 1 to indicate that new content is available. Including this key and value means that when your app is launched in the background or resumed
+     *
+     * @var bool
+     */
+    private $contentAvailable;
+
+    /**
+     * APNS only
      *
      * @var string
      */
@@ -103,6 +111,22 @@ class Message implements \JsonSerializable
     public function getBadge()
     {
         return $this->badge;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isContentAvailable()
+    {
+        return $this->contentAvailable;
+    }
+
+    /**
+     * @param boolean $contentAvailable
+     */
+    public function setContentAvailable($contentAvailable)
+    {
+        $this->contentAvailable = $contentAvailable;
     }
 
     /**
@@ -307,6 +331,10 @@ class Message implements \JsonSerializable
 
         if (!is_null($text)) {
             $apns['aps']['alert'] = $text;
+        }
+
+        if ($this->isContentAvailable()) {
+            $apns['aps']['content-available'] = 1;
         }
 
         if (!is_null($this->badge)) {
