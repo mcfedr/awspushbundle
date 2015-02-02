@@ -127,3 +127,7 @@ parameter.
                 }
             }
         }
+
+## API documentation
+
+You can see the full [API documentation](http://mcfedr.github.io/awspushbundle/) on github pages.
