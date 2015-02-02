@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Mcfedr\AwsPushBundle\Message\Message</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.html">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.html">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.html">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html#Mcfedr_AwsPushBundle_Message">Mcfedr\AwsPushBundle\Message</a>
+          </li>
+          <li class="separator">Message</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/Mcfedr/AwsPushBundle/Message/Message.php.xhtml#line7">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Mcfedr\AwsPushBundle\Message\</small>Message</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Message
+                implements
+                <a title="JsonSerializable" href="../interfaces/JsonSerializable.html">JsonSerializable</a>
+            {<br/><ul class="none"><li>// constants</li><li>const GCM_NO_COLLAPSE = 'do_not_collapse';</li><li>const APNS_MAX_LENGTH = 2048;</li><li>const GCM_MAX_LENGTH = 4096;</li></ul><ul class="none"><li>// members</li><li>private string <a href="#members">$text</a>;
+                    </li><li>private int <a href="#members">$badge</a>;
+                    </li><li>private <span title="Mcfedr\AwsPushBundle\Message\bool">bool</span> <a href="#members">$contentAvailable</a>;
+                    </li><li>private string <a href="#members">$sound</a>;
+                    </li><li>private array <a href="#members">$custom</a>;
+                    </li><li>private array <a href="#members">$gcmData</a>;
+                    </li><li>private array <a href="#members">$admData</a>;
+                    </li><li>private array <a href="#members">$apnsData</a>;
+                    </li><li>private string <a href="#members">$collapseKey</a>;
+                    </li><li>private int <a href="#members">$ttl</a>;
+                    </li><li>private boolean <a href="#members">$delayWhileIdle</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/__construct.html">__construct</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setBadge.html">setBadge</a>()
+                    </li><li>public int <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getBadge.html">getBadge</a>()
+                    </li><li>public boolean <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/isContentAvailable.html">isContentAvailable</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setContentAvailable.html">setContentAvailable</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setCustom.html">setCustom</a>()
+                    </li><li>public array <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getCustom.html">getCustom</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setSound.html">setSound</a>()
+                    </li><li>public string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getSound.html">getSound</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setText.html">setText</a>()
+                    </li><li>public string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getText.html">getText</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setCollapseKey.html">setCollapseKey</a>()
+                    </li><li>public string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getCollapseKey.html">getCollapseKey</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setDelayWhileIdle.html">setDelayWhileIdle</a>()
+                    </li><li>public boolean <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getDelayWhileIdle.html">getDelayWhileIdle</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setTtl.html">setTtl</a>()
+                    </li><li>public int <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getTtl.html">getTtl</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setGcmData.html">setGcmData</a>()
+                    </li><li>public array <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getGcmData.html">getGcmData</a>()
+                    </li><li>public Message <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setAdmData.html">setAdmData</a>()
+                    </li><li>public array <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getAdmData.html">getAdmData</a>()
+                    </li><li>public Message <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setApnsData.html">setApnsData</a>()
+                    </li><li>public array <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getApnsData.html">getApnsData</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/jsonSerialize.html">jsonSerialize</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/__toString.html">__toString</a>()
+                    </li><li>private string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getApnsJson.html">getApnsJson</a>()
+                    </li><li>private string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getAdmJson.html">getAdmJson</a>()
+                    </li><li>private string <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getGcmJson.html">getGcmJson</a>()
+                    </li><li>private array <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/arrayMergeDeep.html">arrayMergeDeep</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a href="../interfaces/JsonSerializable.html">JsonSerializable</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="GCM_NO_COLLAPSE">GCM_NO_COLLAPSE</td>
+              <td>'do_not_collapse'</td>
+            </tr>
+            <tr>
+              <td id="APNS_MAX_LENGTH">APNS_MAX_LENGTH</td>
+              <td>2048</td>
+            </tr>
+            <tr>
+              <td id="GCM_MAX_LENGTH">GCM_MAX_LENGTH</td>
+              <td>4096</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="admData"><strong>$admData</strong>
+                —
+                array<br/><span class="indent">If set, will be sent to ADM, otherwise ['message' =&gt; $text] will be sent as part of the data</span></li>
+            <li id="apnsData"><strong>$apnsData</strong>
+                —
+                array<br/><span class="indent">If set, will be sent to APNS</span></li>
+            <li id="badge"><strong>$badge</strong>
+                —
+                int<br/><span class="indent">APNS only</span></li>
+            <li id="collapseKey"><strong>$collapseKey</strong>
+                —
+                string<br/><span class="indent">GCM and ADM only</span></li>
+            <li id="contentAvailable"><strong>$contentAvailable</strong>
+                —
+                <a href="#">Mcfedr\AwsPushBundle\Message\bool</a><br/><span class="indent">APNS only Provide this key with a value of 1 to indicate that new content is available. Including this key and value means that when your app is launched in the background or resumed</span></li>
+            <li id="custom"><strong>$custom</strong>
+                —
+                array<br/><span class="indent">This is the data to send to all services, it will be deep merged with the other data</span></li>
+            <li id="delayWhileIdle"><strong>$delayWhileIdle</strong>
+                —
+                boolean<br/><span class="indent">GCM only</span></li>
+            <li id="gcmData"><strong>$gcmData</strong>
+                —
+                array<br/><span class="indent">If set, will be sent to GCM, otherwise ['message' =&gt; $text] will be sent as part of the data</span></li>
+            <li id="sound"><strong>$sound</strong>
+                —
+                string<br/><span class="indent">APNS only</span></li>
+            <li id="text"><strong>$text</strong>
+                —
+                string<br/><span class="indent">The text is automatically trimmed when sending to APNS The text will only be sent to GCM and ADM if no platform specific data is set</span></li>
+            <li id="ttl"><strong>$ttl</strong>
+                —
+                int<br/><span class="indent">GCM only</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="arrayMergeDeep"><a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/arrayMergeDeep.html">arrayMergeDeep()</a>
+                — Merge arrays, deeply</li>
+            <li id="getAdmJson"><a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getAdmJson.html">getAdmJson()</a>
+                — Get the json to send via Amazon Device Messaging</li>
+            <li id="getApnsJson"><a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getApnsJson.html">getApnsJson()</a>
+                — Get the correct apple push notification server json</li>
+            <li id="getGcmJson"><a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getGcmJson.html">getGcmJson()</a>
+                — Get the json to send via Google Cloud Messaging</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/__construct.html">__construct()</a>
+            </li>
+            <li id="__toString">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/__toString.html">__toString()</a>
+            </li>
+            <li id="getAdmData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getAdmData.html">getAdmData()</a>
+            </li>
+            <li id="getApnsData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getApnsData.html">getApnsData()</a>
+            </li>
+            <li id="getBadge">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getBadge.html">getBadge()</a>
+            </li>
+            <li id="getCollapseKey">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getCollapseKey.html">getCollapseKey()</a>
+            </li>
+            <li id="getCustom">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getCustom.html">getCustom()</a>
+            </li>
+            <li id="getDelayWhileIdle">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getDelayWhileIdle.html">getDelayWhileIdle()</a>
+            </li>
+            <li id="getGcmData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getGcmData.html">getGcmData()</a>
+            </li>
+            <li id="getSound">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getSound.html">getSound()</a>
+            </li>
+            <li id="getText">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getText.html">getText()</a>
+            </li>
+            <li id="getTtl">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/getTtl.html">getTtl()</a>
+            </li>
+            <li id="isContentAvailable">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/isContentAvailable.html">isContentAvailable()</a>
+            </li>
+            <li id="jsonSerialize">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/jsonSerialize.html">jsonSerialize()</a>
+            </li>
+            <li id="setAdmData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setAdmData.html">setAdmData()</a>
+            </li>
+            <li id="setApnsData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setApnsData.html">setApnsData()</a>
+            </li>
+            <li id="setBadge">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setBadge.html">setBadge()</a>
+            </li>
+            <li id="setCollapseKey">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setCollapseKey.html">setCollapseKey()</a>
+            </li>
+            <li id="setContentAvailable">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setContentAvailable.html">setContentAvailable()</a>
+            </li>
+            <li id="setCustom">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setCustom.html">setCustom()</a>
+            </li>
+            <li id="setDelayWhileIdle">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setDelayWhileIdle.html">setDelayWhileIdle()</a>
+            </li>
+            <li id="setGcmData">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setGcmData.html">setGcmData()</a>
+            </li>
+            <li id="setSound">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setSound.html">setSound()</a>
+            </li>
+            <li id="setText">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setText.html">setText()</a>
+            </li>
+            <li id="setTtl">
+              <a title="Mcfedr\AwsPushBundle\Message\Message" href="../classes/Mcfedr_AwsPushBundle_Message_Message/setTtl.html">setTtl()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2015-02-02T11:28:00+02:00 (commit #<span title="5474a4cf3113ec42346f04c40f8305030e54df74">5474a4c</span>)</h3>
+            <div>
+              <p>
+                        Author: Yuriy Tarnavskiy (yuriy.tarnavskiy@ekreative.com) /
+                        Commiter: Yuriy Tarnavskiy (yuriy.tarnavskiy@ekreative.com)
+                    </p>
+              <pre class="wrapped">added 'content-available' key into APNS JSON structure</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2015-01-26T15:38:45+02:00 (commit #<span title="81ee83035bc9df72fe9118d7ee8be7b02cde5401">81ee830</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Dont set APS values when they are null</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-10-07T22:30:45+03:00 (commit #<span title="07916d6914a7eab6b4ac621b3c29c4e289d97671">07916d6</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Change the namespace name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-10-07T22:03:30+03:00 (commit #<span title="49c2c63c96013149e6875805abc853074006b446">49c2c63</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Update the max size of APNS. Also check max size of GCM</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-05-08T13:14:51+03:00 (commit #<span title="991eb166a25f852ac91d2b42c8475aab424c8b27">991eb16</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Codestyle changes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-04-05T22:20:35+03:00 (commit #<span title="d960d042d87b8ee6d4edb0bd5e4550f2a7d9257d">d960d04</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">use elispses when cutting pushes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-04-05T15:20:54+03:00 (commit #<span title="cb4f1a45411a3bcf2ab47f7df273dd7001d1cc10">cb4f1a4</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Add option for APNS specific data</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-03-16T22:17:07+02:00 (commit #<span title="a916b26dddce5c339ed910b19188320aca158b9b">a916b26</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Change the GCM and ADM format a bit</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-25T17:05:51+02:00 (commit #<span title="d98d4e3689cbdcc15cf1b6b5da04fab8969b8935">d98d4e3</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Use custom array_merge_deep do that its possbile to replace values within the aps array</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-18T23:00:14+02:00 (commit #<span title="7b74c153e422162add6ccd3d04d4222bb5e6cabd">7b74c15</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Add a comment about strlen</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-01-31T14:32:44+02:00 (commit #<span title="9720e131121ad21ac24f1d4bb31f603d87518075">9720e13</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Add some documentation and reformat to PSR1/2 standards</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T22:25:19+02:00 (commit #<span title="37d899cfd4846246d258c7317d21c75404b5162e">37d899c</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Handle longer messages on APNS</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T15:20:53+02:00 (commit #<span title="9f29ed01ab9be475cb06990513de6ef264bd0118">9f29ed0</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">add tostring method for message</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T13:36:46+02:00 (commit #<span title="4c9d46d693574a904197f6c6e41e399f4caacb87">4c9d46d</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Rename the namespace to mcfedr</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-11T13:28:08+02:00 (commit #<span title="92798265a05015f92270714f74c393c3c54a8e50">9279826</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">The aws push bundle</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 4dc29c6-dirty - Copyright (C) 2010 - 2015 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

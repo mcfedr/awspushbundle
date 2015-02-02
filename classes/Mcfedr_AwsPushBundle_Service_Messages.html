@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Mcfedr\AwsPushBundle\Service\Messages</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.html">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.html">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.html">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html#Mcfedr_AwsPushBundle_Service">Mcfedr\AwsPushBundle\Service</a>
+          </li>
+          <li class="separator">Messages</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/Mcfedr/AwsPushBundle/Service/Messages.php.xhtml#line10">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Mcfedr\AwsPushBundle\Service\</small>Messages</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Messages
+            {<br/><ul class="none"><li>// members</li><li>private <span title="Aws\Sns\SnsClient">SnsClient</span> <a href="#members">$sns</a>;
+                    </li><li>private array <a href="#members">$arns</a>;
+                    </li><li>private <span title="Psr\Log\LoggerInterface">LoggerInterface</span> <a href="#members">$logger</a>;
+                    </li><li>private <span title="Mcfedr\AwsPushBundle\Service\bool">bool</span> <a href="#members">$debug</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/__construct.html">__construct</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/broadcast.html">broadcast</a>()
+                    </li><li>public void <a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/send.html">send</a>()
+                    </li><li>private void <a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/broadcastToPlatform.html">broadcastToPlatform</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="arns"><strong>$arns</strong>
+                —
+                array</li>
+            <li id="debug"><strong>$debug</strong>
+                —
+                <a href="#">Mcfedr\AwsPushBundle\Service\bool</a></li>
+            <li id="logger"><strong>$logger</strong>
+                —
+                <a href="#">Psr\Log\LoggerInterface</a></li>
+            <li id="sns"><strong>$sns</strong>
+                —
+                <a href="#">Aws\Sns\SnsClient</a></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="broadcastToPlatform"><a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/broadcastToPlatform.html">broadcastToPlatform()</a>
+                — Send a message to all devices on a platform</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/__construct.html">__construct()</a>
+            </li>
+            <li id="broadcast"><a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/broadcast.html">broadcast()</a>
+                — Send a message to all devices on one or all platforms</li>
+            <li id="send"><a title="Mcfedr\AwsPushBundle\Service\Messages" href="../classes/Mcfedr_AwsPushBundle_Service_Messages/send.html">send()</a>
+                — Send a message to an endpoint</li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2014-10-15T15:41:15+03:00 (commit #<span title="7d82f1cf927d015e0f2fd7758ceafc0a3d2866e1">7d82f1c</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Add some unit tests for the controllers</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-10-14T12:23:14+03:00 (commit #<span title="1286476e2ea05515dffbc76b4971c5e2fd07ef2e">1286476</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">fix check type of message</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-10-07T22:30:45+03:00 (commit #<span title="07916d6914a7eab6b4ac621b3c29c4e289d97671">07916d6</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Change the namespace name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-05-08T13:14:51+03:00 (commit #<span title="991eb166a25f852ac91d2b42c8475aab424c8b27">991eb16</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Codestyle changes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-14T23:17:44+02:00 (commit #<span title="d1b1b0ec37aca0f8db9c3c369cd2cd5dd55cad3a">d1b1b0e</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Add support for pushing using topics, this should speed up push delivery considerably</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-11T19:59:38+02:00 (commit #<span title="eeee6d906ec1db4fa4b9d92d1237a76ccf57f502">eeee6d9</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Chnage logging level</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-07T13:40:26+02:00 (commit #<span title="4f5b0a7f09d9706ead7578c424ae637091a4e18b">4f5b0a7</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Add debug config to disabled sending of messages</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-02-01T16:04:50+02:00 (commit #<span title="4c225de59ed3182eb727adc32fa0e729c8f9e50d">4c225de</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Missing use</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2014-01-31T14:32:44+02:00 (commit #<span title="9720e131121ad21ac24f1d4bb31f603d87518075">9720e13</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (fred@ekreative.com) /
+                        Commiter: Fred Cox (fred@ekreative.com)
+                    </p>
+              <pre class="wrapped">Add some documentation and reformat to PSR1/2 standards</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-13T12:05:51+02:00 (commit #<span title="225b1006d046d9a8f937c0d00f96a31797e7ea19">225b100</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">check enabled</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T22:25:19+02:00 (commit #<span title="37d899cfd4846246d258c7317d21c75404b5162e">37d899c</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Handle longer messages on APNS</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T14:17:32+02:00 (commit #<span title="51c37d26dd338f2bafc8f0c2343cc105dd47f4dd">51c37d2</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Also log the exception :)</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-12T13:36:46+02:00 (commit #<span title="4c9d46d693574a904197f6c6e41e399f4caacb87">4c9d46d</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">Rename the namespace to mcfedr</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2013-12-11T13:28:08+02:00 (commit #<span title="92798265a05015f92270714f74c393c3c54a8e50">9279826</span>)</h3>
+            <div>
+              <p>
+                        Author: Fred Cox (mcfedr@gmail.com) /
+                        Commiter: Fred Cox (mcfedr@gmail.com)
+                    </p>
+              <pre class="wrapped">The aws push bundle</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 4dc29c6-dirty - Copyright (C) 2010 - 2015 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>
