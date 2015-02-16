@@ -2,7 +2,7 @@
     "name": "mcfedr/awspushbundle",
     "type": "symfony-bundle",
     "description": "A set of services to simplify using Aws to send push notifications",
-    "keywords": ["push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns"],
+    "keywords": ["symfony", "push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns"],
     "require": {
         "php": ">=5.4.0",
         "aws/aws-sdk-php": "~2.4",
