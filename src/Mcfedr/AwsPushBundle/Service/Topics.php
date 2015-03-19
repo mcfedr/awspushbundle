@@ -53,7 +53,6 @@ class Topics
      *
      * @param string $deviceArn
      * @param string $topicArn The base name of the topics to use
-     * @throws SubscriptionLimitExceededException
      * @deprecated use SnsClient directly to subscribe
      * @see SnsClient::subscribe
      */

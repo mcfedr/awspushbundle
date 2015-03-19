@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mcfedr_aws_push')
+        $treeBuilder->root('mcfedr_aws_push')
             ->children()
                 ->arrayNode("aws")
                     ->children()

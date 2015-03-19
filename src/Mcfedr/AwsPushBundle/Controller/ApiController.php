@@ -36,51 +36,34 @@ class ApiController extends JsonController
 
         try {
             if (($arn = $this->get('mcfedr_aws_push.devices')->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
-                $this->has('logger') && $this->get('logger')->info(
-                    'Device registered',
-                    [
-                        'arn' => $arn,
-                        'device' => $device->getDeviceId(),
-                        'platform' => $device->getPlatform()
-                    ]
-                );
+                $this->has('logger') && $this->get('logger')->info('Device registered',  [
+                    'arn' => $arn,
+                    'device' => $device->getDeviceId(),
+                    'platform' => $device->getPlatform()
+                ]);
 
                 if ($this->container->getParameter('mcfedr_aws_push.topic_arn')) {
-                    try {
-                        $this->get('mcfedr_aws_push.topics')->registerDeviceOnTopic($arn, $this->container->getParameter('mcfedr_aws_push.topic_arn'));
-                    } catch (TopicLimitExceededException $e) {
-                        $this->has('logger') && $this->get('logger')->error(
-                            'Failed to create topic for device',
-                            [
-                                'deviceArn' => $arn,
-                                'topicArn' => $this->container->getParameter('mcfedr_aws_push.topic_arn'),
-                                'exception' => $e
-                            ]
-                        );
-                        return new Response('Failed to create topic for device', 500);
-                    }
+                    $this->get('mcfedr_aws_push.sns_client')->subscribe([
+                        'TopicArn' => $this->container->getParameter('mcfedr_aws_push.topic_arn'),
+                        'Protocol' => 'application',
+                        'Endpoint' => $arn
+                    ]);
                 }
 
                 return new Response('Device registered', 200);
             }
         } catch (PlatformNotConfiguredException $e) {
-            $this->has('logger') && $this->get('logger')->error(
-                'Unknown platform',
-                [
-                    'e' => $e,
-                    'platform' => $device->getPlatform()
-                ]
-            );
+            $this->has('logger') && $this->get('logger')->error('Unknown platform', [
+                'e' => $e,
+                'platform' => $device->getPlatform()
+            ]);
             return new Response('Unknown platform', 400);
         } catch (\Exception $e) {
-            $this->has('logger') && $this->get('logger')->error(
-                'Exception registering device',
-                [
-                    'e' => $e,
-                    'device' => $device->getDeviceId(),
-                    'platform' => $device->getPlatform()
-                ]
-            );
+            $this->has('logger') && $this->get('logger')->error('Exception registering device', [
+               'e' => $e,
+                'device' => $device->getDeviceId(),
+                'platform' => $device->getPlatform()
+            ]);
         }
 
         return new Response('Unknown error', 500);
@@ -99,13 +82,16 @@ class ApiController extends JsonController
 
         try {
             if ($this->container->getParameter('mcfedr_aws_push.topic_arn') && !$broadcast->getPlatform()) {
-                $this->get('mcfedr_aws_push.topics')->broadcast($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
+                $this->get('mcfedr_aws_push.messages')->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
             } else {
                 $this->get('mcfedr_aws_push.messages')->broadcast($broadcast->getMessage(), $broadcast->getPlatform());
             }
 
             return new Response('Message sent', 200);
         } catch (PlatformNotConfiguredException $e) {
+            $this->has('logger') && $this->get('logger')->error('Unknown platform', [
+                'e' => $e
+            ]);
             return new Response('Unknown platform', 400);
         }
     }
