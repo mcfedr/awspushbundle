@@ -5,6 +5,7 @@ A convenient bundle for registering devices and then pushing to them using amazo
 [![Latest Stable Version](https://poser.pugx.org/mcfedr/awspushbundle/v/stable.png)](https://packagist.org/packages/mcfedr/awspushbundle)
 [![License](https://poser.pugx.org/mcfedr/awspushbundle/license.png)](https://packagist.org/packages/mcfedr/awspushbundle)
 [![Build Status](https://travis-ci.org/mcfedr/awspushbundle.svg?branch=master)](https://travis-ci.org/mcfedr/awspushbundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ab82b189-3854-43e5-9762-45bb620bcd0e/mini.png)](https://insight.sensiolabs.com/projects/ab82b189-3854-43e5-9762-45bb620bcd0e)
 
 ## Install
 
