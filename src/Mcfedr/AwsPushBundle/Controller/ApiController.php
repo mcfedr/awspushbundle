@@ -2,7 +2,6 @@
 
 namespace Mcfedr\AwsPushBundle\Controller;
 
-use Aws\Sns\Exception\TopicLimitExceededException;
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 use Mcfedr\AwsPushBundle\Form\BroadcastType;
 use Mcfedr\AwsPushBundle\Form\DeviceType;

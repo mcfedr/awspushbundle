@@ -1,7 +1,6 @@
 <?php
 namespace Mcfedr\AwsPushBundle\Service;
 
-use Aws\Sns\Exception\SubscriptionLimitExceededException;
 use Aws\Sns\SnsClient;
 use Mcfedr\AwsPushBundle\Message\Message;
 use Psr\Log\LoggerInterface;
