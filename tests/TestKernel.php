@@ -10,7 +10,8 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
-            new Mcfedr\AwsPushBundle\McfedrAwsPushBundle()
+            new Mcfedr\AwsPushBundle\McfedrAwsPushBundle(),
+            new Mcfedr\JsonFormBundle\McfedrJsonFormBundle()
         ];
     }
 

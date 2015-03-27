@@ -7,7 +7,7 @@ use Mcfedr\AwsPushBundle\Form\BroadcastType;
 use Mcfedr\AwsPushBundle\Form\DeviceType;
 use Mcfedr\AwsPushBundle\Form\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Form\Model\Device;
-use Mcfedr\JsonForm\Controller\JsonController;
+use Mcfedr\JsonFormBundle\Controller\JsonController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
