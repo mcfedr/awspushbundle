@@ -6,17 +6,30 @@ use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 
 class Message implements \JsonSerializable
 {
+    /**
+     * @deprecated use NO_COLLAPSE
+     * @see NO_COLLAPSE
+     */
     const GCM_NO_COLLAPSE = 'do_not_collapse';
+
+    const NO_COLLAPSE = 'do_not_collapse';
+
     const APNS_MAX_LENGTH = 2048;
+
     const GCM_MAX_LENGTH = 4096;
 
     /**
-     * The text is automatically trimmed when sending to APNS
-     * The text will only be sent to GCM and ADM if no platform specific data is set
+     * The text is automatically trimmed when sending to APNS and GCM
+     * The text will only be sent to GCM and ADM as 'message' in the data field
      *
      * @var string
      */
     private $text;
+
+    /**
+     * @var bool
+     */
+    private $allowTrimming = true;
 
     /**
      * APNS only
@@ -27,7 +40,7 @@ class Message implements \JsonSerializable
 
     /**
      * APNS only
-     * Provide this key with a value of 1 to indicate that new content is available. Including this key and value means that when your app is launched in the background or resumed
+     * Including this key means that when your app is launched in the background or resumed
      *
      * @var bool
      */
@@ -48,21 +61,21 @@ class Message implements \JsonSerializable
     private $custom = [];
 
     /**
-     * If set, will be sent to GCM, otherwise ['message' => $text] will be sent as part of the data
+     * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field
      *
      * @var array
      */
     private $gcmData;
 
     /**
-     * If set, will be sent to ADM, otherwise ['message' => $text] will be sent as part of the data
+     * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field
      *
      * @var array
      */
     private $admData;
 
     /**
-     * If set, will be sent to APNS
+     * If set, will be sent to APNS, deep merged as the top level
      *
      * @var array
      */
@@ -73,7 +86,7 @@ class Message implements \JsonSerializable
      *
      * @var string
      */
-    private $collapseKey = self::GCM_NO_COLLAPSE;
+    private $collapseKey = self::NO_COLLAPSE;
 
     /**
      * GCM only
@@ -178,11 +191,27 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * @return boolean
+     */
+    public function getAllowTrimming()
+    {
+        return $this->allowTrimming;
+    }
+
+    /**
+     * @param boolean $allowTrimming
+     */
+    public function setAllowTrimming($allowTrimming)
+    {
+        $this->allowTrimming = $allowTrimming;
+    }
+
+    /**
      * @param string $collapseKey
      */
     public function setCollapseKey($collapseKey)
     {
-        $this->collapseKey = $collapseKey;
+        $this->collapseKey = $collapseKey ?: static::NO_COLLAPSE;
     }
 
     /**
@@ -284,7 +313,7 @@ class Message implements \JsonSerializable
             $cut = $apnsDataLength - static::APNS_MAX_LENGTH;
             //Note that strlen returns the byte length of the string
             $textLength = strlen($this->text);
-            if ($textLength > $cut) {
+            if ($textLength > $cut && $this->allowTrimming) {
                 $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
             } else {
                 throw new MessageTooLongException("You message for APNS is too long $apnsData");
@@ -296,7 +325,7 @@ class Message implements \JsonSerializable
             $cut = $gcmDataLength - static::GCM_MAX_LENGTH;
             //Note that strlen returns the byte length of the string
             $textLength = strlen($this->text);
-            if ($textLength > $cut) {
+            if ($textLength > $cut && $this->allowTrimming) {
                 $gcmData = $this->getGcmJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
             } else {
                 throw new MessageTooLongException("You message for GCM is too long $gcmData");
@@ -345,10 +374,14 @@ class Message implements \JsonSerializable
             $apns['aps']['sound'] = $this->sound;
         }
 
-        return json_encode(
-            $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []),
-            JSON_UNESCAPED_UNICODE
-        );
+        $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []);
+
+        // Force aps to be an object, after the merge so that keys from custom or apnsData can get in
+        if (!count($merged['aps'])) {
+            $merged['aps'] = new \stdClass();
+        }
+
+        return json_encode($merged, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -358,11 +391,22 @@ class Message implements \JsonSerializable
      */
     private function getAdmJson()
     {
+        $data = [];
+        if (!is_null($this->text)) {
+            $data['message'] = $this->text;
+        }
+
+        $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
+
+        if (!count($merged)) {
+            $merged = new \stdClass();
+        }
+
         $adm = [
-            'data' => $this->arrayMergeDeep($this->admData ? $this->admData : ['message' => $this->text], $this->custom)
+            'data' => $merged
         ];
 
-        if ($this->collapseKey != static::GCM_NO_COLLAPSE) {
+        if ($this->collapseKey != static::NO_COLLAPSE) {
             $adm['consolidationKey'] = $this->collapseKey;
         }
 
@@ -377,15 +421,23 @@ class Message implements \JsonSerializable
      */
     private function getGcmJson($text)
     {
-        return json_encode(
-            [
-                'collapse_key' => $this->collapseKey,
-                'time_to_live' => $this->ttl,
-                'delay_while_idle' => $this->delayWhileIdle,
-                'data' => $this->arrayMergeDeep($this->gcmData ? $this->gcmData : ['message' => $text], $this->custom)
-            ],
-            JSON_UNESCAPED_UNICODE
-        );
+        $data = [];
+        if (!is_null($text)) {
+            $data['message'] = $text;
+        }
+
+        $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ? $this->gcmData : []);
+
+        if (!count($merged)) {
+            $merged = new \stdClass();
+        }
+
+        return json_encode([
+            'collapse_key' => $this->collapseKey,
+            'time_to_live' => $this->ttl,
+            'delay_while_idle' => $this->delayWhileIdle,
+            'data' => $merged
+        ], JSON_UNESCAPED_UNICODE);
     }
 
     /**
