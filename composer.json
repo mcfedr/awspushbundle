@@ -9,7 +9,8 @@
         "symfony/symfony": "~2.3",
         "ext-mbstring": "*",
         "mcfedr/json-form": "~3.0",
-        "sensio/framework-extra-bundle": "~3.0"
+        "sensio/framework-extra-bundle": "~3.0",
+        "fzaninotto/faker": "~1.4"
     },
     "license": "MIT",
     "authors": [

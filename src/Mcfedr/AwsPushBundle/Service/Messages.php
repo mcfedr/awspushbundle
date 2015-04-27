@@ -3,6 +3,7 @@
 namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\SnsClient;
+use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 use Mcfedr\AwsPushBundle\Message\Message;
 use Psr\Log\LoggerInterface;
@@ -49,7 +50,8 @@ class Messages
      *
      * @param Message $message
      * @param string $platform
-     * @throws \Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException
+     * @throws PlatformNotConfiguredException
+     * @throws MessageTooLongException
      */
     public function broadcast(Message $message, $platform = null)
     {
@@ -57,7 +59,7 @@ class Messages
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
-        $messageData = json_encode($message, JSON_UNESCAPED_UNICODE);
+        $messageData = $this->encodeMessage($message);
 
         if ($platform) {
             $this->broadcastToPlatform($messageData, $platform);
@@ -73,6 +75,7 @@ class Messages
      *
      * @param Message|string $message
      * @param string $endpointArn
+     * @throws MessageTooLongException
      */
     public function send($message, $endpointArn)
     {
@@ -86,13 +89,35 @@ class Messages
             return;
         }
 
+        if (!($message instanceof Message)) {
+            $message = new Message($message);
+        }
+
         $this->sns->publish(
             [
                 'TargetArn' => $endpointArn,
-                'Message' => $message instanceof Message ? json_encode($message, JSON_UNESCAPED_UNICODE) : $message,
+                'Message' => $this->encodeMessage($message),
                 'MessageStructure' => 'json'
             ]
         );
+    }
+
+    /**
+     * @param Message $message
+     * @return string
+     * @throws MessageTooLongException
+     */
+    private function encodeMessage(Message $message)
+    {
+        try {
+            $json = json_encode($message, JSON_UNESCAPED_UNICODE);
+            return $json;
+        } catch (\Exception $e) {
+            if ($e->getPrevious() instanceof MessageTooLongException) {
+                throw $e->getPrevious();
+            }
+            throw $e;
+        }
     }
 
     /**

@@ -18,6 +18,10 @@ class Message implements \JsonSerializable
 
     const GCM_MAX_LENGTH = 4096;
 
+    const PLATFORM_GCM = 'gcm';
+    const PLATFORM_APNS = 'apns';
+    const PLATFORM_ADM = 'adm';
+
     /**
      * The text is automatically trimmed when sending to APNS and GCM
      * The text will only be sent to GCM and ADM as 'message' in the data field
@@ -101,6 +105,13 @@ class Message implements \JsonSerializable
      * @var boolean
      */
     private $delayWhileIdle = false;
+
+    /**
+     * Platforms that this message will create JSON for, and throw errors for
+     *
+     * @var array
+     */
+    private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_GCM];
 
     /**
      * @param string $text
@@ -306,39 +317,66 @@ class Message implements \JsonSerializable
         return $this->apnsData;
     }
 
+    /**
+     * @return array
+     */
+    public function getPlatforms()
+    {
+        return $this->platforms;
+    }
+
+    /**
+     * @param array $platforms
+     * @see self::PLATFORM_GCM
+     * @see self::PLATFORM_APNS
+     * @see self::PLATFORM_ADM
+     */
+    public function setPlatforms(array $platforms)
+    {
+        $this->platforms = $platforms;
+    }
+
     public function jsonSerialize()
     {
-        $apnsData = $this->getApnsJson($this->text);
-        if (($apnsDataLength = strlen($apnsData)) > static::APNS_MAX_LENGTH) {
-            $cut = $apnsDataLength - static::APNS_MAX_LENGTH;
-            //Note that strlen returns the byte length of the string
-            $textLength = strlen($this->text);
-            if ($textLength > $cut && $this->allowTrimming) {
-                $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-            } else {
-                throw new MessageTooLongException("You message for APNS is too long $apnsData");
-            }
-        }
-
-        $gcmData = $this->getGcmJson($this->text);
-        if (($gcmDataLength = strlen($gcmData)) > static::GCM_MAX_LENGTH) {
-            $cut = $gcmDataLength - static::GCM_MAX_LENGTH;
-            //Note that strlen returns the byte length of the string
-            $textLength = strlen($this->text);
-            if ($textLength > $cut && $this->allowTrimming) {
-                $gcmData = $this->getGcmJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-            } else {
-                throw new MessageTooLongException("You message for GCM is too long $gcmData");
-            }
-        }
-
-        return [
-            'default' => $this->text,
-            'APNS' => $apnsData,
-            'APNS_SANDBOX' => $apnsData,
-            'ADM' => $this->getAdmJson(),
-            'GCM' => $gcmData
+        $data = [
+            'default' => $this->text
         ];
+
+        if (in_array(self::PLATFORM_APNS, $this->platforms)) {
+            $apnsData = $this->getApnsJson($this->text);
+            if (($apnsDataLength = strlen($apnsData)) > static::APNS_MAX_LENGTH) {
+                $cut = $apnsDataLength - static::APNS_MAX_LENGTH;
+                //Note that strlen returns the byte length of the string
+                $textLength = strlen($this->text);
+                if ($textLength > $cut && $this->allowTrimming) {
+                    $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+                } else {
+                    throw new MessageTooLongException("You message for APNS is too long $apnsData");
+                }
+            }
+            $data['APNS'] = $data['APNS_SANDBOX'] = $apnsData;
+        }
+
+        if (in_array(self::PLATFORM_GCM, $this->platforms)) {
+            $gcmData = $this->getGcmJson($this->text);
+            if (($gcmDataLength = strlen($gcmData)) > static::GCM_MAX_LENGTH) {
+                $cut = $gcmDataLength - static::GCM_MAX_LENGTH;
+                //Note that strlen returns the byte length of the string
+                $textLength = strlen($this->text);
+                if ($textLength > $cut && $this->allowTrimming) {
+                    $gcmData = $this->getGcmJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+                } else {
+                    throw new MessageTooLongException("You message for GCM is too long $gcmData");
+                }
+            }
+            $data['GCM'] = $gcmData;
+        }
+
+        if (in_array(self::PLATFORM_ADM, $this->platforms)) {
+            $data['ADM'] = $this->getAdmJson();
+        }
+
+        return $data;
     }
 
     public function __toString()
