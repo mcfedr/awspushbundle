@@ -24,14 +24,19 @@ class Message implements \JsonSerializable
 
     /**
      * The text is automatically trimmed when sending to APNS and GCM
-     * The text will only be sent to GCM and ADM as 'message' in the data field
+     * The text will be sent to GCM and ADM as 'message' in the data field
      *
      * @var string
      */
     private $text;
 
     /**
+     * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
+     * platform
+     *
      * @var bool
+     * @see Message::APNS_MAX_LENGTH
+     * @see Message::GCM_MAX_LENGTH
      */
     private $allowTrimming = true;
 
@@ -110,6 +115,9 @@ class Message implements \JsonSerializable
      * Platforms that this message will create JSON for, and throw errors for
      *
      * @var array
+     * @see Message::PLATFORM_GCM
+     * @see Message::PLATFORM_APNS
+     * @see Message::PLATFORM_ADM
      */
     private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_GCM];
 
@@ -327,9 +335,9 @@ class Message implements \JsonSerializable
 
     /**
      * @param array $platforms
-     * @see self::PLATFORM_GCM
-     * @see self::PLATFORM_APNS
-     * @see self::PLATFORM_ADM
+     * @see Message::PLATFORM_GCM
+     * @see Message::PLATFORM_APNS
+     * @see Message::PLATFORM_ADM
      */
     public function setPlatforms(array $platforms)
     {
@@ -343,33 +351,11 @@ class Message implements \JsonSerializable
         ];
 
         if (in_array(self::PLATFORM_APNS, $this->platforms)) {
-            $apnsData = $this->getApnsJson($this->text);
-            if (($apnsDataLength = strlen($apnsData)) > static::APNS_MAX_LENGTH) {
-                $cut = $apnsDataLength - static::APNS_MAX_LENGTH;
-                //Note that strlen returns the byte length of the string
-                $textLength = strlen($this->text);
-                if ($textLength > $cut && $this->allowTrimming) {
-                    $apnsData = $this->getApnsJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-                } else {
-                    throw new MessageTooLongException("You message for APNS is too long $apnsData");
-                }
-            }
-            $data['APNS'] = $data['APNS_SANDBOX'] = $apnsData;
+            $data['APNS'] = $data['APNS_SANDBOX'] = $this->getApnsJson();
         }
 
         if (in_array(self::PLATFORM_GCM, $this->platforms)) {
-            $gcmData = $this->getGcmJson($this->text);
-            if (($gcmDataLength = strlen($gcmData)) > static::GCM_MAX_LENGTH) {
-                $cut = $gcmDataLength - static::GCM_MAX_LENGTH;
-                //Note that strlen returns the byte length of the string
-                $textLength = strlen($this->text);
-                if ($textLength > $cut && $this->allowTrimming) {
-                    $gcmData = $this->getGcmJson(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-                } else {
-                    throw new MessageTooLongException("You message for GCM is too long $gcmData");
-                }
-            }
-            $data['GCM'] = $gcmData;
+            $data['GCM'] = $this->getGcmJson();
         }
 
         if (in_array(self::PLATFORM_ADM, $this->platforms)) {
@@ -385,12 +371,34 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Get the json to send via Apple Push Notification Server
+     *
+     * @return string
+     * @throws MessageTooLongException
+     */
+    private function getApnsJson()
+    {
+        $apnsJson = $this->getApnsJsonInner($this->text);
+        if (($apnsJsonLength = strlen($apnsJson)) > static::APNS_MAX_LENGTH) {
+            $cut = $apnsJsonLength - static::APNS_MAX_LENGTH;
+            //Note that strlen returns the byte length of the string
+            $textLength = strlen($this->text);
+            if ($textLength > $cut && $this->allowTrimming) {
+                $apnsJson = $this->getApnsJsonInner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+            } else {
+                throw new MessageTooLongException("You message for APNS is too long $apnsJson");
+            }
+        }
+        return $apnsJson;
+    }
+
+    /**
      * Get the correct apple push notification server json
      *
      * @param string $text
      * @return string
      */
-    private function getApnsJson($text)
+    private function getApnsJsonInner($text)
     {
         $apns = [
             'aps' => []
@@ -454,10 +462,39 @@ class Message implements \JsonSerializable
     /**
      * Get the json to send via Google Cloud Messaging
      *
-     * @param string $text
      * @return string
+     * @throws MessageTooLongException
      */
-    private function getGcmJson($text)
+    private function getGcmJson()
+    {
+        $gcmInner = $this->getGcmJsonInner($this->text);
+        $gcmInnerJson = json_encode($gcmInner, JSON_UNESCAPED_UNICODE);
+        if (($gcmInnerJsonLength = strlen($gcmInnerJson)) > static::GCM_MAX_LENGTH) {
+            $cut = $gcmInnerJsonLength - static::GCM_MAX_LENGTH;
+            //Note that strlen returns the byte length of the string
+            $textLength = strlen($this->text);
+            if ($textLength > $cut && $this->allowTrimming) {
+                $gcmInner = $this->getGcmJsonInner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+            } else {
+                throw new MessageTooLongException("You message for GCM is too long $gcmInnerJson");
+            }
+        }
+
+        return json_encode([
+            'collapse_key' => $this->collapseKey,
+            'time_to_live' => $this->ttl,
+            'delay_while_idle' => $this->delayWhileIdle,
+            'data' => $gcmInner
+        ], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Gets the data part of the GCM message
+     *
+     * @param $text
+     * @return array
+     */
+    private function getGcmJsonInner($text)
     {
         $data = [];
         if (!is_null($text)) {
@@ -470,12 +507,7 @@ class Message implements \JsonSerializable
             $merged = new \stdClass();
         }
 
-        return json_encode([
-            'collapse_key' => $this->collapseKey,
-            'time_to_live' => $this->ttl,
-            'delay_while_idle' => $this->delayWhileIdle,
-            'data' => $merged
-        ], JSON_UNESCAPED_UNICODE);
+        return $merged;
     }
 
     /**

@@ -17,7 +17,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function testTooLong(Message $message)
     {
         try {
-            json_encode($message);
+            echo json_encode($message);
         } catch (\Exception $e) {
             if ($e->getPrevious() instanceof MessageTooLongException) {
                 throw $e->getPrevious();
@@ -76,6 +76,23 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 $android
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider trimMessage
+     */
+    public function testTrimMessage(Message $message)
+    {
+        $this->assertNotEmpty(json_encode($message));
+    }
+
+    public function trimMessage()
+    {
+        return [
+            [
+                new Message(Lorem::text(10000))
             ]
         ];
     }
