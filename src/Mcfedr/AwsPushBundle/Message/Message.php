@@ -372,6 +372,7 @@ class Message implements \JsonSerializable
 
     /**
      * Get the json to send via Apple Push Notification Server
+     * For APNS the max length applies to the whole message
      *
      * @return string
      * @throws MessageTooLongException
@@ -422,7 +423,7 @@ class Message implements \JsonSerializable
 
         $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []);
 
-        // Force aps to be an object, after the merge so that keys from custom or apnsData can get in
+        // Force aps to be an object, because it shouldnt get encoded as [] but as {}
         if (!count($merged['aps'])) {
             $merged['aps'] = new \stdClass();
         }
@@ -461,6 +462,7 @@ class Message implements \JsonSerializable
 
     /**
      * Get the json to send via Google Cloud Messaging
+     * For GCM the max length is for the data field only
      *
      * @return string
      * @throws MessageTooLongException
@@ -503,6 +505,7 @@ class Message implements \JsonSerializable
 
         $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ? $this->gcmData : []);
 
+        // Force to be an object, because it shouldnt get encoded as [] but as {}
         if (!count($merged)) {
             $merged = new \stdClass();
         }
