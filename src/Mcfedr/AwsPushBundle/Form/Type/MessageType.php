@@ -1,19 +1,21 @@
 <?php
 
-namespace Mcfedr\AwsPushBundle\Form;
+
+namespace Mcfedr\AwsPushBundle\Form\Type;
 
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DeviceType extends AbstractType
+class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('deviceId')
-            ->add('platform');
+            ->add('text')
+            ->add('badge')
+            ->add('sound');
     }
 
     /**
@@ -22,7 +24,7 @@ class DeviceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Mcfedr\AwsPushBundle\Form\Model\Device'
+            'data_class' => 'Mcfedr\AwsPushBundle\Message\Message'
         ]);
     }
 
@@ -33,6 +35,6 @@ class DeviceType extends AbstractType
      */
     public function getName()
     {
-        return 'device';
+        return 'message';
     }
 }

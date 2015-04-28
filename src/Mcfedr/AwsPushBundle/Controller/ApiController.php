@@ -3,8 +3,8 @@
 namespace Mcfedr\AwsPushBundle\Controller;
 
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
-use Mcfedr\AwsPushBundle\Form\BroadcastType;
-use Mcfedr\AwsPushBundle\Form\DeviceType;
+use Mcfedr\AwsPushBundle\Form\Type\BroadcastType;
+use Mcfedr\AwsPushBundle\Form\Type\DeviceType;
 use Mcfedr\AwsPushBundle\Form\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Form\Model\Device;
 use Mcfedr\JsonFormBundle\Controller\JsonController;

@@ -1,21 +1,19 @@
 <?php
 
 
-namespace Mcfedr\AwsPushBundle\Form;
-
+namespace Mcfedr\AwsPushBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MessageType extends AbstractType
+class BroadcastType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text')
-            ->add('badge')
-            ->add('sound');
+            ->add('platform')
+            ->add('message', new MessageType());
     }
 
     /**
@@ -24,7 +22,7 @@ class MessageType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Mcfedr\AwsPushBundle\Message\Message'
+            'data_class' => 'Mcfedr\AwsPushBundle\Form\Model\Broadcast'
         ]);
     }
 
@@ -35,6 +33,6 @@ class MessageType extends AbstractType
      */
     public function getName()
     {
-        return 'message';
+        return 'broadcast';
     }
 }

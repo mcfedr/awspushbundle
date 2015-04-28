@@ -1,19 +1,19 @@
 <?php
 
+namespace Mcfedr\AwsPushBundle\Form\Type;
 
-namespace Mcfedr\AwsPushBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class BroadcastType extends AbstractType
+class DeviceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('platform')
-            ->add('message', new MessageType());
+            ->add('deviceId')
+            ->add('platform');
     }
 
     /**
@@ -22,7 +22,7 @@ class BroadcastType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Mcfedr\AwsPushBundle\Form\Model\Broadcast'
+            'data_class' => 'Mcfedr\AwsPushBundle\Form\Model\Device'
         ]);
     }
 
@@ -33,6 +33,6 @@ class BroadcastType extends AbstractType
      */
     public function getName()
     {
-        return 'broadcast';
+        return 'device';
     }
 }
