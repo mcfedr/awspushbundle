@@ -55,7 +55,7 @@ class Messages
      */
     public function broadcast(Message $message, $platform = null)
     {
-        if ($platform != null && !isset($this->arns[$platform])) {
+        if ($platform !== null && !isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
