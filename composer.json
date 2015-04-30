@@ -19,6 +19,10 @@
             "email": "mcfedr@gmail.com"
         }
     ],
+    "support": {
+        "issues": "https://github.com/mcfedr/awspushbundle/issues",
+        "source": "https://github.com/mcfedr/awspushbundle"
+    },
     "minimum-stability": "stable",
     "require-dev": {
         "phpunit/phpunit": "~4.3",
@@ -34,6 +38,6 @@
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
     },
     "autoload-dev": {
-        "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
+        "psr-4": { "Mcfedr\\AwsPushBundle\\": "tests/Mcfedr/AwsPushBundle" }
     }
 }
