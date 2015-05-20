@@ -67,7 +67,7 @@ class Topics
      * Delete a topic
      * @param  string $topicArn Topic ARN
      */
-    public function createTopic($topicArn)
+    public function deleteTopic($topicArn)
     {
 
         $this->sns->deleteTopic(
