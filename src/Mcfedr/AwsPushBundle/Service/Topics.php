@@ -47,6 +47,40 @@ class Topics
     }
 
     /**
+     * Create a topic
+     * @param  string $name Topic name
+     * @return string The topic ARN
+     */
+    public function createTopic($name)
+    {
+
+        $res = $this->sns->createTopic(
+            [
+                'Name' => $name
+            ]
+        );
+
+        return $res['TopicArn'];
+    }
+
+    /**
+     * Delete a topic
+     * @param  string $topicArn Topic ARN
+     */
+    public function createTopic($topicArn)
+    {
+
+        $this->sns->deleteTopic(
+            [
+                'TopicArn' => $topicArn
+            ]
+        );
+
+    }
+
+
+
+    /**
      * Subscribe a device to the topic, will create new numbered topics
      * once the first is full
      *
