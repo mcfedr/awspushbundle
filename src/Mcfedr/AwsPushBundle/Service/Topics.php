@@ -47,6 +47,37 @@ class Topics
     }
 
     /**
+     * Create a topic
+     * @param  string $name Topic name
+     * @return string The topic ARN
+     * @deprecated use SnsClient directly to subscribe
+     */
+    public function createTopic($name)
+    {
+        $res = $this->sns->createTopic(
+            [
+                'Name' => $name
+            ]
+        );
+
+        return $res['TopicArn'];
+    }
+
+    /**
+     * Delete a topic
+     * @param  string $topicArn Topic ARN
+     * @deprecated use SnsClient directly to subscribe
+     */
+    public function deleteTopic($topicArn)
+    {
+        $this->sns->deleteTopic(
+            [
+                'TopicArn' => $topicArn
+            ]
+        );
+    }
+
+    /**
      * Subscribe a device to the topic, will create new numbered topics
      * once the first is full
      *
