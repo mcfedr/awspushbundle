@@ -26,9 +26,17 @@ class McfedrAwsPushExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('mcfedr_aws_push.platforms', $config['platforms']);
-        $container->setParameter('mcfedr_aws_push.aws.key', $config['aws']['key']);
-        $container->setParameter('mcfedr_aws_push.aws.secret', $config['aws']['secret']);
-        $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
+        if (isset($config['aws'])) {
+            if (isset($config['aws']['key'])) {
+                $container->setParameter('mcfedr_aws_push.aws.key', $config['aws']['key']);
+            }
+            if (isset($config['aws']['secret'])) {
+                $container->setParameter('mcfedr_aws_push.aws.secret', $config['aws']['secret']);
+            }
+            if (isset($config['aws']['region'])) {
+                $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
+            }
+        }
         $container->setParameter('mcfedr_aws_push.debug', $config['debug']);
 
         if (isset($config['topic_arn'])) {
