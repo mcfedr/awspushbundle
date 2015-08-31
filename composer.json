@@ -5,7 +5,7 @@
     "keywords": ["symfony", "push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns", "aws", "amazon"],
     "require": {
         "php": ">=5.4.0",
-        "aws/aws-sdk-php": "~2.4",
+        "aws/aws-sdk-php": "~3.0",
         "symfony/symfony": "~2.3",
         "ext-mbstring": "*",
         "mcfedr/json-form": "~3.0",
