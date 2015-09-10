@@ -59,13 +59,11 @@ class Messages
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
-        $messageData = $this->encodeMessage($message);
-
         if ($platform) {
-            $this->broadcastToPlatform($messageData, $platform);
+            $this->broadcastToPlatform($message, $platform);
         } else {
             foreach ($this->arns as $platform => $arn) {
-                $this->broadcastToPlatform($messageData, $platform);
+                $this->broadcastToPlatform($message, $platform);
             }
         }
     }
