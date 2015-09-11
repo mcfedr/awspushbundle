@@ -4,7 +4,7 @@
     "description": "A set of services to simplify using Aws to send push notifications",
     "keywords": ["symfony", "push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns", "aws", "amazon"],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5",
         "aws/aws-sdk-php": "~3.0",
         "symfony/symfony": "~2.3",
         "ext-mbstring": "*",
