@@ -201,4 +201,45 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             [Lorem::text(1000), Lorem::text(50), Lorem::words(3)]
         ];
     }
+
+    /**
+     * @dataProvider localizedNoArgs
+     */
+    public function testLocalizedNoArgsMessageStructure($text, $key)
+    {
+        $message = new Message($text);
+        $message->setLocalizedKey($key);
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $this->assertEquals($text, $data['default'], 'Default should be just the text of the message');
+
+        $apnsData = json_decode($data['APNS'], true);
+        $this->assertCount(1, $apnsData);
+        $this->assertCount(1, $apnsData['aps']);
+        $this->assertArrayHasKey('alert', $apnsData['aps']);
+        $this->assertInternalType('array', $apnsData['aps']['alert']);
+        $this->assertCount(1, $apnsData['aps']['alert']);
+        $this->assertEquals($key, $apnsData['aps']['alert']['loc-key'], 'APNS.aps.alert.loc-key should be the key of the message');
+
+        $gcmData = json_decode($data['GCM'], true);
+        $this->assertCount(4, $gcmData);
+        $this->assertCount(2, $gcmData['data']);
+        $this->assertEquals($text, $gcmData['data']['message'], 'GCM.data.message should be the text of the message');
+        $this->assertEquals($key, $gcmData['data']['message-loc-key'], 'GCM.data.message-loc-key should be the key of the message');
+
+        $admData = json_decode($data['ADM'], true);
+        $this->assertCount(1, $admData);
+        $this->assertCount(2, $admData['data']);
+        $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
+        $this->assertEquals($key, $admData['data']['message-loc-key'], 'ADM.data.message-loc-key should be the key of the message');
+    }
+
+    public function localizedNoArgs()
+    {
+        return [
+            [Lorem::text(1000), Lorem::text(50)]
+        ];
+    }
 }
