@@ -92,6 +92,8 @@ There are some commands to help manage the devices
 There is a controller included which makes basic usage of the bundle very easy. You may or may not want to use it,
 you might find it most useful as an example.
 
+Dont forget to install `mcfedr/json-form` and `sensio/framework-extra-bundle` if you want to use this
+
 ### Routing
 
 If you want to use the default controller you need to setup the routing

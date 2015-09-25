@@ -5,12 +5,13 @@
     "keywords": ["symfony", "push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns", "aws", "amazon"],
     "require": {
         "php": ">=5.5",
-        "aws/aws-sdk-php": "~3.0",
-        "symfony/symfony": "~2.3",
         "ext-mbstring": "*",
-        "mcfedr/json-form": "~3.0",
-        "sensio/framework-extra-bundle": "~3.0",
-        "fzaninotto/faker": "~1.4"
+        "aws/aws-sdk-php": "~3.0",
+        "symfony/symfony": "~2.3"
+    },
+    "suggest": {
+        "mcfedr/json-form": "Required if you want to use the included ApiController",
+        "sensio/framework-extra-bundle": "Required if you want to use the included ApiController"
     },
     "license": "MIT",
     "authors": [
@@ -26,7 +27,10 @@
     "minimum-stability": "stable",
     "require-dev": {
         "phpunit/phpunit": "~4.3",
-        "symfony/monolog-bundle": "~2.6"
+        "symfony/monolog-bundle": "~2.6",
+        "fzaninotto/faker": "~1.4",
+        "mcfedr/json-form": "^3.1",
+        "sensio/framework-extra-bundle": "^3.0"
     },
     "autoload": {
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
