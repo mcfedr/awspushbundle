@@ -115,7 +115,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('GCM', $data);
         $this->assertArrayHasKey('ADM', $data);
 
-        $this->assertEquals($text, $data['default'], 'Default should be just the text of the message');
+        $this->assertEquals($text, $data['default'], 'Default should be the text of the message');
         $this->assertEquals($data['APNS'], $data['APNS_SANDBOX'], 'The APNS and APNS_SANDBOX should match');
 
         $apnsData = json_decode($data['APNS'], true);
@@ -154,6 +154,51 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [Lorem::text(1000)]
+        ];
+    }
+
+    /**
+     * @dataProvider localized
+     */
+    public function testLocalizedMessageStructure($text, $key, $args)
+    {
+        $message = new Message($text);
+        $message->setLocalizedKey($key);
+        $message->setLocalizedArguments($args);
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $this->assertEquals($text, $data['default'], 'Default should be just the text of the message');
+
+        $apnsData = json_decode($data['APNS'], true);
+        $this->assertCount(1, $apnsData);
+        $this->assertCount(1, $apnsData['aps']);
+        $this->assertArrayHasKey('alert', $apnsData['aps']);
+        $this->assertInternalType('array', $apnsData['aps']['alert']);
+        $this->assertCount(2, $apnsData['aps']['alert']);
+        $this->assertEquals($key, $apnsData['aps']['alert']['loc-key'], 'APNS.aps.alert.loc-key should be the key of the message');
+        $this->assertEquals($args, $apnsData['aps']['alert']['loc-args'], 'APNS.aps.alert.loc-args should be the args of the message');
+
+        $gcmData = json_decode($data['GCM'], true);
+        $this->assertCount(4, $gcmData);
+        $this->assertCount(3, $gcmData['data']);
+        $this->assertEquals($text, $gcmData['data']['message'], 'GCM.data.message should be the text of the message');
+        $this->assertEquals($key, $gcmData['data']['message-loc-key'], 'GCM.data.message-loc-key should be the key of the message');
+        $this->assertEquals($args, $gcmData['data']['message-loc-args'], 'GCM.data.message-loc-args should be the args of the message');
+
+        $admData = json_decode($data['ADM'], true);
+        $this->assertCount(1, $admData);
+        $this->assertCount(3, $admData['data']);
+        $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
+        $this->assertEquals($key, $admData['data']['message-loc-key'], 'ADM.data.message-loc-key should be the key of the message');
+        $this->assertEquals($args, $admData['data']['message-loc-args'], 'ADM.data.message-loc-args should be the args of the message');
+    }
+
+    public function localized()
+    {
+        return [
+            [Lorem::text(1000), Lorem::text(50), Lorem::words(3)]
         ];
     }
 }

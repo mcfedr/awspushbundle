@@ -449,7 +449,7 @@ class Message implements \JsonSerializable
             $apns['aps']['alert'] = [
                 'loc-key' => $this->localizedKey
             ];
-            if (!$this->localizedArguments) {
+            if ($this->localizedArguments) {
                 $apns['aps']['alert']['loc-args'] = $this->localizedArguments;
             }
         }
@@ -557,7 +557,7 @@ class Message implements \JsonSerializable
 
         if (!is_null($this->localizedKey)) {
             $data['message-loc-key'] = $this->localizedKey;
-            if (!$this->localizedArguments) {
+            if ($this->localizedArguments) {
                 $data['message-loc-args'] = $this->localizedArguments;
             }
         }
