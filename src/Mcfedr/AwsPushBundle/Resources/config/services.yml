@@ -62,8 +62,8 @@ services:
         class: Aws\Sns\SnsClient
         arguments:
           -
-            version: "latest"
+            version: "2010-03-31"
             region: "%mcfedr_aws_push.aws.region%"
-            credentials:    
+            credentials:
                key: "%mcfedr_aws_push.aws.key%"
                secret: "%mcfedr_aws_push.aws.secret%"
