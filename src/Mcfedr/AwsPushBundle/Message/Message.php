@@ -430,18 +430,7 @@ class Message implements \JsonSerializable
      */
     private function getApnsJson()
     {
-        $apnsJson = $this->getApnsJsonInner($this->text);
-        if (($apnsJsonLength = strlen($apnsJson)) > static::APNS_MAX_LENGTH) {
-            $cut = $apnsJsonLength - static::APNS_MAX_LENGTH;
-            //Note that strlen returns the byte length of the string
-            $textLength = strlen($this->text);
-            if ($textLength > $cut && $this->allowTrimming) {
-                $apnsJson = $this->getApnsJsonInner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-            } else {
-                throw new MessageTooLongException("You message for APNS is too long $apnsJson");
-            }
-        }
-        return $apnsJson;
+        return $this->getTrimmedJson([$this, 'getApnsJsonInner'], static::APNS_MAX_LENGTH, 'You message for APNS is too long');
     }
 
     /**
@@ -525,24 +514,11 @@ class Message implements \JsonSerializable
      */
     private function getGcmJson()
     {
-        $gcmInner = $this->getGcmJsonInner($this->text);
-        $gcmInnerJson = json_encode($gcmInner, JSON_UNESCAPED_UNICODE);
-        if (($gcmInnerJsonLength = strlen($gcmInnerJson)) > static::GCM_MAX_LENGTH) {
-            $cut = $gcmInnerJsonLength - static::GCM_MAX_LENGTH;
-            //Note that strlen returns the byte length of the string
-            $textLength = strlen($this->text);
-            if ($textLength > $cut && $this->allowTrimming) {
-                $gcmInner = $this->getGcmJsonInner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
-            } else {
-                throw new MessageTooLongException("You message for GCM is too long $gcmInnerJson");
-            }
-        }
-
         return json_encode([
             'collapse_key' => $this->collapseKey,
             'time_to_live' => $this->ttl,
             'delay_while_idle' => $this->delayWhileIdle,
-            'data' => $gcmInner
+            'data' => $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long')
         ], JSON_UNESCAPED_UNICODE);
     }
 
@@ -581,6 +557,23 @@ class Message implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    private function getTrimmedJson(callable $inner, $limit, $error)
+    {
+        $gcmInner = $inner($this->text);
+        $gcmInnerJson = json_encode($gcmInner, JSON_UNESCAPED_UNICODE);
+        if (($gcmInnerJsonLength = strlen($gcmInnerJson)) > $limit) {
+            $cut = $gcmInnerJsonLength - $limit;
+            //Note that strlen returns the byte length of the string
+            $textLength = strlen($this->text);
+            if ($textLength > $cut && $this->allowTrimming) {
+                $gcmInner = $inner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+            } else {
+                throw new MessageTooLongException("$error $gcmInnerJson");
+            }
+        }
+        return $gcmInner;
     }
 
     /**
