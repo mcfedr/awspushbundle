@@ -134,7 +134,7 @@ class Message implements \JsonSerializable
      * @see Message::PLATFORM_APNS
      * @see Message::PLATFORM_ADM
      */
-    private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_GCM];
+    private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_ADM];
 
     /**
      * @param string $text
@@ -430,14 +430,14 @@ class Message implements \JsonSerializable
      */
     private function getApnsJson()
     {
-        return $this->getTrimmedJson([$this, 'getApnsJsonInner'], static::APNS_MAX_LENGTH, 'You message for APNS is too long');
+        return json_encode($this->getTrimmedJson([$this, 'getApnsJsonInner'], static::APNS_MAX_LENGTH, 'You message for APNS is too long'), JSON_UNESCAPED_UNICODE);
     }
 
     /**
-     * Get the correct apple push notification server json
+     * Get the correct apple push notification server data
      *
      * @param string $text
-     * @return string
+     * @return array
      */
     private function getApnsJsonInner($text)
     {
@@ -476,7 +476,7 @@ class Message implements \JsonSerializable
             $merged['aps'] = new \stdClass();
         }
 
-        return json_encode($merged, JSON_UNESCAPED_UNICODE);
+        return $merged;
     }
 
     /**
@@ -542,6 +542,12 @@ class Message implements \JsonSerializable
         return $merged;
     }
 
+    /**
+     * Gets the base of the data for the android platforms, with text and localization keys
+     *
+     * @param $text
+     * @return array
+     */
     private function getAndroidJsonInner($text)
     {
         $data = [];
@@ -559,6 +565,15 @@ class Message implements \JsonSerializable
         return $data;
     }
 
+    /**
+     * Using a inner function gets the data, and trys again if its too long by trimming the text
+     *
+     * @param callable $inner
+     * @param int $limit
+     * @param string $error
+     * @return array
+     * @throws MessageTooLongException
+     */
     private function getTrimmedJson(callable $inner, $limit, $error)
     {
         $gcmInner = $inner($this->text);
