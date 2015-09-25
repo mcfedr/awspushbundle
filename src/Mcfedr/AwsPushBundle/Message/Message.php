@@ -261,6 +261,18 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Convience to set localized text
+     *
+     * @param string $key
+     * @param array|null $arguments
+     */
+    public function setLocalizedText($key, array $arguments = null)
+    {
+        $this->setLocalizedKey($key);
+        $this->setLocalizedArguments($arguments);
+    }
+
+    /**
      * @return boolean
      */
     public function getAllowTrimming()
