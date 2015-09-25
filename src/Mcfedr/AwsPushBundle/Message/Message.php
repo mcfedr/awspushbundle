@@ -31,6 +31,21 @@ class Message implements \JsonSerializable
     private $text;
 
     /**
+     * The key of a localized string that will form the message displayed
+     *
+     * @var string
+     */
+    private $localizedKey;
+
+    /**
+     * Arguments for the localized message
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
+     * @var array
+     */
+    private $localizedArguments;
+
+    /**
      * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
      * platform
      *
@@ -207,6 +222,42 @@ class Message implements \JsonSerializable
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalizedKey()
+    {
+        return $this->localizedKey;
+    }
+
+    /**
+     * @param string $localizedKey
+     * @return Message
+     */
+    public function setLocalizedKey($localizedKey)
+    {
+        $this->localizedKey = $localizedKey;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocalizedArguments()
+    {
+        return $this->localizedArguments;
+    }
+
+    /**
+     * @param array $localizedArguments
+     * @return Message
+     */
+    public function setLocalizedArguments(array $localizedArguments)
+    {
+        $this->localizedArguments = $localizedArguments;
+        return $this;
     }
 
     /**
@@ -405,7 +456,15 @@ class Message implements \JsonSerializable
             'aps' => []
         ];
 
-        if (!is_null($text)) {
+        if (!is_null($this->localizedKey)) {
+            $apns['aps']['alert'] = [
+                'loc-key' => $this->localizedKey
+            ];
+            if (!$this->localizedArguments) {
+                $apns['aps']['alert']['loc-args'] = $this->localizedArguments;
+            }
+        }
+        else if (!is_null($text)) {
             $apns['aps']['alert'] = $text;
         }
 
@@ -438,10 +497,7 @@ class Message implements \JsonSerializable
      */
     private function getAdmJson()
     {
-        $data = [];
-        if (!is_null($this->text)) {
-            $data['message'] = $this->text;
-        }
+        $data = $this->getAndroidJsonInner($this->text);
 
         $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
 
@@ -498,10 +554,7 @@ class Message implements \JsonSerializable
      */
     private function getGcmJsonInner($text)
     {
-        $data = [];
-        if (!is_null($text)) {
-            $data['message'] = $text;
-        }
+        $data = $this->getAndroidJsonInner($text);
 
         $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ? $this->gcmData : []);
 
@@ -511,6 +564,23 @@ class Message implements \JsonSerializable
         }
 
         return $merged;
+    }
+
+    private function getAndroidJsonInner($text)
+    {
+        $data = [];
+        if (!is_null($text)) {
+            $data['message'] = $text;
+        }
+
+        if (!is_null($this->localizedKey)) {
+            $data['message-loc-key'] = $this->localizedKey;
+            if (!$this->localizedArguments) {
+                $data['message-loc-args'] = $this->localizedArguments;
+            }
+        }
+
+        return $data;
     }
 
     /**
