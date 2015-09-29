@@ -5,7 +5,7 @@ namespace Mcfedr\AwsPushBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DeviceType extends AbstractType
 {
@@ -16,10 +16,7 @@ class DeviceType extends AbstractType
             ->add('platform');
     }
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'Mcfedr\AwsPushBundle\Form\Model\Device'

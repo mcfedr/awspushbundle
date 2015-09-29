@@ -3,10 +3,9 @@
 
 namespace Mcfedr\AwsPushBundle\Form\Type;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MessageType extends AbstractType
 {
@@ -18,10 +17,7 @@ class MessageType extends AbstractType
             ->add('sound');
     }
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'Mcfedr\AwsPushBundle\Message\Message'
