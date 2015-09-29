@@ -32,7 +32,6 @@ services:
     mcfedr_aws_push.command.subscribe:
         class: Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand
         arguments:
-          - "@mcfedr_aws_push.topics"
           - "%mcfedr_aws_push.topic_arn%"
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"

@@ -3,7 +3,6 @@ namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\Exception\SnsException;
 use Aws\Sns\SnsClient;
-use Mcfedr\AwsPushBundle\Service\Topics;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,11 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SubscribeTopicsCommand extends Command
 {
-    /**
-     * @var Topics
-     */
-    private $topics;
-
     /**
      * @var string
      */
@@ -38,15 +32,13 @@ class SubscribeTopicsCommand extends Command
     private $logger;
 
     /**
-     * @param Topics $topics
      * @param string $topicArn
      * @param SnsClient $sns
      * @param array $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(Topics $topics, $topicArn, SnsClient $sns, $arns, LoggerInterface $logger = null)
+    public function __construct($topicArn, SnsClient $sns, $arns, LoggerInterface $logger = null)
     {
-        $this->topics = $topics;
         $this->topicArn = $topicArn;
         $this->sns = $sns;
         $this->arns = $arns;
@@ -77,12 +69,9 @@ class SubscribeTopicsCommand extends Command
                 $this->subscribePlatform($platform, $input->getOption('topic'));
             }
         } catch (SnsException $e) {
-            $this->logger && $this->logger->error(
-                'Failed to create topic',
-                [
-                    'exception' => $e
-                ]
-            );
+            $this->logger && $this->logger->error('Failed to create topic', [
+                'exception' => $e
+            ]);
         }
     }
 
@@ -91,15 +80,25 @@ class SubscribeTopicsCommand extends Command
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpoint) {
-            $this->logger && $this->logger->info(
-                'Subscribing device to topic',
-                [
+            $this->logger && $this->logger->info('Subscribing device to topic', [
+                'device' => $endpoint['EndpointArn'],
+                'topic' => $topic,
+                'platform' => $platform
+            ]);
+            try {
+                $this->sns->subscribe([
+                    'TopicArn' => $topic,
+                    'Protocol' => 'application',
+                    'Endpoint' => $endpoint['EndpointArn']
+                ]);
+            } catch (SnsException $e) {
+                $this->logger && $this->logger->info('Error subscribing device to topic', [
                     'device' => $endpoint['EndpointArn'],
                     'topic' => $topic,
-                    'platform' => $platform
-                ]
-            );
-            $this->topics->registerDeviceOnTopic($endpoint['EndpointArn'], $topic);
+                    'platform' => $platform,
+                    'exception' => $e
+                ]);
+            }
         }
     }
 }
