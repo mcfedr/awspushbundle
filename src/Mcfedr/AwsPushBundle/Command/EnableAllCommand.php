@@ -61,11 +61,9 @@ class EnableAllCommand extends Command
      */
     private function enablePlatform($platform)
     {
-        foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-            [
-                'PlatformApplicationArn' => $this->arns[$platform]
-            ]
-        ) as $endpoint) {
+        foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
+            'PlatformApplicationArn' => $this->arns[$platform]
+        ]) as $endpoint) {
             if ($endpoint['Attributes']['Enabled'] == "false") {
                 try {
                     $this->sns->setEndpointAttributes(

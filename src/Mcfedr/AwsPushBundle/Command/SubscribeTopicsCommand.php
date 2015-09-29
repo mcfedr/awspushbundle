@@ -1,8 +1,7 @@
 <?php
 namespace Mcfedr\AwsPushBundle\Command;
 
-use Aws\Sns\Exception\SubscriptionLimitExceededException;
-use Aws\Sns\Exception\TopicLimitExceededException;
+use Aws\Sns\Exception\SnsException;
 use Aws\Sns\SnsClient;
 use Mcfedr\AwsPushBundle\Service\Topics;
 use Psr\Log\LoggerInterface;
@@ -77,14 +76,7 @@ class SubscribeTopicsCommand extends Command
             foreach ($this->arns as $platform => $arn) {
                 $this->subscribePlatform($platform, $input->getOption('topic'));
             }
-        } catch (SubscriptionLimitExceededException $e) {
-            $this->logger && $this->logger->error(
-                'Failed to subscription to topic',
-                [
-                    'exception' => $e
-                ]
-            );
-        } catch (TopicLimitExceededException $e) {
+        } catch (SnsException $e) {
             $this->logger && $this->logger->error(
                 'Failed to create topic',
                 [
@@ -96,11 +88,9 @@ class SubscribeTopicsCommand extends Command
 
     private function subscribePlatform($platform, $topic)
     {
-        foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-            [
-                'PlatformApplicationArn' => $this->arns[$platform]
-            ]
-        ) as $endpoint) {
+        foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
+            'PlatformApplicationArn' => $this->arns[$platform]
+        ]) as $endpoint) {
             $this->logger && $this->logger->info(
                 'Subscribing device to topic',
                 [

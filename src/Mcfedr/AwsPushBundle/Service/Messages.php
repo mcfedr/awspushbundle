@@ -136,11 +136,9 @@ class Messages
             return;
         }
 
-        foreach ($this->sns->getListEndpointsByPlatformApplicationIterator(
-            [
-                'PlatformApplicationArn' => $this->arns[$platform]
-            ]
-        ) as $endpoint) {
+        foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
+            'PlatformApplicationArn' => $this->arns[$platform]
+        ]) as $endpoint) {
             if ($endpoint['Attributes']['Enabled'] == "true") {
                 try {
                     $this->send($message, $endpoint['EndpointArn']);

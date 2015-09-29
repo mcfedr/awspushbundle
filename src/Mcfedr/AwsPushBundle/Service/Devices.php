@@ -2,7 +2,7 @@
 
 namespace Mcfedr\AwsPushBundle\Service;
 
-use Aws\Sns\Exception\InvalidParameterException;
+use Aws\Sns\Exception\SnsException;
 use Aws\Sns\SnsClient;
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 
@@ -53,7 +53,7 @@ class Devices
                     ]
                 ]
             );
-        } catch (InvalidParameterException $e) {
+        } catch (SnsException $e) {
             preg_match('/Endpoint (.+?) already/', $e->getMessage(), $matches);
             if (isset($matches[1])) {
                 $this->sns->setEndpointAttributes(
