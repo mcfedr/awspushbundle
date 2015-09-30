@@ -254,7 +254,7 @@ class Message implements \JsonSerializable
      * @param array $localizedArguments
      * @return Message
      */
-    public function setLocalizedArguments(array $localizedArguments)
+    public function setLocalizedArguments(array $localizedArguments = null)
     {
         $this->localizedArguments = $localizedArguments;
         return $this;
