@@ -34,7 +34,7 @@ class Devices
      *
      * @param string $deviceId device token
      * @param string $platform platform on which to register
-     * @param string $userData
+     * @param string $userData Arbitrary user data to associate with the endpoint
      * @return string the endpoint ARN for this device
      * @throws PlatformNotConfiguredException
      * @throws \Exception
