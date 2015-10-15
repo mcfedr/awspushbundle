@@ -54,7 +54,7 @@ class Devices
                 ]
             ];
 
-            if ($userData && is_string($userData)) {
+            if ($userData) {
                 $args['CustomUserData'] = $userData;
             }
 
