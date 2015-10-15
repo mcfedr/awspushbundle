@@ -34,25 +34,31 @@ class Devices
      *
      * @param string $deviceId device token
      * @param string $platform platform on which to register
+     * @param string $userData
      * @return string the endpoint ARN for this device
      * @throws PlatformNotConfiguredException
+     * @throws \Exception
      */
-    public function registerDevice($deviceId, $platform)
+    public function registerDevice($deviceId, $platform, $userData = null)
     {
         if (!isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
         }
 
         try {
-            $res = $this->sns->createPlatformEndpoint(
-                [
-                    'PlatformApplicationArn' => $this->arns[$platform],
-                    'Token' => $deviceId,
-                    'Attributes' => [
-                        'Enabled' => 'true'
-                    ]
+            $args = [
+                'PlatformApplicationArn' => $this->arns[$platform],
+                'Token' => $deviceId,
+                'Attributes' => [
+                    'Enabled' => 'true'
                 ]
-            );
+            ];
+
+            if ($userData && is_string($userData)) {
+                $args['CustomUserData'] = $userData;
+            }
+
+            $res = $this->sns->createPlatformEndpoint($args);
         } catch (SnsException $e) {
             preg_match('/Endpoint (.+?) already/', $e->getMessage(), $matches);
             if (isset($matches[1])) {
