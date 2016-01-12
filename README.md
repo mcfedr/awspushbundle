@@ -71,6 +71,36 @@ Alternative usage, using topics to send messages to lots of devices
 If you later add a topic_name to the configuration you can run the `mcfedr:aws:subscribe` command to add your existing
 devices to the topic.
 
+## Text in notifications
+
+For GCM and ADM there is no 'standard' key for text data as there is for Apple pushes, so this bundle send text in a key
+called 'message'.
+
+If localized text is sent the keys are
+* `message-loc-key`
+* `message-loc-args`
+
+## 'Complicated' data on ADM
+
+ADM only allows strings as values in the push data. This bundle lets you send 'complicated' values and will
+automatically json encode these values for ADM. When it does this the key has `_json` added so that its easy to handle
+this on the app side.
+
+### Example
+
+Sending:
+
+    $message = new Message();
+    $message->setCustom(['simple' => 'Hello', 'complicated' => ['inner' => 'value']]);
+    
+ADM received data:
+
+    {"data": {"simple": "Hello", "complicated_json": "{\"inner\":\"value\"}"}}
+    
+To handle this data you should detect keys that end with `_json` and decode the values
+
+**The applies to `message-loc-args` as well, they will always come as `message-loc-args_json` via ADM**
+
 ## Commands
 
 There are some commands to help manage the devices
