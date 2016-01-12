@@ -4,6 +4,7 @@
 namespace Mcfedr\AwsPushBundle\Tests\Message;
 
 
+use Faker\Provider\Base;
 use Faker\Provider\Lorem;
 use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 use Mcfedr\AwsPushBundle\Message\Message;
@@ -32,6 +33,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $ios->setCustom([
             'data' => Lorem::text(3000)
         ]);
+        $ios->setPlatforms([Message::PLATFORM_APNS]);
 
         $android = new Message();
         $android->setCustom([
@@ -39,12 +41,21 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         ]);
         $android->setPlatforms([Message::PLATFORM_GCM]);
 
+        $amazon = new Message();
+        $amazon->setCustom([
+            'data' => Lorem::text(7000)
+        ]);
+        $amazon->setPlatforms([Message::PLATFORM_ADM]);
+
         return [
             [
                 $ios
             ],
             [
                 $android
+            ],
+            [
+                $amazon
             ]
         ];
     }
@@ -63,6 +74,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $ios->setCustom([
             'data' => Lorem::text(2000)
         ]);
+        $ios->setPlatforms([Message::PLATFORM_APNS]);
 
         $android = new Message();
         $android->setCustom([
@@ -70,12 +82,21 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         ]);
         $android->setPlatforms([Message::PLATFORM_GCM]);
 
+        $amazon = new Message();
+        $amazon->setCustom([
+            'data' => Lorem::text(5050)
+        ]);
+        $amazon->setPlatforms([Message::PLATFORM_ADM]);
+
         return [
             [
                 $ios
             ],
             [
                 $android
+            ],
+            [
+                $amazon
             ]
         ];
     }
@@ -103,8 +124,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function testTextMessageStructure($text)
     {
         $message = new Message($text);
-        $string = (string) $message;
 
+        $string = (string) $message;
         $data = json_decode($string, true);
 
         $this->assertInternalType('array', $data);
@@ -142,8 +163,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         $admData = json_decode($data['ADM'], true);
         $this->assertInternalType('array', $admData);
-        $this->assertCount(1, $admData);
+        $this->assertCount(2, $admData);
         $this->assertArrayHasKey('data', $admData);
+        $this->assertArrayHasKey('expiresAfter', $admData);
 
         $this->assertInternalType('array', $admData['data']);
         $this->assertCount(1, $admData['data']);
@@ -188,11 +210,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($args, $gcmData['data']['message-loc-args'], 'GCM.data.message-loc-args should be the args of the message');
 
         $admData = json_decode($data['ADM'], true);
-        $this->assertCount(1, $admData);
+        $this->assertCount(2, $admData);
         $this->assertCount(3, $admData['data']);
         $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
         $this->assertEquals($key, $admData['data']['message-loc-key'], 'ADM.data.message-loc-key should be the key of the message');
-        $this->assertEquals($args, $admData['data']['message-loc-args'], 'ADM.data.message-loc-args should be the args of the message');
+        $this->assertEquals(json_encode($args), $admData['data']['message-loc-args_json'], 'ADM.data.message-loc-args should be the args of the message');
     }
 
     public function localized()
@@ -230,7 +252,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($key, $gcmData['data']['message-loc-key'], 'GCM.data.message-loc-key should be the key of the message');
 
         $admData = json_decode($data['ADM'], true);
-        $this->assertCount(1, $admData);
+        $this->assertCount(2, $admData);
         $this->assertCount(2, $admData['data']);
         $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
         $this->assertEquals($key, $admData['data']['message-loc-key'], 'ADM.data.message-loc-key should be the key of the message');
@@ -240,6 +262,55 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [Lorem::text(1000), Lorem::text(50)]
+        ];
+    }
+
+    public function testAdmCustomData()
+    {
+        $message = new Message();
+        $message->setCustom([
+            'simple' => 'Hello',
+            'complicated' => [
+                'inner' => 'values'
+            ]
+        ]);
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $admData = json_decode($data['ADM'], true);
+
+        $this->assertCount(2, $admData['data']);
+        $this->assertArrayHasKey('simple', $admData['data']);
+        $this->assertEquals('Hello', $admData['data']['simple']);
+        $this->assertArrayHasKey('complicated_json', $admData['data']);
+        $this->assertEquals(json_encode([
+            'inner' => 'values'
+        ]), $admData['data']['complicated_json']);
+    }
+
+    /**
+     * @dataProvider ttl
+     */
+    public function testTtl($ttl)
+    {
+        $message = new Message(Lorem::text(1000));
+        $message->setTtl($ttl);
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $gcmData = json_decode($data['GCM'], true);
+        $this->assertEquals($ttl, $gcmData['time_to_live']);
+
+        $admData = json_decode($data['ADM'], true);
+        $this->assertEquals($ttl, $admData['expiresAfter']);
+    }
+
+    public function ttl()
+    {
+        return [
+            [Base::numberBetween(60, 2678400)]
         ];
     }
 }

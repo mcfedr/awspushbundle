@@ -15,8 +15,8 @@ class Message implements \JsonSerializable
     const NO_COLLAPSE = 'do_not_collapse';
 
     const APNS_MAX_LENGTH = 2048;
-
     const GCM_MAX_LENGTH = 4096;
+    const ADM_MAX_LENGTH = 6144;
 
     const PLATFORM_GCM = 'gcm';
     const PLATFORM_APNS = 'apns';
@@ -113,9 +113,9 @@ class Message implements \JsonSerializable
     private $collapseKey = self::NO_COLLAPSE;
 
     /**
-     * GCM only
+     * GCM and ADM only
      *
-     * @var int
+     * @var int number of seconds that the server should retain the message
      */
     private $ttl;
 
@@ -498,23 +498,43 @@ class Message implements \JsonSerializable
      */
     private function getAdmJson()
     {
-        $data = $this->getAndroidJsonInner($this->text);
-
-        $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
-
-        if (!count($merged)) {
-            $merged = new \stdClass();
-        }
-
         $adm = [
-            'data' => $merged
+            'data' => $this->getTrimmedJson([$this, 'getAdmJsonInner'], static::ADM_MAX_LENGTH, 'You message for ADM is too long'),
+            'expiresAfter' => $this->ttl
         ];
+
+        foreach ($adm['data'] as $key => $value) {
+            if (!is_string($value)) {
+                $adm['data']["{$key}_json"] = json_encode($value);
+                unset($adm['data'][$key]);
+            }
+        }
 
         if ($this->collapseKey != static::NO_COLLAPSE) {
             $adm['consolidationKey'] = $this->collapseKey;
         }
 
         return json_encode($adm, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Gets the data part of the GCM message
+     *
+     * @param $text
+     * @return array
+     */
+    private function getAdmJsonInner($text)
+    {
+        $data = $this->getAndroidJsonInner($text);
+
+        $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
+
+        // Force to be an object, because it shouldnt get encoded as [] but as {}
+        if (!count($merged)) {
+            $merged = new \stdClass();
+        }
+
+        return $merged;
     }
 
     /**
