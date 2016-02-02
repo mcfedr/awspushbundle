@@ -10,3 +10,4 @@ before_script:
     - composer install --prefer-source
 
 script: ./vendor/bin/phpunit
+sudo: false
