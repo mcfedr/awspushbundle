@@ -13,7 +13,7 @@ class BroadcastType extends AbstractType
     {
         $builder
             ->add('platform')
-            ->add('message', new MessageType());
+            ->add('message', MessageType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -23,12 +23,7 @@ class BroadcastType extends AbstractType
         ]);
     }
 
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'broadcast';
     }

@@ -30,7 +30,7 @@ class ApiController extends JsonController
     public function registerDeviceAction(Request $request)
     {
         $device = new Device();
-        $form = $this->createForm(new DeviceType(), $device);
+        $form = $this->createForm(DeviceType::class, $device);
         $this->handleJsonForm($form, $request);
 
         try {
@@ -76,7 +76,7 @@ class ApiController extends JsonController
     public function broadcastAction(Request $request)
     {
         $broadcast = new Broadcast();
-        $form = $this->createForm(new BroadcastType(), $broadcast);
+        $form = $this->createForm(BroadcastType::class, $broadcast);
         $this->handleJsonForm($form, $request);
 
         try {
