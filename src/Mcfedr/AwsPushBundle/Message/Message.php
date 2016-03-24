@@ -145,6 +145,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Set the number on displayed badge
+     * APNS only
+     *
      * @param int $badge
      */
     public function setBadge($badge)
@@ -169,6 +172,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Including this key means that when your app is launched in the background or resumed
+     * APNS only
+     *
      * @param boolean $contentAvailable
      */
     public function setContentAvailable($contentAvailable)
@@ -177,9 +183,11 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * This is the data to send to all services, it will be deep merged with the other data
+     *
      * @param array $custom
      */
-    public function setCustom($custom)
+    public function setCustom(array $custom)
     {
         $this->custom = $custom;
     }
@@ -193,6 +201,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Name of sound file to use
+     * APNS only
+     *
      * @param string $sound
      */
     public function setSound($sound)
@@ -209,6 +220,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * The text is automatically trimmed when sending to APNS and GCM
+     * The text will be sent to GCM and ADM as 'message' in the data field
+     *
      * @param string $text
      */
     public function setText($text)
@@ -233,6 +247,8 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * The key of a localized string that will form the message displayed
+     *
      * @param string $localizedKey
      * @return Message
      */
@@ -251,6 +267,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Arguments for the localized message
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
      * @param array $localizedArguments
      * @return Message
      */
@@ -261,7 +280,7 @@ class Message implements \JsonSerializable
     }
 
     /**
-     * Convience to set localized text
+     * Convenience to set localized text
      *
      * @param string $key
      * @param array|null $arguments
@@ -281,6 +300,9 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
+     * platform
+     *
      * @param boolean $allowTrimming
      */
     public function setAllowTrimming($allowTrimming)
@@ -289,6 +311,8 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * GCM and ADM only
+     *
      * @param string $collapseKey
      */
     public function setCollapseKey($collapseKey)
@@ -305,6 +329,8 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * GCM only
+     *
      * @param boolean $delayWhileIdle
      */
     public function setDelayWhileIdle($delayWhileIdle)
@@ -321,6 +347,10 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * number of seconds that the server should retain the message
+     *
+     * GCM and ADM only
+     *
      * @param int $ttl
      */
     public function setTtl($ttl)
@@ -337,9 +367,11 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field
+     *
      * @param array $gcmData
      */
-    public function setGcmData($gcmData)
+    public function setGcmData(array $gcmData)
     {
         $this->gcmData = $gcmData;
     }
@@ -353,10 +385,12 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field
+     *
      * @param array $admData
      * @return Message
      */
-    public function setAdmData($admData)
+    public function setAdmData(array $admData)
     {
         $this->admData = $admData;
         return $this;
@@ -371,10 +405,12 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * If set, will be sent to APNS, deep merged as the top level, meaning you can add extra data to 'aps'
+     *
      * @param array $apnsData
      * @return Message
      */
-    public function setApnsData($apnsData)
+    public function setApnsData(array $apnsData)
     {
         $this->apnsData = $apnsData;
         return $this;
@@ -397,6 +433,8 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * Platforms that this message will create JSON for, and throw errors for (for long messages)
+     *
      * @param array $platforms
      * @see Message::PLATFORM_GCM
      * @see Message::PLATFORM_APNS
@@ -407,6 +445,9 @@ class Message implements \JsonSerializable
         $this->platforms = $platforms;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function jsonSerialize()
     {
         $data = [
@@ -630,7 +671,7 @@ class Message implements \JsonSerializable
      * @param array $array2
      * @return array
      */
-    private function arrayMergeDeep($array1, $array2)
+    private function arrayMergeDeep(array $array1, array $array2)
     {
         $result = [];
         foreach (func_get_args() as $array) {
