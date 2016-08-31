@@ -114,6 +114,9 @@ class Message implements \JsonSerializable
 
     /**
      * GCM and ADM only
+     * 
+     * GCM: default is 4 weeks
+     * ADM: default is 1 week
      *
      * @var int number of seconds that the server should retain the message
      */
