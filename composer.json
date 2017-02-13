@@ -30,7 +30,8 @@
         "symfony/monolog-bundle": "~2.6",
         "fzaninotto/faker": "~1.4",
         "mcfedr/json-form": "^3.1",
-        "sensio/framework-extra-bundle": "^3.0"
+        "sensio/framework-extra-bundle": "^3.0",
+        "friendsofphp/php-cs-fixer": "^2.1"
     },
     "autoload": {
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }

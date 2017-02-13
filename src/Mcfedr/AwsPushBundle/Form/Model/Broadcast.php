@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mcfedr\AwsPushBundle\Form\Model;
-
 
 use Mcfedr\AwsPushBundle\Message\Message;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -32,11 +30,13 @@ class Broadcast
 
     /**
      * @param Message $message
+     *
      * @return Broadcast
      */
     public function setMessage($message)
     {
         $this->message = $message;
+
         return $this;
     }
 
@@ -50,11 +50,13 @@ class Broadcast
 
     /**
      * @param string $platform
+     *
      * @return Broadcast
      */
     public function setPlatform($platform)
     {
         $this->platform = $platform;
+
         return $this;
     }
 }

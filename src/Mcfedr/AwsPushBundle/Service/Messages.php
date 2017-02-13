@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 
 class Messages
 {
-
     /**
      * @var SnsClient
      */
@@ -32,10 +31,10 @@ class Messages
     private $debug;
 
     /**
-     * @param SnsClient $client
-     * @param array $platformARNS
+     * @param SnsClient       $client
+     * @param array           $platformARNS
      * @param LoggerInterface $logger
-     * @param bool $debug
+     * @param bool            $debug
      */
     public function __construct(SnsClient $client, $platformARNS, $debug, LoggerInterface $logger = null)
     {
@@ -46,10 +45,11 @@ class Messages
     }
 
     /**
-     * Send a message to all devices on one or all platforms
+     * Send a message to all devices on one or all platforms.
      *
      * @param Message $message
-     * @param string $platform
+     * @param string  $platform
+     *
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
      */
@@ -69,10 +69,11 @@ class Messages
     }
 
     /**
-     * Send a message to an endpoint
+     * Send a message to an endpoint.
      *
      * @param Message|string $message
-     * @param string $endpointArn
+     * @param string         $endpointArn
+     *
      * @throws MessageTooLongException
      */
     public function send($message, $endpointArn)
@@ -84,6 +85,7 @@ class Messages
                     'Message' => $message
                 ]
             );
+
             return;
         }
 
@@ -102,13 +104,16 @@ class Messages
 
     /**
      * @param Message $message
+     *
      * @return string
+     *
      * @throws MessageTooLongException
      */
     private function encodeMessage(Message $message)
     {
         try {
             $json = json_encode($message, JSON_UNESCAPED_UNICODE);
+
             return $json;
         } catch (\Exception $e) {
             if ($e->getPrevious() instanceof MessageTooLongException) {
@@ -119,10 +124,10 @@ class Messages
     }
 
     /**
-     * Send a message to all devices on a platform
+     * Send a message to all devices on a platform.
      *
      * @param Message|string $message
-     * @param string $platform
+     * @param string         $platform
      */
     private function broadcastToPlatform($message, $platform)
     {
@@ -133,13 +138,14 @@ class Messages
                     'Message' => $message
                 ]
             );
+
             return;
         }
 
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpoint) {
-            if ($endpoint['Attributes']['Enabled'] == "true") {
+            if ($endpoint['Attributes']['Enabled'] == 'true') {
                 try {
                     $this->send($message, $endpoint['EndpointArn']);
                 } catch (\Exception $e) {
@@ -163,5 +169,4 @@ class Messages
             }
         }
     }
-
 }

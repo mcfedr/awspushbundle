@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mcfedr\AwsPushBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;

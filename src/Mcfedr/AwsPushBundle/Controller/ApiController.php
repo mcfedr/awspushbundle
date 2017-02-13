@@ -3,13 +3,13 @@
 namespace Mcfedr\AwsPushBundle\Controller;
 
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
-use Mcfedr\AwsPushBundle\Form\Type\BroadcastType;
-use Mcfedr\AwsPushBundle\Form\Type\DeviceType;
 use Mcfedr\AwsPushBundle\Form\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Form\Model\Device;
+use Mcfedr\AwsPushBundle\Form\Type\BroadcastType;
+use Mcfedr\AwsPushBundle\Form\Type\DeviceType;
 use Mcfedr\JsonFormBundle\Controller\JsonController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
  * This should server as an example of how to use the services
  * provided by this bundle.
  * In some simple cases it may be enough to use this controller.
- *
- * @package Mcfedr\AwsPushBundle\Controller
  */
 class ApiController extends JsonController
 {
@@ -35,7 +33,7 @@ class ApiController extends JsonController
 
         try {
             if (($arn = $this->get('mcfedr_aws_push.devices')->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
-                $this->has('logger') && $this->get('logger')->info('Device registered',  [
+                $this->has('logger') && $this->get('logger')->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
                     'platform' => $device->getPlatform()
@@ -56,6 +54,7 @@ class ApiController extends JsonController
                 'e' => $e,
                 'platform' => $device->getPlatform()
             ]);
+
             return new Response('Unknown platform', 400);
         } catch (\Exception $e) {
             $this->has('logger') && $this->get('logger')->error('Exception registering device', [
@@ -91,6 +90,7 @@ class ApiController extends JsonController
             $this->has('logger') && $this->get('logger')->error('Unknown platform', [
                 'e' => $e
             ]);
+
             return new Response('Unknown platform', 400);
         }
     }

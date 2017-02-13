@@ -1,4 +1,5 @@
 <?php
+
 namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\Exception\SnsException;
@@ -32,9 +33,9 @@ class SubscribeTopicsCommand extends Command
     private $logger;
 
     /**
-     * @param string $topicArn
-     * @param SnsClient $sns
-     * @param array $arns
+     * @param string                   $topicArn
+     * @param SnsClient                $sns
+     * @param array                    $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct($topicArn, SnsClient $sns, $arns, LoggerInterface $logger = null)
@@ -46,7 +47,6 @@ class SubscribeTopicsCommand extends Command
 
         parent::__construct();
     }
-
 
     protected function configure()
     {

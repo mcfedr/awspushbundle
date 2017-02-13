@@ -1,4 +1,5 @@
 <?php
+
 namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
@@ -25,8 +26,8 @@ class RemoveDisabledCommand extends Command
     private $logger;
 
     /**
-     * @param SnsClient $sns
-     * @param array $arns
+     * @param SnsClient                $sns
+     * @param array                    $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(SnsClient $sns, $arns, LoggerInterface $logger = null)
@@ -37,7 +38,6 @@ class RemoveDisabledCommand extends Command
         $this->arns = $arns;
         $this->logger = $logger;
     }
-
 
     protected function configure()
     {
@@ -55,7 +55,7 @@ class RemoveDisabledCommand extends Command
     }
 
     /**
-     * Enable all devices registered on platform
+     * Enable all devices registered on platform.
      *
      * @param string $platform
      */
@@ -64,7 +64,7 @@ class RemoveDisabledCommand extends Command
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpoint) {
-            if ($endpoint['Attributes']['Enabled'] == "false") {
+            if ($endpoint['Attributes']['Enabled'] == 'false') {
                 try {
                     $this->sns->deleteEndpoint(
                         [

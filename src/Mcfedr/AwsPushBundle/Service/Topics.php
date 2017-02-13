@@ -1,4 +1,5 @@
 <?php
+
 namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\SnsClient;
@@ -11,7 +12,6 @@ use Psr\Log\LoggerInterface;
  */
 class Topics
 {
-
     /**
      * @var SnsClient
      */
@@ -33,9 +33,9 @@ class Topics
     private $debug;
 
     /**
-     * @param SnsClient $client
+     * @param SnsClient       $client
      * @param LoggerInterface $logger
-     * @param Messages $messages
+     * @param Messages        $messages
      * @param $debug
      */
     public function __construct(SnsClient $client, Messages $messages, $debug, LoggerInterface $logger = null)
@@ -47,9 +47,12 @@ class Topics
     }
 
     /**
-     * Create a topic
-     * @param  string $name Topic name
+     * Create a topic.
+     *
+     * @param string $name Topic name
+     *
      * @return string The topic ARN
+     *
      * @deprecated use SnsClient directly to subscribe
      */
     public function createTopic($name)
@@ -64,8 +67,10 @@ class Topics
     }
 
     /**
-     * Delete a topic
-     * @param  string $topicArn Topic ARN
+     * Delete a topic.
+     *
+     * @param string $topicArn Topic ARN
+     *
      * @deprecated use SnsClient directly to subscribe
      */
     public function deleteTopic($topicArn)
@@ -79,10 +84,11 @@ class Topics
 
     /**
      * Subscribe a device to the topic, will create new numbered topics
-     * once the first is full
+     * once the first is full.
      *
      * @param string $deviceArn
-     * @param string $topicArn The base name of the topics to use
+     * @param string $topicArn  The base name of the topics to use
+     *
      * @deprecated use SnsClient directly to subscribe
      * @see SnsClient::subscribe
      */
@@ -98,10 +104,11 @@ class Topics
     }
 
     /**
-     * Send a message to all topics in the group
+     * Send a message to all topics in the group.
      *
      * @param Message $message
-     * @param string $topicArn
+     * @param string  $topicArn
+     *
      * @deprecated Use Messages send method and pass the topicArn as the destination
      * @see Messages::send
      */
@@ -114,6 +121,7 @@ class Topics
                     'Message' => $message
                 ]
             );
+
             return;
         }
 

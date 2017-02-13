@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
-
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -38,7 +36,7 @@ class ApiControllerTest extends WebTestCase
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW'   => 'password'
+            'PHP_AUTH_PW' => 'password'
         ], json_encode([
             'broadcast' => [
                 'message' => [

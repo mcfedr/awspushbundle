@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mcfedr\AwsPushBundle\Tests\Message;
-
 
 use Faker\Provider\Base;
 use Faker\Provider\Lorem;

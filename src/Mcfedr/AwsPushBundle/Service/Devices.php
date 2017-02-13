@@ -8,7 +8,6 @@ use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 
 class Devices
 {
-
     /**
      * @var SnsClient
      */
@@ -21,7 +20,7 @@ class Devices
 
     /**
      * @param SnsClient $client
-     * @param array $platformARNS
+     * @param array     $platformARNS
      */
     public function __construct(SnsClient $client, $platformARNS)
     {
@@ -30,12 +29,14 @@ class Devices
     }
 
     /**
-     * Register a device token
+     * Register a device token.
      *
      * @param string $deviceId device token
      * @param string $platform platform on which to register
      * @param string $userData Arbitrary user data to associate with the endpoint
+     *
      * @return string the endpoint ARN for this device
+     *
      * @throws PlatformNotConfiguredException
      * @throws \Exception
      */
@@ -70,6 +71,7 @@ class Devices
                         ]
                     ]
                 );
+
                 return $matches[1];
             } else {
                 throw $e;
@@ -80,7 +82,7 @@ class Devices
     }
 
     /**
-     * Unregister a device, using its endpoint ARN
+     * Unregister a device, using its endpoint ARN.
      *
      * @param string $endpoint
      */
@@ -94,7 +96,7 @@ class Devices
     }
 
     /**
-     * Returns a list of configured platforms
+     * Returns a list of configured platforms.
      *
      * @return array
      */

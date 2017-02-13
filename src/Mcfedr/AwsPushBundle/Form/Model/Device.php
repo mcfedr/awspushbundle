@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mcfedr\AwsPushBundle\Form\Model;
-
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -30,11 +28,13 @@ class Device
 
     /**
      * @param string $deviceId
+     *
      * @return Device
      */
     public function setDeviceId($deviceId)
     {
         $this->deviceId = $deviceId;
+
         return $this;
     }
 
@@ -48,11 +48,13 @@ class Device
 
     /**
      * @param string $platform
+     *
      * @return Device
      */
     public function setPlatform($platform)
     {
         $this->platform = $platform;
+
         return $this;
     }
 }
