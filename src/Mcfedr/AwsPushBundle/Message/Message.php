@@ -119,7 +119,7 @@ class Message implements \JsonSerializable
      * @see Message::PLATFORM_APNS
      * @see Message::PLATFORM_ADM
      */
-    private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_GCM];
+    private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_ADM];
 
     /**
      * @param string $text
