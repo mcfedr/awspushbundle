@@ -13,8 +13,8 @@ mcfedr_aws_push:
     platforms:
         test: 'platform'
     aws:
-        key: 'key'
-        secret: 'secret'
+#        key: 'key'
+#        secret: 'secret'
         region: 'region'
     topic_arn: 'topic'
 

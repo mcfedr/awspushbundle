@@ -1,7 +1,6 @@
 parameters:
     mcfedr_aws_push.platforms: []
-    mcfedr_aws_push.aws.key: ''
-    mcfedr_aws_push.aws.secret: ''
+    mcfedr_aws_push.aws.credentials: ~
     mcfedr_aws_push.aws.region: ''
     mcfedr_aws_push.debug: false
     mcfedr_aws_push.topic_arn: ''
@@ -63,6 +62,4 @@ services:
           -
             version: "2010-03-31"
             region: "%mcfedr_aws_push.aws.region%"
-            credentials:
-               key: "%mcfedr_aws_push.aws.key%"
-               secret: "%mcfedr_aws_push.aws.secret%"
+            credentials: "%mcfedr_aws_push.aws.credentials%"

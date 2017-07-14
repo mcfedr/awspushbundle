@@ -37,6 +37,10 @@ Put something like this in your config. The arns in the platforms section should
             secret: 'my secret'
             region: 'my region'
 
+You can skip `key` and `secret` if you have want the Aws SDK to get credentials indirectly, either from
+[environment](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#environment-credentials) or
+[ec2 role](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#using-iam-roles-for-amazon-ec2-instances).
+
 ## Usage
 
 Basically have a look at how the ApiController does its stuff
