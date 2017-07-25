@@ -1,19 +1,13 @@
 sudo: false
 language: php
 php:
-    - 5.6
     - 5.5
-    - hhvm
+    - 5.6
     - 7.0
     - 7.1
 
-matrix:
-    allow_failures:
-        - php: hhvm
-
 before_script:
-    - composer selfupdate
-    - composer install --prefer-source
+    - composer install
 
 script:
     - ./vendor/bin/php-cs-fixer fix --dry-run --diff
