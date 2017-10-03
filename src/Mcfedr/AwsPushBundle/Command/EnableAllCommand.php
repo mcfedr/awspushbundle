@@ -63,26 +63,28 @@ class EnableAllCommand extends Command
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
-        ]) as $endpoint) {
-            if ($endpoint['Attributes']['Enabled'] == 'false') {
-                try {
-                    $this->sns->setEndpointAttributes(
-                        [
-                            'EndpointArn' => $endpoint['EndpointArn'],
-                            'Attributes' => [
-                                'Enabled' => 'true'
+        ]) as $endpointsResult) {
+            foreach ($endpointsResult['Endpoints'] as $endpoint) {
+                if ($endpoint['Attributes']['Enabled'] == 'false') {
+                    try {
+                        $this->sns->setEndpointAttributes(
+                            [
+                                'EndpointArn' => $endpoint['EndpointArn'],
+                                'Attributes' => [
+                                    'Enabled' => 'true'
+                                ]
                             ]
-                        ]
-                    );
-                    $this->logger && $this->logger->info("Enabled {$endpoint['EndpointArn']}");
-                } catch (\Exception $e) {
-                    $this->logger && $this->logger->error(
-                        "Failed to push set attributes on {$endpoint['EndpointArn']}",
-                        [
-                            'exception' => $e,
-                            'endpoint' => $endpoint
-                        ]
-                    );
+                        );
+                        $this->logger && $this->logger->info("Enabled {$endpoint['EndpointArn']}");
+                    } catch (\Exception $e) {
+                        $this->logger && $this->logger->error(
+                            "Failed to push set attributes on {$endpoint['EndpointArn']}",
+                            [
+                                'exception' => $e,
+                                'endpoint' => $endpoint
+                            ]
+                        );
+                    }
                 }
             }
         }

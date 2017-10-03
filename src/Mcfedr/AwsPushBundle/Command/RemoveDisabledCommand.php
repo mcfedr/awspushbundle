@@ -63,23 +63,25 @@ class RemoveDisabledCommand extends Command
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
-        ]) as $endpoint) {
-            if ($endpoint['Attributes']['Enabled'] == 'false') {
-                try {
-                    $this->sns->deleteEndpoint(
-                        [
-                            'EndpointArn' => $endpoint['EndpointArn']
-                        ]
-                    );
-                    $this->logger && $this->logger->info("Removed {$endpoint['EndpointArn']}");
-                } catch (\Exception $e) {
-                    $this->logger && $this->logger->error(
-                        "Failed to remove endpoint {$endpoint['EndpointArn']}",
-                        [
-                            'exception' => $e,
-                            'endpoint' => $endpoint
-                        ]
-                    );
+        ]) as $endpointsResult) {
+            foreach ($endpointsResult['Endpoints'] as $endpoint) {
+                if ($endpoint['Attributes']['Enabled'] == 'false') {
+                    try {
+                        $this->sns->deleteEndpoint(
+                            [
+                                'EndpointArn' => $endpoint['EndpointArn']
+                            ]
+                        );
+                        $this->logger && $this->logger->info("Removed {$endpoint['EndpointArn']}");
+                    } catch (\Exception $e) {
+                        $this->logger && $this->logger->error(
+                            "Failed to remove endpoint {$endpoint['EndpointArn']}",
+                            [
+                                'exception' => $e,
+                                'endpoint' => $endpoint
+                            ]
+                        );
+                    }
                 }
             }
         }

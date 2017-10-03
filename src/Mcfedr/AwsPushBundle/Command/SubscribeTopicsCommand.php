@@ -79,25 +79,27 @@ class SubscribeTopicsCommand extends Command
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform]
-        ]) as $endpoint) {
-            $this->logger && $this->logger->info('Subscribing device to topic', [
-                'device' => $endpoint['EndpointArn'],
-                'topic' => $topic,
-                'platform' => $platform
-            ]);
-            try {
-                $this->sns->subscribe([
-                    'TopicArn' => $topic,
-                    'Protocol' => 'application',
-                    'Endpoint' => $endpoint['EndpointArn']
-                ]);
-            } catch (SnsException $e) {
-                $this->logger && $this->logger->info('Error subscribing device to topic', [
+        ]) as $endpointsResult) {
+            foreach ($endpointsResult['Endpoints'] as $endpoint) {
+                $this->logger && $this->logger->info('Subscribing device to topic', [
                     'device' => $endpoint['EndpointArn'],
                     'topic' => $topic,
-                    'platform' => $platform,
-                    'exception' => $e
+                    'platform' => $platform
                 ]);
+                try {
+                    $this->sns->subscribe([
+                        'TopicArn' => $topic,
+                        'Protocol' => 'application',
+                        'Endpoint' => $endpoint['EndpointArn']
+                    ]);
+                } catch (SnsException $e) {
+                    $this->logger && $this->logger->info('Error subscribing device to topic', [
+                        'device' => $endpoint['EndpointArn'],
+                        'topic' => $topic,
+                        'platform' => $platform,
+                        'exception' => $e
+                    ]);
+                }
             }
         }
     }
