@@ -149,11 +149,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         $gcmData = json_decode($data['GCM'], true);
         $this->assertInternalType('array', $gcmData);
-        $this->assertCount(4, $gcmData);
+        $this->assertCount(5, $gcmData);
         $this->assertArrayHasKey('data', $gcmData);
         $this->assertArrayHasKey('collapse_key', $gcmData);
         $this->assertArrayHasKey('time_to_live', $gcmData);
         $this->assertArrayHasKey('delay_while_idle', $gcmData);
+        $this->assertArrayHasKey('priority', $gcmData);
 
         $this->assertInternalType('array', $gcmData['data']);
         $this->assertCount(1, $gcmData['data']);
@@ -201,7 +202,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($args, $apnsData['aps']['alert']['loc-args'], 'APNS.aps.alert.loc-args should be the args of the message');
 
         $gcmData = json_decode($data['GCM'], true);
-        $this->assertCount(4, $gcmData);
+        $this->assertCount(5, $gcmData);
         $this->assertCount(3, $gcmData['data']);
         $this->assertEquals($text, $gcmData['data']['message'], 'GCM.data.message should be the text of the message');
         $this->assertEquals($key, $gcmData['data']['message-loc-key'], 'GCM.data.message-loc-key should be the key of the message');
@@ -244,7 +245,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($key, $apnsData['aps']['alert']['loc-key'], 'APNS.aps.alert.loc-key should be the key of the message');
 
         $gcmData = json_decode($data['GCM'], true);
-        $this->assertCount(4, $gcmData);
+        $this->assertCount(5, $gcmData);
         $this->assertCount(2, $gcmData['data']);
         $this->assertEquals($text, $gcmData['data']['message'], 'GCM.data.message should be the text of the message');
         $this->assertEquals($key, $gcmData['data']['message-loc-key'], 'GCM.data.message-loc-key should be the key of the message');

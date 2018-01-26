@@ -22,6 +22,9 @@ class Message implements \JsonSerializable
     const PLATFORM_APNS = 'apns';
     const PLATFORM_ADM = 'adm';
 
+    const PRIORITY_HIGH = 'high';
+    const PRIORITY_NORMAL = 'normal';
+
     /**
      * The text is automatically trimmed when sending to APNS and GCM
      * The text will be sent to GCM and ADM as 'message' in the data field.
@@ -29,6 +32,13 @@ class Message implements \JsonSerializable
      * @var string
      */
     private $text;
+
+    /**
+     * This is notification priority for GCM should be 'high' or 'normal'. High priority is default.
+     *
+     * @var string
+     */
+    private $priority = self::PRIORITY_HIGH;
 
     /**
      * The key of a localized string that will form the message displayed.
@@ -241,6 +251,30 @@ class Message implements \JsonSerializable
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * Set Priority.
+     *
+     * @param string $priority
+     *
+     * @return $this
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Get Priority.
+     *
+     * @return string
+     */
+    public function getPriority()
+    {
+        return $this->priority;
     }
 
     /**
@@ -608,6 +642,7 @@ class Message implements \JsonSerializable
             'collapse_key' => $this->collapseKey,
             'time_to_live' => $this->ttl,
             'delay_while_idle' => $this->delayWhileIdle,
+            'priority' => $this->priority,
             'data' => $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long')
         ], JSON_UNESCAPED_UNICODE);
     }
