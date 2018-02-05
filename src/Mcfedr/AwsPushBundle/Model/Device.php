@@ -1,6 +1,6 @@
 <?php
 
-namespace Mcfedr\AwsPushBundle\Form\Model;
+namespace Mcfedr\AwsPushBundle\Model;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 

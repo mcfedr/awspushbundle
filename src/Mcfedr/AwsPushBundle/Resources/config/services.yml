@@ -8,12 +8,14 @@ parameters:
 services:
     mcfedr_aws_push.devices:
         class: Mcfedr\AwsPushBundle\Service\Devices
+        public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
 
     mcfedr_aws_push.messages:
         class: Mcfedr\AwsPushBundle\Service\Messages
+        public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -22,6 +24,7 @@ services:
 
     mcfedr_aws_push.topics:
         class: Mcfedr\AwsPushBundle\Service\Topics
+        public: true
         arguments:
             - "@mcfedr_aws_push.sns_client"
             - "@mcfedr_aws_push.messages"
@@ -30,6 +33,7 @@ services:
 
     mcfedr_aws_push.command.subscribe:
         class: Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand
+        public: true
         arguments:
           - "%mcfedr_aws_push.topic_arn%"
           - "@mcfedr_aws_push.sns_client"
@@ -40,6 +44,7 @@ services:
 
     mcfedr_aws_push.command.enable:
         class: Mcfedr\AwsPushBundle\Command\EnableAllCommand
+        public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -49,6 +54,7 @@ services:
 
     mcfedr_aws_push.command.remove:
         class: Mcfedr\AwsPushBundle\Command\RemoveDisabledCommand
+        public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -58,8 +64,22 @@ services:
 
     mcfedr_aws_push.sns_client:
         class: Aws\Sns\SnsClient
+        public: true
         arguments:
           -
             version: "2010-03-31"
             region: "%mcfedr_aws_push.aws.region%"
             credentials: "%mcfedr_aws_push.aws.credentials%"
+
+    Mcfedr\AwsPushBundle\Controller\:
+        public: true
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    Mcfedr\AwsPushBundle\Normalizer\DeviceNormalizer:
+        tags:
+            - { name: serializer.normalizer }
+
+    Mcfedr\AwsPushBundle\Normalizer\BroadcastNormalizer:
+        tags:
+            - { name: serializer.normalizer }
