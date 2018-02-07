@@ -6,34 +6,27 @@ parameters:
     mcfedr_aws_push.topic_arn: ''
 
 services:
-    mcfedr_aws_push.devices:
-        class: Mcfedr\AwsPushBundle\Service\Devices
+    Mcfedr\AwsPushBundle\Service\Devices:
         public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
 
-    mcfedr_aws_push.messages:
-        class: Mcfedr\AwsPushBundle\Service\Messages
-        public: true
+    Mcfedr\AwsPushBundle\Service\Messages:
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
           - "%mcfedr_aws_push.debug%"
           - "@?logger"
 
-    mcfedr_aws_push.topics:
-        class: Mcfedr\AwsPushBundle\Service\Topics
-        public: true
+    Mcfedr\AwsPushBundle\Service\Topics:
         arguments:
             - "@mcfedr_aws_push.sns_client"
-            - "@mcfedr_aws_push.messages"
+            - '@Mcfedr\AwsPushBundle\Service\Messages'
             - "%mcfedr_aws_push.debug%"
             - "@?logger"
 
-    mcfedr_aws_push.command.subscribe:
-        class: Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand
-        public: true
+    Mcfedr\AwsPushBundle\Command\SubscribeTopicsCommand:
         arguments:
           - "%mcfedr_aws_push.topic_arn%"
           - "@mcfedr_aws_push.sns_client"
@@ -42,9 +35,7 @@ services:
         tags:
           -  { name: console.command }
 
-    mcfedr_aws_push.command.enable:
-        class: Mcfedr\AwsPushBundle\Command\EnableAllCommand
-        public: true
+    Mcfedr\AwsPushBundle\Command\EnableAllCommand:
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -52,9 +43,7 @@ services:
         tags:
           -  { name: console.command }
 
-    mcfedr_aws_push.command.remove:
-        class: Mcfedr\AwsPushBundle\Command\RemoveDisabledCommand
-        public: true
+    Mcfedr\AwsPushBundle\Command\RemoveDisabledCommand:
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -63,8 +52,8 @@ services:
           -  { name: console.command }
 
     mcfedr_aws_push.sns_client:
-        class: Aws\Sns\SnsClient
         public: true
+        class: Aws\Sns\SnsClient
         arguments:
           -
             version: "2010-03-31"
@@ -83,3 +72,16 @@ services:
     Mcfedr\AwsPushBundle\Normalizer\BroadcastNormalizer:
         tags:
             - { name: serializer.normalizer }
+
+# public aliases
+    mcfedr_aws_push.topics:
+        alias: Mcfedr\AwsPushBundle\Service\Topics
+        public: true
+
+    mcfedr_aws_push.devices:
+        alias: Mcfedr\AwsPushBundle\Service\Devices
+        public: true
+
+    mcfedr_aws_push.messages:
+        alias: Mcfedr\AwsPushBundle\Service\Messages
+        public: true

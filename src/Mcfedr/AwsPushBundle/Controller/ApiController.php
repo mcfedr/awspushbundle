@@ -5,6 +5,8 @@ namespace Mcfedr\AwsPushBundle\Controller;
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 use Mcfedr\AwsPushBundle\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Model\Device;
+use Mcfedr\AwsPushBundle\Service\Devices;
+use Mcfedr\AwsPushBundle\Service\Messages;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -25,14 +27,14 @@ class ApiController extends Controller
      * @Route("/devices", name="mcfedr_aws_push.register")
      * @Method({"POST"})
      */
-    public function registerDeviceAction(Request $request, SerializerInterface $serializer)
+    public function registerDeviceAction(Request $request, SerializerInterface $serializer, Devices $devices)
     {
         $device = new Device();
         $serializer->deserialize($request->getContent(), Device::class, 'json', [
             AbstractNormalizer::OBJECT_TO_POPULATE => $device
         ]);
         try {
-            if (($arn = $this->get('mcfedr_aws_push.devices')->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
+            if (($arn = $devices->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
                 $this->has('logger') && $this->get('logger')->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
@@ -72,7 +74,7 @@ class ApiController extends Controller
      * @Method({"POST"})
      * @Security("has_role('ROLE_MCFEDR_AWS_BROADCAST')")
      */
-    public function broadcastAction(Request $request, SerializerInterface $serializer)
+    public function broadcastAction(Request $request, SerializerInterface $serializer, Messages $messages)
     {
         $broadcast = new Broadcast();
         $serializer->deserialize($request->getContent(), Broadcast::class, 'json', [
@@ -80,9 +82,9 @@ class ApiController extends Controller
         ]);
         try {
             if ($this->container->getParameter('mcfedr_aws_push.topic_arn') && !$broadcast->getPlatform()) {
-                $this->get('mcfedr_aws_push.messages')->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
+                $messages->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
             } else {
-                $this->get('mcfedr_aws_push.messages')->broadcast($broadcast->getMessage(), $broadcast->getPlatform());
+                $messages->broadcast($broadcast->getMessage(), $broadcast->getPlatform());
             }
 
             return new Response('Message sent', 200);
