@@ -10,7 +10,10 @@ class ApiControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $snsMock = $this->getMock('Aws\Sns\SnsClient', ['createPlatformEndpoint'], [], '', false);
+        $snsMock = $this->getMockBuilder('Aws\Sns\SnsClient')
+            ->setMethods(['createPlatformEndpoint'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $snsMock->expects($this->once())
             ->method('createPlatformEndpoint');
 
@@ -27,8 +30,10 @@ class ApiControllerTest extends WebTestCase
     public function testBroadcast()
     {
         $client = self::createClient();
-
-        $snsMock = $this->getMock('Aws\Sns\SnsClient', ['publish'], [], '', false);
+        $snsMock = $this->getMockBuilder('Aws\Sns\SnsClient')
+            ->setMethods(['publish'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $snsMock->expects($this->once())
             ->method('publish');
 

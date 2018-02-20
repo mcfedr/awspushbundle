@@ -3,36 +3,38 @@
 namespace Mcfedr\AwsPushBundle\Controller;
 
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
-use Mcfedr\AwsPushBundle\Form\Model\Broadcast;
-use Mcfedr\AwsPushBundle\Form\Model\Device;
-use Mcfedr\AwsPushBundle\Form\Type\BroadcastType;
-use Mcfedr\AwsPushBundle\Form\Type\DeviceType;
-use Mcfedr\JsonFormBundle\Controller\JsonController;
+use Mcfedr\AwsPushBundle\Model\Broadcast;
+use Mcfedr\AwsPushBundle\Model\Device;
+use Mcfedr\AwsPushBundle\Service\Devices;
+use Mcfedr\AwsPushBundle\Service\Messages;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * This should server as an example of how to use the services
  * provided by this bundle.
  * In some simple cases it may be enough to use this controller.
  */
-class ApiController extends JsonController
+class ApiController extends Controller
 {
     /**
      * @Route("/devices", name="mcfedr_aws_push.register")
      * @Method({"POST"})
      */
-    public function registerDeviceAction(Request $request)
+    public function registerDeviceAction(Request $request, SerializerInterface $serializer, Devices $devices)
     {
         $device = new Device();
-        $form = $this->createForm(DeviceType::class, $device);
-        $this->handleJsonForm($form, $request);
-
+        $serializer->deserialize($request->getContent(), Device::class, 'json', [
+            AbstractNormalizer::OBJECT_TO_POPULATE => $device
+        ]);
         try {
-            if (($arn = $this->get('mcfedr_aws_push.devices')->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
+            if (($arn = $devices->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
                 $this->has('logger') && $this->get('logger')->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
@@ -72,17 +74,17 @@ class ApiController extends JsonController
      * @Method({"POST"})
      * @Security("has_role('ROLE_MCFEDR_AWS_BROADCAST')")
      */
-    public function broadcastAction(Request $request)
+    public function broadcastAction(Request $request, SerializerInterface $serializer, Messages $messages)
     {
         $broadcast = new Broadcast();
-        $form = $this->createForm(BroadcastType::class, $broadcast);
-        $this->handleJsonForm($form, $request);
-
+        $serializer->deserialize($request->getContent(), Broadcast::class, 'json', [
+            AbstractNormalizer::OBJECT_TO_POPULATE => $broadcast
+        ]);
         try {
             if ($this->container->getParameter('mcfedr_aws_push.topic_arn') && !$broadcast->getPlatform()) {
-                $this->get('mcfedr_aws_push.messages')->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
+                $messages->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
             } else {
-                $this->get('mcfedr_aws_push.messages')->broadcast($broadcast->getMessage(), $broadcast->getPlatform());
+                $messages->broadcast($broadcast->getMessage(), $broadcast->getPlatform());
             }
 
             return new Response('Message sent', 200);

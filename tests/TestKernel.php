@@ -11,7 +11,6 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Mcfedr\AwsPushBundle\McfedrAwsPushBundle(),
-            new Mcfedr\JsonFormBundle\McfedrJsonFormBundle()
         ];
     }
 
