@@ -126,11 +126,27 @@ There are some commands to help manage the devices
 There is a controller included which makes basic usage of the bundle very easy. You may or may not want to use it,
 you might find it most useful as an example.
 
-Dont forget to install `mcfedr/json-form` and `sensio/framework-extra-bundle` if you want to use this
+There are some extra dependencies you must add when using the controller
 
-### Routing
+- sensio/framework-extra-bundle
+- symfony/validator
+- symfony/serializer
+- symfony/property-info
+- symfony/security-bundle
+- symfony/expression-language
 
-If you want to use the default controller you need to setup the routing
+They also need enabling in the framework config
+
+```yaml
+framework:
+    validation: { enable_annotations: true }
+    serializer:
+        enabled: true
+    property_info:
+        enabled: true
+```
+
+Add the routes in your `routing.yaml`:
 
     mcfedr_aws_push:
         resource: "@McfedrAwsPushBundle/Controller/"
