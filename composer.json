@@ -7,15 +7,16 @@
         "php": ">=5.5",
         "aws/aws-sdk-php": "^3.0",
         "symfony/framework-bundle": "^3.0|^4.0",
-        "symfony/polyfill-mbstring": "^1.1",
-        "symfony/security-bundle": "^3.0|^4.0",
-        "symfony/form": "^3.0|^4.0",
-        "symfony/validator": "^3.0|^4.0",
-        "symfony/expression-language": "^3.0|^4.0",
-        "symfony/serializer": "^3.0|^4.0"
+        "symfony/polyfill-mbstring": "^1.1"
     },
     "suggest": {
-        "sensio/framework-extra-bundle": "Required if you want to use the included ApiController"
+        "ext-mbstring": "Its polyfilled, but better to use the extension",
+        "sensio/framework-extra-bundle": "Required if you want to use the included ApiController",
+        "symfony/validator": "Required if you want to use the included ApiController",
+        "symfony/serializer": "Required if you want to use the included ApiController",
+        "symfony/property-info": "Required if you want to use the included ApiController",
+        "symfony/security-bundle": "Required if you want to use the included ApiController",
+        "symfony/expression-language": "Required if you want to use the included ApiController"
     },
     "license": "MIT",
     "authors": [
@@ -35,7 +36,12 @@
         "fzaninotto/faker": "~1.4",
         "sensio/framework-extra-bundle": "^3.0|^4.0|^5.0",
         "friendsofphp/php-cs-fixer": "^2.1",
-        "symfony/browser-kit": "^3.0|^4.0"
+        "symfony/browser-kit": "^3.0|^4.0",
+        "symfony/security-bundle": "^3.0|^4.0",
+        "symfony/validator": "^3.0|^4.0",
+        "symfony/expression-language": "^3.0|^4.0",
+        "symfony/serializer": "^3.0|^4.0",
+        "symfony/property-info": "^3.0|^4.0"
     },
     "autoload": {
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }

@@ -4,7 +4,9 @@ namespace Mcfedr\AwsPushBundle\Controller;
 
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 use Mcfedr\AwsPushBundle\Model\Broadcast;
+use Mcfedr\AwsPushBundle\Model\BroadcastRequest;
 use Mcfedr\AwsPushBundle\Model\Device;
+use Mcfedr\AwsPushBundle\Model\DeviceRequest;
 use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,8 +15,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * This should server as an example of how to use the services
@@ -27,12 +30,16 @@ class ApiController extends Controller
      * @Route("/devices", name="mcfedr_aws_push.register")
      * @Method({"POST"})
      */
-    public function registerDeviceAction(Request $request, SerializerInterface $serializer, Devices $devices)
+    public function registerDeviceAction(Request $request, SerializerInterface $serializer, Devices $devices, ValidatorInterface $validator)
     {
-        $device = new Device();
-        $serializer->deserialize($request->getContent(), Device::class, 'json', [
-            AbstractNormalizer::OBJECT_TO_POPULATE => $device
-        ]);
+        /** @var DeviceRequest $deviceRequest */
+        $deviceRequest = $serializer->deserialize($request->getContent(), DeviceRequest::class, 'json');
+        $errors = $validator->validate($deviceRequest);
+        if (count($errors)) {
+            throw new BadRequestHttpException('Invalid register');
+        }
+        $device = $deviceRequest->getDevice();
+
         try {
             if (($arn = $devices->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
                 $this->has('logger') && $this->get('logger')->info('Device registered', [
@@ -74,12 +81,16 @@ class ApiController extends Controller
      * @Method({"POST"})
      * @Security("has_role('ROLE_MCFEDR_AWS_BROADCAST')")
      */
-    public function broadcastAction(Request $request, SerializerInterface $serializer, Messages $messages)
+    public function broadcastAction(Request $request, SerializerInterface $serializer, Messages $messages, ValidatorInterface $validator)
     {
-        $broadcast = new Broadcast();
-        $serializer->deserialize($request->getContent(), Broadcast::class, 'json', [
-            AbstractNormalizer::OBJECT_TO_POPULATE => $broadcast
-        ]);
+        /** @var BroadcastRequest $broadcastRequest */
+        $broadcastRequest = $serializer->deserialize($request->getContent(), BroadcastRequest::class, 'json');
+        $errors = $validator->validate($broadcastRequest);
+        if (count($errors)) {
+            throw new BadRequestHttpException('Invalid broadcast');
+        }
+        $broadcast = $broadcastRequest->getBroadcast();
+
         try {
             if ($this->container->getParameter('mcfedr_aws_push.topic_arn') && !$broadcast->getPlatform()) {
                 $messages->send($broadcast->getMessage(), $this->container->getParameter('mcfedr_aws_push.topic_arn'));
