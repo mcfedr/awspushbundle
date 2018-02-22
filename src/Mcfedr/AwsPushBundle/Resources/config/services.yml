@@ -13,6 +13,7 @@ services:
           - "%mcfedr_aws_push.platforms%"
 
     Mcfedr\AwsPushBundle\Service\Messages:
+        public: true
         arguments:
           - "@mcfedr_aws_push.sns_client"
           - "%mcfedr_aws_push.platforms%"
@@ -20,6 +21,7 @@ services:
           - "@?logger"
 
     Mcfedr\AwsPushBundle\Service\Topics:
+        public: true
         arguments:
             - "@mcfedr_aws_push.sns_client"
             - '@Mcfedr\AwsPushBundle\Service\Messages'
@@ -73,7 +75,7 @@ services:
         tags:
             - { name: serializer.normalizer }
 
-# public aliases
+# public aliases for back compat
     mcfedr_aws_push.topics:
         alias: Mcfedr\AwsPushBundle\Service\Topics
         public: true
