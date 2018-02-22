@@ -67,14 +67,6 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    Mcfedr\AwsPushBundle\Normalizer\DeviceNormalizer:
-        tags:
-            - { name: serializer.normalizer }
-
-    Mcfedr\AwsPushBundle\Normalizer\BroadcastNormalizer:
-        tags:
-            - { name: serializer.normalizer }
-
 # public aliases for back compat
     mcfedr_aws_push.topics:
         alias: Mcfedr\AwsPushBundle\Service\Topics

@@ -7,7 +7,10 @@ framework:
         strict_requirements: ~
     validation:      { enable_annotations: true }
     secret: 'fake_secret'
-    form: ~
+    serializer:
+        enabled: true
+    property_info:
+        enabled: true
 
 mcfedr_aws_push:
     platforms:
@@ -26,6 +29,7 @@ security:
             memory:
                 users:
                     admin: { password: password, roles: 'ROLE_MCFEDR_AWS_BROADCAST' }
+                    other: { password: password, roles: 'ROLE_OTHER' }
     firewalls:
         default:
             pattern: ^/

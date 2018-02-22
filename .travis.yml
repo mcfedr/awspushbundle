@@ -25,7 +25,7 @@ matrix:
   fast_finish: true
 
 before_script:
-  - if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update "symfony/framework-bundle:${SYMFONY_VERSION}" "symfony/security-bundle:${SYMFONY_VERSION}" "symfony/form:${SYMFONY_VERSION}" "symfony/validator:${SYMFONY_VERSION}" "symfony/expression-language:${SYMFONY_VERSION}" "symfony/serializer:${SYMFONY_VERSION}"; fi;
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update "symfony/framework-bundle:${SYMFONY_VERSION}" "symfony/security-bundle:${SYMFONY_VERSION}" "symfony/validator:${SYMFONY_VERSION}" "symfony/expression-language:${SYMFONY_VERSION}" "symfony/serializer:${SYMFONY_VERSION}"; fi;
   - composer update
 
 script:

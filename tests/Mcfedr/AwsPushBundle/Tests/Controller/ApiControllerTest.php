@@ -52,4 +52,61 @@ class ApiControllerTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     */
+    public function testInvalidRegisterDevice()
+    {
+        $client = self::createClient();
+
+        $client->request('POST', '/broadcast', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'password'
+        ], json_encode([
+            'broadcastX' => [
+                'message' => [
+                    'text' => 'hello'
+                ]
+            ]
+        ]));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     */
+    public function testInvalidBroadcast()
+    {
+        $client = self::createClient();
+
+        $client->request('POST', '/broadcast', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'password'
+        ], json_encode([
+            'broadcastX' => [
+                'message' => [
+                    'text' => 'hello'
+                ]
+            ]
+        ]));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+    public function testOtherUserBroadcast()
+    {
+        $client = self::createClient();
+
+        $client->request('POST', '/broadcast', [], [], [
+            'PHP_AUTH_USER' => 'other',
+            'PHP_AUTH_PW' => 'password'
+        ], json_encode([
+            'broadcast' => [
+                'message' => [
+                    'text' => 'hello'
+                ]
+            ]
+        ]));
+    }
 }
