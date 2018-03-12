@@ -1,7 +1,8 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(['src', 'tests']);
+    ->in(['src', 'tests'])
+    ->exclude(['tests/cache']);
 
 return PhpCsFixer\Config::create()
     ->setRules(['@Symfony' => true, 'trailing_comma_in_multiline_array' => false, 'concat_space' => ['spacing' => 'one'], 'array_syntax' => ['syntax' => 'short'], 'ordered_imports' => true])

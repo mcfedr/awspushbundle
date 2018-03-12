@@ -27,12 +27,15 @@ class McfedrAwsPushExtension extends Extension
 
         $container->setParameter('mcfedr_aws_push.platforms', $config['platforms']);
         if (isset($config['aws'])) {
-            if (isset($config['aws']['key']) && isset($config['aws']['secret'])) {
+            if (array_key_exists('credentials', $config['aws'])) {
+                $container->setParameter('mcfedr_aws_push.aws.credentials', $config['aws']['credentials']);
+            } elseif (isset($config['aws']['key']) && isset($config['aws']['secret'])) {
                 $credentials = [];
                 $credentials['key'] = $config['aws']['key'];
                 $credentials['secret'] = $config['aws']['secret'];
                 $container->setParameter('mcfedr_aws_push.aws.credentials', $credentials);
             }
+
             if (isset($config['aws']['region'])) {
                 $container->setParameter('mcfedr_aws_push.aws.region', $config['aws']['region']);
             }
