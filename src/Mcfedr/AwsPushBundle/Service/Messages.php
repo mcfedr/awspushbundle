@@ -146,7 +146,7 @@ class Messages
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
-                if ($endpoint['Attributes']['Enabled'] == 'true') {
+                if ('true' == $endpoint['Attributes']['Enabled']) {
                     try {
                         $this->send($message, $endpoint['EndpointArn']);
                     } catch (\Exception $e) {

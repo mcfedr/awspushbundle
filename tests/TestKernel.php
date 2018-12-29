@@ -1,6 +1,5 @@
 <?php
 
-
 class TestKernel extends Symfony\Component\HttpKernel\Kernel
 {
     public function registerBundles()

@@ -65,7 +65,7 @@ class RemoveDisabledCommand extends Command
             'PlatformApplicationArn' => $this->arns[$platform]
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
-                if ($endpoint['Attributes']['Enabled'] == 'false') {
+                if ('false' == $endpoint['Attributes']['Enabled']) {
                     try {
                         $this->sns->deleteEndpoint(
                             [

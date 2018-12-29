@@ -3,9 +3,7 @@
 namespace Mcfedr\AwsPushBundle\Controller;
 
 use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
-use Mcfedr\AwsPushBundle\Model\Broadcast;
 use Mcfedr\AwsPushBundle\Model\BroadcastRequest;
-use Mcfedr\AwsPushBundle\Model\Device;
 use Mcfedr\AwsPushBundle\Model\DeviceRequest;
 use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
