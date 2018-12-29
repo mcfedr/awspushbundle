@@ -171,6 +171,63 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
     }
 
+    /**
+     * @dataProvider text
+     */
+    public function testTextMessageStructureWithFcm($text)
+    {
+        $message = new Message($text);
+        $message->setFcmFormat(true);
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $this->assertInternalType('array', $data);
+        $this->assertCount(5, $data);
+        $this->assertArrayHasKey('default', $data);
+        $this->assertArrayHasKey('APNS', $data);
+        $this->assertArrayHasKey('APNS_SANDBOX', $data);
+        $this->assertArrayHasKey('GCM', $data);
+        $this->assertArrayHasKey('ADM', $data);
+
+        $this->assertEquals($text, $data['default'], 'Default should be the text of the message');
+        $this->assertEquals($data['APNS'], $data['APNS_SANDBOX'], 'The APNS and APNS_SANDBOX should match');
+
+        $apnsData = json_decode($data['APNS'], true);
+        $this->assertInternalType('array', $apnsData);
+        $this->assertCount(1, $apnsData);
+        $this->assertArrayHasKey('aps', $apnsData);
+
+        $this->assertInternalType('array', $apnsData['aps']);
+        $this->assertCount(1, $apnsData['aps']);
+        $this->assertArrayHasKey('alert', $apnsData['aps']);
+        $this->assertEquals($text, $apnsData['aps']['alert'], 'APNS.aps.alert should be the text of the message');
+
+        $gcmData = json_decode($data['GCM'], true);
+        $this->assertInternalType('array', $gcmData);
+        $this->assertCount(6, $gcmData);
+        $this->assertArrayHasKey('notification', $gcmData);
+        $this->assertArrayHasKey('data', $gcmData);
+        $this->assertArrayHasKey('collapse_key', $gcmData);
+        $this->assertArrayHasKey('time_to_live', $gcmData);
+        $this->assertArrayHasKey('delay_while_idle', $gcmData);
+        $this->assertArrayHasKey('priority', $gcmData);
+
+        $this->assertInternalType('array', $gcmData['notification']);
+        $this->assertCount(1, $gcmData['notification']);
+        $this->assertEquals($text, $gcmData['notification']['body'], 'GCM.data.message should be the text of the message');
+
+        $admData = json_decode($data['ADM'], true);
+        $this->assertInternalType('array', $admData);
+        $this->assertCount(2, $admData);
+        $this->assertArrayHasKey('data', $admData);
+        $this->assertArrayHasKey('expiresAfter', $admData);
+
+        $this->assertInternalType('array', $admData['data']);
+        $this->assertCount(1, $admData['data']);
+        $this->assertEquals($text, $admData['data']['message'], 'ADM.data.message should be the text of the message');
+    }
+
     public function text()
     {
         return [

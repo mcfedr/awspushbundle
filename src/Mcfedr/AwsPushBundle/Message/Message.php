@@ -26,8 +26,25 @@ class Message implements \JsonSerializable
     const PRIORITY_NORMAL = 'normal';
 
     /**
+     * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
+     * platform.
+     *
+     * @var bool
+     */
+    private $fcmFormat = false;
+
+    /**
+     * FCM only.
+     * The text will be sent to FCM over GCM as 'title' in the data field.
+     *
+     * @var string
+     */
+    private $title;
+
+    /**
      * The text is automatically trimmed when sending to APNS and GCM
      * The text will be sent to GCM and ADM as 'message' in the data field.
+     * The text will be sent to FCM over GCM as 'body' in the data field.
      *
      * @var string
      */
@@ -56,6 +73,21 @@ class Message implements \JsonSerializable
     private $localizedArguments;
 
     /**
+     * The key of a localized string that will form the message displayed.
+     *
+     * @var string
+     */
+    private $localizedTitleKey;
+
+    /**
+     * Arguments for the localized message
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
+     * @var array
+     */
+    private $localizedTitleArguments;
+
+    /**
      * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
      * platform.
      *
@@ -67,7 +99,7 @@ class Message implements \JsonSerializable
     private $allowTrimming = true;
 
     /**
-     * APNS only.
+     * APNS and FCM over GCM.
      *
      * @var int
      */
@@ -82,11 +114,26 @@ class Message implements \JsonSerializable
     private $contentAvailable;
 
     /**
-     * APNS only.
+     * APNS and FCM over GCM.
      *
      * @var string
      */
     private $sound;
+
+    /**
+     * FCM over GCM and only for android.
+     *
+     * @var string
+     */
+    private $icon;
+
+    /**
+     * FCM over GCM.
+     * The action associated with a user click on the notification.
+     *
+     * @var string
+     */
+    private $clickAction;
 
     /**
      * This is the data to send to all services, it will be deep merged with the other data.
@@ -179,6 +226,22 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getClickAction()
+    {
+        return $this->clickAction;
+    }
+
+    /**
+     * @param string $clickAction
+     */
+    public function setClickAction($clickAction)
+    {
+        $this->clickAction = $clickAction;
+    }
+
+    /**
      * @return bool
      */
     public function isContentAvailable()
@@ -216,6 +279,40 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isFcmFormat()
+    {
+        return $this->fcmFormat;
+    }
+
+    /**
+     * Send GCM push notifications in Firebase Message Cloud format.
+     *
+     * @param bool $fcmFormat
+     */
+    public function setFcmFormat($fcmFormat)
+    {
+        $this->fcmFormat = $fcmFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    /**
      * Name of sound file to use
      * APNS only.
      *
@@ -235,8 +332,28 @@ class Message implements \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * FCM only.
+     * The text will be sent to FCM over GCM as 'title' in the data field.
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
      * The text is automatically trimmed when sending to APNS and GCM
      * The text will be sent to GCM and ADM as 'message' in the data field.
+     * The text will be sent to FCM over GCM as 'body' in the data field.
      *
      * @param string $text
      */
@@ -332,6 +449,63 @@ class Message implements \JsonSerializable
     {
         $this->setLocalizedKey($key);
         $this->setLocalizedArguments($arguments);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalizedTitleKey()
+    {
+        return $this->localizedTitleKey;
+    }
+
+    /**
+     * The key of a localized string that will form the message displayed.
+     *
+     * @param string $localizedTitleKey
+     *
+     * @return Message
+     */
+    public function setLocalizedTitleKey($localizedTitleKey)
+    {
+        $this->localizedTitleKey = $localizedTitleKey;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocalizedTitleArguments()
+    {
+        return $this->localizedTitleArguments;
+    }
+
+    /**
+     * Arguments for the localized message
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
+     * @param array $localizedTitleArguments
+     *
+     * @return Message
+     */
+    public function setLocalizedTitleArguments(array $localizedTitleArguments = null)
+    {
+        $this->localizedTitleArguments = $localizedTitleArguments;
+
+        return $this;
+    }
+
+    /**
+     * Convenience to set localized text.
+     *
+     * @param string     $key
+     * @param array|null $arguments
+     */
+    public function setLocalizedTitleText($key, array $arguments = null)
+    {
+        $this->setLocalizedTitleKey($key);
+        $this->setLocalizedTitleArguments($arguments);
     }
 
     /**
@@ -638,13 +812,20 @@ class Message implements \JsonSerializable
      */
     private function getGcmJson()
     {
-        return json_encode([
+        $payload = [
             'collapse_key' => $this->collapseKey,
             'time_to_live' => $this->ttl,
             'delay_while_idle' => $this->delayWhileIdle,
             'priority' => $this->priority,
-            'data' => $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long')
-        ], JSON_UNESCAPED_UNICODE);
+        ];
+
+        if ($this->isFcmFormat()) {
+            $payload = array_merge($payload, $this->getTrimmedJson([$this, 'getFcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long'));
+        } else {
+            $payload['data'] = $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long');
+        }
+
+        return json_encode($payload, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -666,6 +847,57 @@ class Message implements \JsonSerializable
         }
 
         return $merged;
+    }
+
+    /**
+     * Gets the data part of the FCM message.
+     *
+     * @param $text
+     *
+     * @return array
+     */
+    private function getFcmJsonInner($text)
+    {
+        $notification = [];
+
+        if (!is_null($text)) {
+            $notification['body'] = $text;
+        }
+
+        if (!is_null($this->localizedKey)) {
+            $notification['body_loc_key'] = $this->localizedKey;
+            if ($this->localizedArguments) {
+                $notification['body_loc_args'] = $this->localizedArguments;
+            }
+        }
+
+        if (!is_null($this->title)) {
+            $notification['title'] = $this->title;
+        }
+
+        if (!is_null($this->localizedTitleKey)) {
+            $notification['title_loc_key'] = $this->localizedTitleKey;
+            if ($this->localizedTitleArguments) {
+                $notification['title_loc_args'] = $this->localizedTitleArguments;
+            }
+        }
+
+        if (!is_null($this->icon)) {
+            $notification['icon'] = $this->icon;
+        }
+
+        if (!is_null($this->clickAction)) {
+            $notification['click_action'] = $this->clickAction;
+        }
+
+        if (!is_null($this->sound)) {
+            $notification['sound'] = $this->sound;
+        }
+
+        return [
+            'notification' => $notification,
+            'data' => $this->arrayMergeDeep($this->custom, $this->gcmData ? $this->gcmData : [])
+        ];
     }
 
     /**
