@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Tests\DependencyInjection\McfedrAwsPushExtension;
 
 use Aws\Sns\SnsClient;

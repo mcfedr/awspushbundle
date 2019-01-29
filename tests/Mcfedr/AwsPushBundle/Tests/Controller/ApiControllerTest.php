@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -15,15 +17,16 @@ class ApiControllerTest extends WebTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $snsMock->expects($this->once())
-            ->method('createPlatformEndpoint');
+            ->method('createPlatformEndpoint')
+            ->willReturn('some:arn');
 
         $client->getContainer()->set('mcfedr_aws_push.sns_client', $snsMock);
 
         $client->request('POST', '/devices', [], [], [], json_encode([
             'device' => [
                 'platform' => 'test',
-                'deviceId' => 'abcd'
-            ]
+                'deviceId' => 'abcd',
+            ],
         ]));
     }
 
@@ -41,13 +44,13 @@ class ApiControllerTest extends WebTestCase
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'password'
+            'PHP_AUTH_PW' => 'password',
         ], json_encode([
             'broadcast' => [
                 'message' => [
-                    'text' => 'hello'
-                ]
-            ]
+                    'text' => 'hello',
+                ],
+            ],
         ]));
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -60,15 +63,13 @@ class ApiControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $client->request('POST', '/broadcast', [], [], [
+        $client->request('POST', '/devices', [], [], [
             'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'password'
+            'PHP_AUTH_PW' => 'password',
         ], json_encode([
-            'broadcastX' => [
-                'message' => [
-                    'text' => 'hello'
-                ]
-            ]
+            'device' => [
+                'deviceId' => 'abcd',
+            ],
         ]));
     }
 
@@ -81,13 +82,13 @@ class ApiControllerTest extends WebTestCase
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'password'
+            'PHP_AUTH_PW' => 'password',
         ], json_encode([
             'broadcastX' => [
                 'message' => [
-                    'text' => 'hello'
-                ]
-            ]
+                    'text' => 'hello',
+                ],
+            ],
         ]));
     }
 
@@ -100,13 +101,13 @@ class ApiControllerTest extends WebTestCase
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'other',
-            'PHP_AUTH_PW' => 'password'
+            'PHP_AUTH_PW' => 'password',
         ], json_encode([
             'broadcast' => [
                 'message' => [
-                    'text' => 'hello'
-                ]
-            ]
+                    'text' => 'hello',
+                ],
+            ],
         ]));
     }
 }

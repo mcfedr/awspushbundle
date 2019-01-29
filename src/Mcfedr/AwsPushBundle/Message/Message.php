@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Message;
 
 use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
@@ -29,7 +31,7 @@ class Message implements \JsonSerializable
      * The text is automatically trimmed when sending to APNS and GCM
      * The text will be sent to GCM and ADM as 'message' in the data field.
      *
-     * @var string
+     * @var ?string
      */
     private $text;
 
@@ -43,7 +45,7 @@ class Message implements \JsonSerializable
     /**
      * The key of a localized string that will form the message displayed.
      *
-     * @var string
+     * @var ?string
      */
     private $localizedKey;
 
@@ -51,7 +53,7 @@ class Message implements \JsonSerializable
      * Arguments for the localized message
      * If you are using iOS these should be strings only, plural localization doesn't work!
      *
-     * @var array
+     * @var ?array
      */
     private $localizedArguments;
 
@@ -69,7 +71,7 @@ class Message implements \JsonSerializable
     /**
      * APNS only.
      *
-     * @var int
+     * @var ?int
      */
     private $badge;
 
@@ -77,14 +79,14 @@ class Message implements \JsonSerializable
      * APNS only
      * Including this key means that when your app is launched in the background or resumed.
      *
-     * @var bool
+     * @var ?bool
      */
     private $contentAvailable;
 
     /**
      * APNS only.
      *
-     * @var string
+     * @var ?string
      */
     private $sound;
 
@@ -98,21 +100,21 @@ class Message implements \JsonSerializable
     /**
      * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field.
      *
-     * @var array
+     * @var ?array
      */
     private $gcmData;
 
     /**
      * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field.
      *
-     * @var array
+     * @var ?array
      */
     private $admData;
 
     /**
      * If set, will be sent to APNS, deep merged as the top level.
      *
-     * @var array
+     * @var ?array
      */
     private $apnsData;
 
@@ -129,7 +131,7 @@ class Message implements \JsonSerializable
      * GCM: default is 4 weeks
      * ADM: default is 1 week
      *
-     * @var int number of seconds that the server should retain the message
+     * @var ?int number of seconds that the server should retain the message
      */
     private $ttl;
 
@@ -151,37 +153,28 @@ class Message implements \JsonSerializable
      */
     private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_ADM];
 
-    /**
-     * @param string $text
-     */
-    public function __construct($text = null)
+    public function __construct(?string $text = null)
     {
         $this->text = $text;
     }
 
-    /**
-     * Set the number on displayed badge
-     * APNS only.
-     *
-     * @param int $badge
-     */
-    public function setBadge($badge)
-    {
-        $this->badge = $badge;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBadge()
+    public function getBadge(): ?int
     {
         return $this->badge;
     }
 
     /**
-     * @return bool
+     * Set the number on displayed badge
+     * APNS only.
      */
-    public function isContentAvailable()
+    public function setBadge(?int $badge): self
+    {
+        $this->badge = $badge;
+
+        return $this;
+    }
+
+    public function isContentAvailable(): ?bool
     {
         return $this->contentAvailable;
     }
@@ -189,120 +182,95 @@ class Message implements \JsonSerializable
     /**
      * Including this key means that when your app is launched in the background or resumed
      * APNS only.
-     *
-     * @param bool $contentAvailable
      */
-    public function setContentAvailable($contentAvailable)
+    public function setContentAvailable(?bool $contentAvailable): self
     {
         $this->contentAvailable = $contentAvailable;
+
+        return $this;
     }
 
-    /**
-     * This is the data to send to all services, it will be deep merged with the other data.
-     *
-     * @param array $custom
-     */
-    public function setCustom(array $custom)
-    {
-        $this->custom = $custom;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCustom()
+    public function getCustom(): array
     {
         return $this->custom;
     }
 
     /**
-     * Name of sound file to use
-     * APNS only.
-     *
-     * @param string $sound
+     * This is the data to send to all services, it will be deep merged with the other data.
      */
-    public function setSound($sound)
+    public function setCustom(array $custom): self
     {
-        $this->sound = $sound;
+        $this->custom = $custom;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSound()
+    public function getSound(): ?string
     {
         return $this->sound;
     }
 
     /**
-     * The text is automatically trimmed when sending to APNS and GCM
-     * The text will be sent to GCM and ADM as 'message' in the data field.
-     *
-     * @param string $text
+     * Name of sound file to use
+     * APNS only.
      */
-    public function setText($text)
+    public function setSound(?string $sound): self
     {
-        $this->text = $text;
+        $this->sound = $sound;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getText()
+    public function getText(): ?string
     {
         return $this->text;
     }
 
     /**
-     * Set Priority.
-     *
-     * @param string $priority
-     *
-     * @return $this
+     * The text is automatically trimmed when sending to APNS and GCM
+     * The text will be sent to GCM and ADM as 'message' in the data field.
      */
-    public function setPriority($priority)
+    public function setText(?string $text): self
     {
-        $this->priority = $priority;
+        $this->text = $text;
 
         return $this;
     }
 
     /**
      * Get Priority.
-     *
-     * @return string
      */
-    public function getPriority()
+    public function getPriority(): string
     {
         return $this->priority;
     }
 
     /**
-     * @return string
+     * Set Priority.
      */
-    public function getLocalizedKey()
+    public function setPriority(string $priority): self
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    public function getLocalizedKey(): ?string
     {
         return $this->localizedKey;
     }
 
     /**
      * The key of a localized string that will form the message displayed.
-     *
-     * @param string $localizedKey
-     *
-     * @return Message
      */
-    public function setLocalizedKey($localizedKey)
+    public function setLocalizedKey(?string $localizedKey): self
     {
         $this->localizedKey = $localizedKey;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getLocalizedArguments()
+    public function getLocalizedArguments(): ?array
     {
         return $this->localizedArguments;
     }
@@ -310,12 +278,8 @@ class Message implements \JsonSerializable
     /**
      * Arguments for the localized message
      * If you are using iOS these should be strings only, plural localization doesn't work!
-     *
-     * @param array $localizedArguments
-     *
-     * @return Message
      */
-    public function setLocalizedArguments(array $localizedArguments = null)
+    public function setLocalizedArguments(?array $localizedArguments = null): self
     {
         $this->localizedArguments = $localizedArguments;
 
@@ -324,20 +288,16 @@ class Message implements \JsonSerializable
 
     /**
      * Convenience to set localized text.
-     *
-     * @param string     $key
-     * @param array|null $arguments
      */
-    public function setLocalizedText($key, array $arguments = null)
+    public function setLocalizedText(?string $key, ?array $arguments = null): self
     {
         $this->setLocalizedKey($key);
         $this->setLocalizedArguments($arguments);
+
+        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowTrimming()
+    public function getAllowTrimming(): bool
     {
         return $this->allowTrimming;
     }
@@ -345,136 +305,107 @@ class Message implements \JsonSerializable
     /**
      * If set then the text content of the message will be trimmed where necessary to fit in the length limits of each
      * platform.
-     *
-     * @param bool $allowTrimming
      */
-    public function setAllowTrimming($allowTrimming)
+    public function setAllowTrimming(bool $allowTrimming): self
     {
         $this->allowTrimming = $allowTrimming;
+
+        return $this;
     }
 
-    /**
-     * GCM and ADM only.
-     *
-     * @param string $collapseKey
-     */
-    public function setCollapseKey($collapseKey)
-    {
-        $this->collapseKey = $collapseKey ?: static::NO_COLLAPSE;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCollapseKey()
+    public function getCollapseKey(): string
     {
         return $this->collapseKey;
     }
 
     /**
-     * GCM only.
-     *
-     * @param bool $delayWhileIdle
+     * GCM and ADM only.
      */
-    public function setDelayWhileIdle($delayWhileIdle)
+    public function setCollapseKey(?string $collapseKey): self
     {
-        $this->delayWhileIdle = $delayWhileIdle;
+        $this->collapseKey = $collapseKey ?: static::NO_COLLAPSE;
+
+        return $this;
+    }
+
+    public function getDelayWhileIdle(): bool
+    {
+        return $this->delayWhileIdle;
     }
 
     /**
-     * @return bool
+     * GCM only.
      */
-    public function getDelayWhileIdle()
+    public function setDelayWhileIdle(bool $delayWhileIdle): self
     {
-        return $this->delayWhileIdle;
+        $this->delayWhileIdle = $delayWhileIdle;
+
+        return $this;
+    }
+
+    public function getTtl(): ?int
+    {
+        return $this->ttl;
     }
 
     /**
      * number of seconds that the server should retain the message.
      *
      * GCM and ADM only
-     *
-     * @param int $ttl
      */
-    public function setTtl($ttl)
+    public function setTtl(?int $ttl): self
     {
         $this->ttl = $ttl;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTtl()
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field.
-     *
-     * @param array $gcmData
-     */
-    public function setGcmData(array $gcmData)
-    {
-        $this->gcmData = $gcmData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGcmData()
+    public function getGcmData(): ?array
     {
         return $this->gcmData;
     }
 
     /**
-     * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field.
-     *
-     * @param array $admData
-     *
-     * @return Message
+     * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field.
      */
-    public function setAdmData(array $admData)
+    public function setGcmData(?array $gcmData): self
+    {
+        $this->gcmData = $gcmData;
+
+        return $this;
+    }
+
+    public function getAdmData(): ?array
+    {
+        return $this->admData;
+    }
+
+    /**
+     * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field.
+     */
+    public function setAdmData(?array $admData): self
     {
         $this->admData = $admData;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getAdmData()
+    public function getApnsData(): ?array
     {
-        return $this->admData;
+        return $this->apnsData;
     }
 
     /**
      * If set, will be sent to APNS, deep merged as the top level, meaning you can add extra data to 'aps'.
-     *
-     * @param array $apnsData
-     *
-     * @return Message
      */
-    public function setApnsData(array $apnsData)
+    public function setApnsData(?array $apnsData): self
     {
         $this->apnsData = $apnsData;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getApnsData()
-    {
-        return $this->apnsData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPlatforms()
+    public function getPlatforms(): ?array
     {
         return $this->platforms;
     }
@@ -482,35 +413,32 @@ class Message implements \JsonSerializable
     /**
      * Platforms that this message will create JSON for, and throw errors for (for long messages).
      *
-     * @param array $platforms
-     *
      * @see Message::PLATFORM_GCM
      * @see Message::PLATFORM_APNS
      * @see Message::PLATFORM_ADM
      */
-    public function setPlatforms(array $platforms)
+    public function setPlatforms(array $platforms): self
     {
         $this->platforms = $platforms;
+
+        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         $data = [
-            'default' => $this->text
+            'default' => $this->text,
         ];
 
-        if (in_array(self::PLATFORM_APNS, $this->platforms)) {
+        if (\in_array(self::PLATFORM_APNS, $this->platforms)) {
             $data['APNS'] = $data['APNS_SANDBOX'] = $this->getApnsJson();
         }
 
-        if (in_array(self::PLATFORM_GCM, $this->platforms)) {
+        if (\in_array(self::PLATFORM_GCM, $this->platforms)) {
             $data['GCM'] = $this->getGcmJson();
         }
 
-        if (in_array(self::PLATFORM_ADM, $this->platforms)) {
+        if (\in_array(self::PLATFORM_ADM, $this->platforms)) {
             $data['ADM'] = $this->getAdmJson();
         }
 
@@ -526,36 +454,30 @@ class Message implements \JsonSerializable
      * Get the json to send via Apple Push Notification Server
      * For APNS the max length applies to the whole message.
      *
-     * @return string
-     *
      * @throws MessageTooLongException
      */
-    private function getApnsJson()
+    private function getApnsJson(): string
     {
         return json_encode($this->getTrimmedJson([$this, 'getApnsJsonInner'], static::APNS_MAX_LENGTH, 'You message for APNS is too long'), JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Get the correct apple push notification server data.
-     *
-     * @param string $text
-     *
-     * @return array
      */
-    private function getApnsJsonInner($text)
+    private function getApnsJsonInner(?string $text): array
     {
         $apns = [
-            'aps' => []
+            'aps' => [],
         ];
 
-        if (!is_null($this->localizedKey)) {
+        if (null !== $this->localizedKey) {
             $apns['aps']['alert'] = [
-                'loc-key' => $this->localizedKey
+                'loc-key' => $this->localizedKey,
             ];
             if ($this->localizedArguments) {
                 $apns['aps']['alert']['loc-args'] = $this->localizedArguments;
             }
-        } elseif (!is_null($text)) {
+        } elseif (null !== $text) {
             $apns['aps']['alert'] = $text;
         }
 
@@ -563,18 +485,18 @@ class Message implements \JsonSerializable
             $apns['aps']['content-available'] = 1;
         }
 
-        if (!is_null($this->badge)) {
+        if (null !== $this->badge) {
             $apns['aps']['badge'] = $this->badge;
         }
 
-        if (!is_null($this->sound)) {
+        if (null !== $this->sound) {
             $apns['aps']['sound'] = $this->sound;
         }
 
         $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []);
 
         // Force aps to be an object, because it shouldnt get encoded as [] but as {}
-        if (!count($merged['aps'])) {
+        if (!\count($merged['aps'])) {
             $merged['aps'] = new \stdClass();
         }
 
@@ -583,18 +505,16 @@ class Message implements \JsonSerializable
 
     /**
      * Get the json to send via Amazon Device Messaging.
-     *
-     * @return string
      */
-    private function getAdmJson()
+    private function getAdmJson(): string
     {
         $adm = [
             'data' => $this->getTrimmedJson([$this, 'getAdmJsonInner'], static::ADM_MAX_LENGTH, 'You message for ADM is too long'),
-            'expiresAfter' => $this->ttl
+            'expiresAfter' => $this->ttl,
         ];
 
         foreach ($adm['data'] as $key => $value) {
-            if (!is_string($value)) {
+            if (!\is_string($value)) {
                 $adm['data']["{$key}_json"] = json_encode($value);
                 unset($adm['data'][$key]);
             }
@@ -609,19 +529,15 @@ class Message implements \JsonSerializable
 
     /**
      * Gets the data part of the GCM message.
-     *
-     * @param $text
-     *
-     * @return array
      */
-    private function getAdmJsonInner($text)
+    private function getAdmJsonInner(?string $text): array
     {
         $data = $this->getAndroidJsonInner($text);
 
         $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
 
         // Force to be an object, because it shouldnt get encoded as [] but as {}
-        if (!count($merged)) {
+        if (!\count($merged)) {
             $merged = new \stdClass();
         }
 
@@ -632,36 +548,30 @@ class Message implements \JsonSerializable
      * Get the json to send via Google Cloud Messaging
      * For GCM the max length is for the data field only.
      *
-     * @return string
-     *
      * @throws MessageTooLongException
      */
-    private function getGcmJson()
+    private function getGcmJson(): string
     {
         return json_encode([
             'collapse_key' => $this->collapseKey,
             'time_to_live' => $this->ttl,
             'delay_while_idle' => $this->delayWhileIdle,
             'priority' => $this->priority,
-            'data' => $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long')
+            'data' => $this->getTrimmedJson([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long'),
         ], JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Gets the data part of the GCM message.
-     *
-     * @param $text
-     *
-     * @return array
      */
-    private function getGcmJsonInner($text)
+    private function getGcmJsonInner(?string $text): array
     {
         $data = $this->getAndroidJsonInner($text);
 
         $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ? $this->gcmData : []);
 
         // Force to be an object, because it shouldnt get encoded as [] but as {}
-        if (!count($merged)) {
+        if (!\count($merged)) {
             $merged = new \stdClass();
         }
 
@@ -670,19 +580,15 @@ class Message implements \JsonSerializable
 
     /**
      * Gets the base of the data for the android platforms, with text and localization keys.
-     *
-     * @param $text
-     *
-     * @return array
      */
-    private function getAndroidJsonInner($text)
+    private function getAndroidJsonInner(?string $text): array
     {
         $data = [];
-        if (!is_null($text)) {
+        if (null !== $text) {
             $data['message'] = $text;
         }
 
-        if (!is_null($this->localizedKey)) {
+        if (null !== $this->localizedKey) {
             $data['message-loc-key'] = $this->localizedKey;
             if ($this->localizedArguments) {
                 $data['message-loc-args'] = $this->localizedArguments;
@@ -695,24 +601,17 @@ class Message implements \JsonSerializable
     /**
      * Using a inner function gets the data, and trys again if its too long by trimming the text.
      *
-     * @param callable $inner
-     * @param int      $limit
-     * @param string   $error
-     *
-     * @return array
-     *
      * @throws MessageTooLongException
      */
-    private function getTrimmedJson(callable $inner, $limit, $error)
+    private function getTrimmedJson(callable $inner, int $limit, string $error): array
     {
         $gcmInner = $inner($this->text);
         $gcmInnerJson = json_encode($gcmInner, JSON_UNESCAPED_UNICODE);
-        if (($gcmInnerJsonLength = strlen($gcmInnerJson)) > $limit) {
+        if (($gcmInnerJsonLength = \strlen($gcmInnerJson)) > $limit) {
             $cut = $gcmInnerJsonLength - $limit;
             //Note that strlen returns the byte length of the string
-            $textLength = strlen($this->text);
-            if ($textLength > $cut && $this->allowTrimming) {
-                $gcmInner = $inner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8') . '...');
+            if ($this->text && ($textLength = \strlen($this->text)) > $cut && $this->allowTrimming) {
+                $gcmInner = $inner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8').'...');
             } else {
                 throw new MessageTooLongException("$error $gcmInnerJson");
             }
@@ -723,23 +622,18 @@ class Message implements \JsonSerializable
 
     /**
      * Merge arrays, deeply.
-     *
-     * @param array $array1
-     * @param array $array2
-     *
-     * @return array
      */
-    private function arrayMergeDeep(array $array1, array $array2)
+    private function arrayMergeDeep(array $array1, array $array2): array
     {
         $result = [];
-        foreach (func_get_args() as $array) {
+        foreach (\func_get_args() as $array) {
             foreach ($array as $key => $value) {
                 // Renumber integer keys as array_merge_recursive() does. Note that PHP
                 // automatically converts array keys that are integer strings (e.g., '1')
                 // to integers.
-                if (is_integer($key)) {
+                if (\is_int($key)) {
                     $result[] = $value;
-                } elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+                } elseif (isset($result[$key]) && \is_array($result[$key]) && \is_array($value)) {
                     // Recurse when both values are arrays.
                     $result[$key] = $this->arrayMergeDeep($result[$key], $value);
                 } else {

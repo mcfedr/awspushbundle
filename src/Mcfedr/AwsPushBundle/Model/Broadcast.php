@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Model;
 
 use Mcfedr\AwsPushBundle\Message\Message;
@@ -20,40 +22,24 @@ class Broadcast
      */
     private $message;
 
-    /**
-     * @return Message
-     */
-    public function getMessage()
+    public function getMessage(): Message
     {
         return $this->message;
     }
 
-    /**
-     * @param Message $message
-     *
-     * @return Broadcast
-     */
-    public function setMessage($message)
+    public function setMessage(Message $message): self
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPlatform()
+    public function getPlatform(): ?string
     {
         return empty($this->platform) ? null : $this->platform;
     }
 
-    /**
-     * @param string $platform
-     *
-     * @return Broadcast
-     */
-    public function setPlatform($platform)
+    public function setPlatform(?string $platform): self
     {
         $this->platform = $platform;
 

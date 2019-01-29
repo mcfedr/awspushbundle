@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\SnsClient;
@@ -36,7 +38,7 @@ class Messages
      * @param LoggerInterface $logger
      * @param bool            $debug
      */
-    public function __construct(SnsClient $client, $platformARNS, $debug, LoggerInterface $logger = null)
+    public function __construct(SnsClient $client, array $platformARNS, bool $debug, LoggerInterface $logger = null)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;
@@ -53,7 +55,7 @@ class Messages
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
      */
-    public function broadcast(Message $message, $platform = null)
+    public function broadcast(Message $message, ?string $platform = null)
     {
         if (null !== $platform && !isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
@@ -76,13 +78,13 @@ class Messages
      *
      * @throws MessageTooLongException
      */
-    public function send($message, $endpointArn)
+    public function send($message, string $endpointArn)
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
                 "Message would have been sent to $endpointArn",
                 [
-                    'Message' => $message
+                    'Message' => $message,
                 ]
             );
 
@@ -97,19 +99,15 @@ class Messages
             [
                 'TargetArn' => $endpointArn,
                 'Message' => $this->encodeMessage($message),
-                'MessageStructure' => 'json'
+                'MessageStructure' => 'json',
             ]
         );
     }
 
     /**
-     * @param Message $message
-     *
-     * @return string
-     *
      * @throws MessageTooLongException
      */
-    private function encodeMessage(Message $message)
+    private function encodeMessage(Message $message): string
     {
         try {
             $json = json_encode($message, JSON_UNESCAPED_UNICODE);
@@ -129,13 +127,13 @@ class Messages
      * @param Message|string $message
      * @param string         $platform
      */
-    private function broadcastToPlatform($message, $platform)
+    private function broadcastToPlatform($message, string $platform)
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
                 "Message would have been sent to $platform",
                 [
-                    'Message' => $message
+                    'Message' => $message,
                 ]
             );
 
@@ -143,7 +141,7 @@ class Messages
         }
 
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
-            'PlatformApplicationArn' => $this->arns[$platform]
+            'PlatformApplicationArn' => $this->arns[$platform],
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
                 if ($endpoint['Attributes']['Enabled'] == 'true') {
@@ -155,7 +153,7 @@ class Messages
                             [
                                 'Message' => $message,
                                 'Exception' => $e,
-                                'Endpoint' => $endpoint
+                                'Endpoint' => $endpoint,
                             ]
                         );
                     }
@@ -164,7 +162,7 @@ class Messages
                         "Disabled endpoint {$endpoint['EndpointArn']}",
                         [
                             'Message' => $message,
-                            'Endpoint' => $endpoint
+                            'Endpoint' => $endpoint,
                         ]
                     );
                 }
