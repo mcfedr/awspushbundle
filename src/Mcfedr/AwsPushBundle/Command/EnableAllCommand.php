@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
@@ -56,13 +58,11 @@ class EnableAllCommand extends Command
 
     /**
      * Enable all devices registered on platform.
-     *
-     * @param string $platform
      */
-    private function enablePlatform($platform)
+    private function enablePlatform(string $platform)
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
-            'PlatformApplicationArn' => $this->arns[$platform]
+            'PlatformApplicationArn' => $this->arns[$platform],
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
                 if ($endpoint['Attributes']['Enabled'] == 'false') {
@@ -71,8 +71,8 @@ class EnableAllCommand extends Command
                             [
                                 'EndpointArn' => $endpoint['EndpointArn'],
                                 'Attributes' => [
-                                    'Enabled' => 'true'
-                                ]
+                                    'Enabled' => 'true',
+                                ],
                             ]
                         );
                         $this->logger && $this->logger->info("Enabled {$endpoint['EndpointArn']}");
@@ -81,7 +81,7 @@ class EnableAllCommand extends Command
                             "Failed to push set attributes on {$endpoint['EndpointArn']}",
                             [
                                 'exception' => $e,
-                                'endpoint' => $endpoint
+                                'endpoint' => $endpoint,
                             ]
                         );
                     }

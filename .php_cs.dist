@@ -1,9 +1,16 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(['src', 'tests'])
-    ->exclude(['tests/cache']);
+    ->in(['src', 'tests']);
 
 return PhpCsFixer\Config::create()
-    ->setRules(['@Symfony' => true, 'trailing_comma_in_multiline_array' => false, 'concat_space' => ['spacing' => 'one'], 'array_syntax' => ['syntax' => 'short'], 'ordered_imports' => true])
+    ->setRules([
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'ordered_imports' => true,
+        'yoda_style' => false,
+        'declare_strict_types' => true
+    ])
+    ->setRiskyAllowed(true)
     ->setFinder($finder);

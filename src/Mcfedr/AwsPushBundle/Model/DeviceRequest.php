@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,19 +15,15 @@ class DeviceRequest
      */
     private $device;
 
-    /**
-     * @return Device
-     */
-    public function getDevice()
+    public function getDevice(): Device
     {
         return $this->device;
     }
 
-    /**
-     * @param Device $device
-     */
-    public function setDevice(Device $device = null)
+    public function setDevice(Device $device): self
     {
         $this->device = $device;
+
+        return $this;
     }
 }

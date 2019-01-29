@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Controller;
 
 use Aws\Sns\SnsClient;
@@ -59,12 +61,12 @@ class ApiController
     /**
      * @Route("/devices", name="mcfedr_aws_push.register", methods={"POST"})
      */
-    public function registerDeviceAction(Request $request)
+    public function registerDeviceAction(Request $request): Response
     {
         /** @var DeviceRequest $deviceRequest */
         $deviceRequest = $this->serializer->deserialize($request->getContent(), DeviceRequest::class, 'json');
         $errors = $this->validator->validate($deviceRequest);
-        if (count($errors)) {
+        if (\count($errors)) {
             throw new BadRequestHttpException('Invalid register');
         }
         $device = $deviceRequest->getDevice();
@@ -74,14 +76,14 @@ class ApiController
                 $this->logger && $this->logger->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
-                    'platform' => $device->getPlatform()
+                    'platform' => $device->getPlatform(),
                 ]);
 
                 if ($this->topicArn) {
                     $this->snsClient->subscribe([
                         'TopicArn' => $this->topicArn,
                         'Protocol' => 'application',
-                        'Endpoint' => $arn
+                        'Endpoint' => $arn,
                     ]);
                 }
 
@@ -90,7 +92,7 @@ class ApiController
         } catch (PlatformNotConfiguredException $e) {
             $this->logger && $this->logger->error('Unknown platform', [
                 'e' => $e,
-                'platform' => $device->getPlatform()
+                'platform' => $device->getPlatform(),
             ]);
 
             return new Response('Unknown platform', 400);
@@ -98,7 +100,7 @@ class ApiController
             $this->logger && $this->logger->error('Exception registering device', [
                'e' => $e,
                 'device' => $device->getDeviceId(),
-                'platform' => $device->getPlatform()
+                'platform' => $device->getPlatform(),
             ]);
         }
 
@@ -109,12 +111,12 @@ class ApiController
      * @Route("/broadcast", name="mcfedr_aws_push.broadcast", methods={"POST"})
      * @Security("has_role('ROLE_MCFEDR_AWS_BROADCAST')")
      */
-    public function broadcastAction(Request $request)
+    public function broadcastAction(Request $request): Response
     {
         /** @var BroadcastRequest $broadcastRequest */
         $broadcastRequest = $this->serializer->deserialize($request->getContent(), BroadcastRequest::class, 'json');
         $errors = $this->validator->validate($broadcastRequest);
-        if (count($errors)) {
+        if (\count($errors)) {
             throw new BadRequestHttpException('Invalid broadcast');
         }
         $broadcast = $broadcastRequest->getBroadcast();
@@ -129,7 +131,7 @@ class ApiController
             return new Response('Message sent', 200);
         } catch (PlatformNotConfiguredException $e) {
             $this->logger && $this->logger->error('Unknown platform', [
-                'e' => $e
+                'e' => $e,
             ]);
 
             return new Response('Unknown platform', 400);

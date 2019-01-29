@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
@@ -56,20 +58,18 @@ class RemoveDisabledCommand extends Command
 
     /**
      * Enable all devices registered on platform.
-     *
-     * @param string $platform
      */
-    private function removeFromPlatform($platform)
+    private function removeFromPlatform(string $platform)
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
-            'PlatformApplicationArn' => $this->arns[$platform]
+            'PlatformApplicationArn' => $this->arns[$platform],
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
                 if ($endpoint['Attributes']['Enabled'] == 'false') {
                     try {
                         $this->sns->deleteEndpoint(
                             [
-                                'EndpointArn' => $endpoint['EndpointArn']
+                                'EndpointArn' => $endpoint['EndpointArn'],
                             ]
                         );
                         $this->logger && $this->logger->info("Removed {$endpoint['EndpointArn']}");
@@ -78,7 +78,7 @@ class RemoveDisabledCommand extends Command
                             "Failed to remove endpoint {$endpoint['EndpointArn']}",
                             [
                                 'exception' => $e,
-                                'endpoint' => $endpoint
+                                'endpoint' => $endpoint,
                             ]
                         );
                     }

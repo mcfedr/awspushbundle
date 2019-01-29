@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 class TestKernel extends Symfony\Component\HttpKernel\Kernel
 {
@@ -16,6 +17,6 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
 
     public function registerContainerConfiguration(\Symfony\Component\Config\Loader\LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config_test.yml');
+        $loader->load(__DIR__.'/config_test.yml');
     }
 }

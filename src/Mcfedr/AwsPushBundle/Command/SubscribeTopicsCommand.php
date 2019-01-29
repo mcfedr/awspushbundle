@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\Exception\SnsException;
@@ -70,34 +72,34 @@ class SubscribeTopicsCommand extends Command
             }
         } catch (SnsException $e) {
             $this->logger && $this->logger->error('Failed to create topic', [
-                'exception' => $e
+                'exception' => $e,
             ]);
         }
     }
 
-    private function subscribePlatform($platform, $topic)
+    private function subscribePlatform(string $platform, string $topic)
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
-            'PlatformApplicationArn' => $this->arns[$platform]
+            'PlatformApplicationArn' => $this->arns[$platform],
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
                 $this->logger && $this->logger->info('Subscribing device to topic', [
                     'device' => $endpoint['EndpointArn'],
                     'topic' => $topic,
-                    'platform' => $platform
+                    'platform' => $platform,
                 ]);
                 try {
                     $this->sns->subscribe([
                         'TopicArn' => $topic,
                         'Protocol' => 'application',
-                        'Endpoint' => $endpoint['EndpointArn']
+                        'Endpoint' => $endpoint['EndpointArn'],
                     ]);
                 } catch (SnsException $e) {
                     $this->logger && $this->logger->info('Error subscribing device to topic', [
                         'device' => $endpoint['EndpointArn'],
                         'topic' => $topic,
                         'platform' => $platform,
-                        'exception' => $e
+                        'exception' => $e,
                     ]);
                 }
             }

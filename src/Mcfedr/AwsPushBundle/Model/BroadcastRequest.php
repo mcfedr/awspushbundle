@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,19 +15,15 @@ class BroadcastRequest
      */
     private $broadcast;
 
-    /**
-     * @return Broadcast
-     */
-    public function getBroadcast()
+    public function getBroadcast(): Broadcast
     {
         return $this->broadcast;
     }
 
-    /**
-     * @param Broadcast $broadcast
-     */
-    public function setBroadcast(Broadcast $broadcast = null)
+    public function setBroadcast(Broadcast $broadcast): self
     {
         $this->broadcast = $broadcast;
+
+        return $this;
     }
 }

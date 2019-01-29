@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Tests\Message;
 
 use Faker\Provider\Base;
@@ -30,32 +32,32 @@ class MessageTest extends TestCase
     {
         $ios = new Message();
         $ios->setCustom([
-            'data' => Lorem::text(3000)
+            'data' => Lorem::text(3000),
         ]);
         $ios->setPlatforms([Message::PLATFORM_APNS]);
 
         $android = new Message();
         $android->setCustom([
-            'data' => Lorem::text(6000)
+            'data' => Lorem::text(6000),
         ]);
         $android->setPlatforms([Message::PLATFORM_GCM]);
 
         $amazon = new Message();
         $amazon->setCustom([
-            'data' => Lorem::text(7000)
+            'data' => Lorem::text(7000),
         ]);
         $amazon->setPlatforms([Message::PLATFORM_ADM]);
 
         return [
             [
-                $ios
+                $ios,
             ],
             [
-                $android
+                $android,
             ],
             [
-                $amazon
-            ]
+                $amazon,
+            ],
         ];
     }
 
@@ -71,32 +73,32 @@ class MessageTest extends TestCase
     {
         $ios = new Message();
         $ios->setCustom([
-            'data' => Lorem::text(2000)
+            'data' => Lorem::text(2000),
         ]);
         $ios->setPlatforms([Message::PLATFORM_APNS]);
 
         $android = new Message();
         $android->setCustom([
-            'data' => Lorem::text(4050)
+            'data' => Lorem::text(4050),
         ]);
         $android->setPlatforms([Message::PLATFORM_GCM]);
 
         $amazon = new Message();
         $amazon->setCustom([
-            'data' => Lorem::text(5050)
+            'data' => Lorem::text(5050),
         ]);
         $amazon->setPlatforms([Message::PLATFORM_ADM]);
 
         return [
             [
-                $ios
+                $ios,
             ],
             [
-                $android
+                $android,
             ],
             [
-                $amazon
-            ]
+                $amazon,
+            ],
         ];
     }
 
@@ -112,8 +114,8 @@ class MessageTest extends TestCase
     {
         return [
             [
-                new Message(Lorem::text(10000))
-            ]
+                new Message(Lorem::text(10000)),
+            ],
         ];
     }
 
@@ -175,7 +177,7 @@ class MessageTest extends TestCase
     public function text()
     {
         return [
-            [Lorem::text(1000)]
+            [Lorem::text(1000)],
         ];
     }
 
@@ -220,7 +222,7 @@ class MessageTest extends TestCase
     public function localized()
     {
         return [
-            [Lorem::text(1000), Lorem::text(50), Lorem::words(3)]
+            [Lorem::text(1000), Lorem::text(50), Lorem::words(3)],
         ];
     }
 
@@ -261,7 +263,7 @@ class MessageTest extends TestCase
     public function localizedNoArgs()
     {
         return [
-            [Lorem::text(1000), Lorem::text(50)]
+            [Lorem::text(1000), Lorem::text(50)],
         ];
     }
 
@@ -271,8 +273,8 @@ class MessageTest extends TestCase
         $message->setCustom([
             'simple' => 'Hello',
             'complicated' => [
-                'inner' => 'values'
-            ]
+                'inner' => 'values',
+            ],
         ]);
 
         $string = (string) $message;
@@ -285,7 +287,7 @@ class MessageTest extends TestCase
         $this->assertEquals('Hello', $admData['data']['simple']);
         $this->assertArrayHasKey('complicated_json', $admData['data']);
         $this->assertEquals(json_encode([
-            'inner' => 'values'
+            'inner' => 'values',
         ]), $admData['data']['complicated_json']);
     }
 
@@ -310,7 +312,7 @@ class MessageTest extends TestCase
     public function ttl()
     {
         return [
-            [Base::numberBetween(60, 2678400)]
+            [Base::numberBetween(60, 2678400)],
         ];
     }
 }

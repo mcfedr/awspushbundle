@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\SnsClient;
@@ -38,7 +40,7 @@ class Topics
      * @param Messages        $messages
      * @param $debug
      */
-    public function __construct(SnsClient $client, Messages $messages, $debug, LoggerInterface $logger = null)
+    public function __construct(SnsClient $client, Messages $messages, bool $debug, LoggerInterface $logger = null)
     {
         $this->sns = $client;
         $this->logger = $logger;
@@ -55,11 +57,11 @@ class Topics
      *
      * @deprecated use SnsClient directly to subscribe
      */
-    public function createTopic($name)
+    public function createTopic(string $name): string
     {
         $res = $this->sns->createTopic(
             [
-                'Name' => $name
+                'Name' => $name,
             ]
         );
 
@@ -73,11 +75,11 @@ class Topics
      *
      * @deprecated use SnsClient directly to subscribe
      */
-    public function deleteTopic($topicArn)
+    public function deleteTopic(string $topicArn)
     {
         $this->sns->deleteTopic(
             [
-                'TopicArn' => $topicArn
+                'TopicArn' => $topicArn,
             ]
         );
     }
@@ -92,13 +94,13 @@ class Topics
      * @deprecated use SnsClient directly to subscribe
      * @see SnsClient::subscribe
      */
-    public function registerDeviceOnTopic($deviceArn, $topicArn)
+    public function registerDeviceOnTopic(string $deviceArn, string $topicArn)
     {
         $this->sns->subscribe(
             [
                 'TopicArn' => $topicArn,
                 'Protocol' => 'application',
-                'Endpoint' => $deviceArn
+                'Endpoint' => $deviceArn,
             ]
         );
     }
@@ -112,13 +114,13 @@ class Topics
      * @deprecated Use Messages send method and pass the topicArn as the destination
      * @see Messages::send
      */
-    public function broadcast(Message $message, $topicArn)
+    public function broadcast(Message $message, string $topicArn)
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
                 "Message would have been sent to $topicArn",
                 [
-                    'Message' => $message
+                    'Message' => $message,
                 ]
             );
 

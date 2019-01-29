@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mcfedr\AwsPushBundle\Service;
 
 use Aws\Sns\Exception\SnsException;
@@ -22,7 +24,7 @@ class Devices
      * @param SnsClient $client
      * @param array     $platformARNS
      */
-    public function __construct(SnsClient $client, $platformARNS)
+    public function __construct(SnsClient $client, array $platformARNS)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;
@@ -40,7 +42,7 @@ class Devices
      * @throws PlatformNotConfiguredException
      * @throws \Exception
      */
-    public function registerDevice($deviceId, $platform, $userData = null)
+    public function registerDevice(string $deviceId, string $platform, ?string $userData = null): string
     {
         if (!isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
@@ -51,8 +53,8 @@ class Devices
                 'PlatformApplicationArn' => $this->arns[$platform],
                 'Token' => $deviceId,
                 'Attributes' => [
-                    'Enabled' => 'true'
-                ]
+                    'Enabled' => 'true',
+                ],
             ];
 
             if ($userData) {
@@ -67,8 +69,8 @@ class Devices
                     [
                         'EndpointArn' => $matches[1],
                         'Attributes' => [
-                            'Enabled' => 'true'
-                        ]
+                            'Enabled' => 'true',
+                        ],
                     ]
                 );
 
@@ -83,24 +85,20 @@ class Devices
 
     /**
      * Unregister a device, using its endpoint ARN.
-     *
-     * @param string $endpoint
      */
-    public function unregisterDevice($endpoint)
+    public function unregisterDevice(string $endpoint)
     {
         $this->sns->deleteEndpoint(
             [
-                'EndpointArn' => $endpoint
+                'EndpointArn' => $endpoint,
             ]
         );
     }
 
     /**
      * Returns a list of configured platforms.
-     *
-     * @return array
      */
-    public function validPlatforms()
+    public function validPlatforms(): array
     {
         return array_keys($this->arns);
     }
