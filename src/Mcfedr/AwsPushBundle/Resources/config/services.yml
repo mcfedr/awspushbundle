@@ -65,7 +65,11 @@ services:
     Mcfedr\AwsPushBundle\Controller\:
         public: true
         resource: '../../Controller'
-        tags: ['controller.service_arguments']
+        autowire: true
+        autoconfigure: true
+        bind:
+          $snsClient: "@mcfedr_aws_push.sns_client"
+          $topicArn: "%mcfedr_aws_push.topic_arn%"
 
 # public aliases for back compat
     mcfedr_aws_push.topics:

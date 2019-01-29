@@ -6,8 +6,9 @@ use Faker\Provider\Base;
 use Faker\Provider\Lorem;
 use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 use Mcfedr\AwsPushBundle\Message\Message;
+use PHPUnit\Framework\TestCase;
 
-class MessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends TestCase
 {
     /**
      * @dataProvider tooLongMessage
