@@ -431,7 +431,7 @@ class Message implements \JsonSerializable
         ];
 
         if (\in_array(self::PLATFORM_APNS, $this->platforms)) {
-            $data['APNS'] = $data['APNS_SANDBOX'] = $this->getApnsJson();
+            $data['APNS'] = $data['APNS_SANDBOX'] = $data['APNS_VOIP_SANDBOX'] = $data['APNS_VOIP'] = $this->getApnsJson();
         }
 
         if (\in_array(self::PLATFORM_GCM, $this->platforms)) {

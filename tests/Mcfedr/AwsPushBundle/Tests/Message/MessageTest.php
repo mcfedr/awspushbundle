@@ -130,10 +130,12 @@ class MessageTest extends TestCase
         $data = json_decode($string, true);
 
         $this->assertInternalType('array', $data);
-        $this->assertCount(5, $data);
+        $this->assertCount(7, $data);
         $this->assertArrayHasKey('default', $data);
         $this->assertArrayHasKey('APNS', $data);
+        $this->assertArrayHasKey('APNS_VOIP', $data);
         $this->assertArrayHasKey('APNS_SANDBOX', $data);
+        $this->assertArrayHasKey('APNS_VOIP_SANDBOX', $data);
         $this->assertArrayHasKey('GCM', $data);
         $this->assertArrayHasKey('ADM', $data);
 
