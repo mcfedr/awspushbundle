@@ -36,6 +36,13 @@ class Message implements \JsonSerializable
     private $text;
 
     /**
+     * The text will be sent to FCM over GCM as 'title' in the notification field.
+     *
+     * @var ?string
+     */
+    private $title = null;
+
+    /**
      * This is notification priority for GCM should be 'high' or 'normal'. High priority is default.
      *
      * @var string
@@ -219,6 +226,23 @@ class Message implements \JsonSerializable
         $this->sound = $sound;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    /**
+     * The text will be sent to FCM over GCM as 'title' in the data field.
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
     public function getText(): ?string
@@ -478,7 +502,10 @@ class Message implements \JsonSerializable
                 $apns['aps']['alert']['loc-args'] = $this->localizedArguments;
             }
         } elseif (null !== $text) {
-            $apns['aps']['alert'] = $text;
+            $apns['aps']['alert']['body'] = $text;
+            if (!is_null($this->title)) {
+                $apns['aps']['alert']['title'] = $this->title;
+            }
         }
 
         if ($this->isContentAvailable()) {
