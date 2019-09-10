@@ -503,7 +503,7 @@ class Message implements \JsonSerializable
             }
         } elseif (null !== $text) {
             $apns['aps']['alert']['body'] = $text;
-            if (!is_null($this->title)) {
+            if (null !== $this->title) {
                 $apns['aps']['alert']['title'] = $this->title;
             }
         }
