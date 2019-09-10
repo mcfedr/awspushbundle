@@ -153,7 +153,7 @@ class MessageTest extends TestCase
 
         $this->assertInternalType('array', $apnsData['aps']['alert']);
         $this->assertArrayHasKey('body', $apnsData['aps']['alert']);
-        
+
         $this->assertEquals($text, $apnsData['aps']['alert']['body'], 'APNS.aps.alert.body should be the text of the message');
 
         $gcmData = json_decode($data['GCM'], true);

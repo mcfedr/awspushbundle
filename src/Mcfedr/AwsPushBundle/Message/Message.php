@@ -235,6 +235,7 @@ class Message implements \JsonSerializable
     {
         return $this->title;
     }
+
     /**
      * The text will be sent to FCM over GCM as 'title' in the data field.
      *
