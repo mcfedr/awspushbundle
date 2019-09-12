@@ -4,6 +4,7 @@ parameters:
     mcfedr_aws_push.aws.region: ''
     mcfedr_aws_push.debug: false
     mcfedr_aws_push.topic_arn: ''
+    mcfedr_aws_push.push_platforms: ~
 
 services:
     Mcfedr\AwsPushBundle\Service\Devices:
@@ -19,6 +20,7 @@ services:
           - "%mcfedr_aws_push.platforms%"
           - "%mcfedr_aws_push.debug%"
           - "@?logger"
+          - "%mcfedr_aws_push.push_platforms%"
 
     Mcfedr\AwsPushBundle\Service\Topics:
         public: true

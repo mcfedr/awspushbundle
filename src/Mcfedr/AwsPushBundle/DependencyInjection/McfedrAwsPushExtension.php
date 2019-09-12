@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mcfedr\AwsPushBundle\DependencyInjection;
 
+use Mcfedr\AwsPushBundle\Message\Message;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -46,6 +47,10 @@ class McfedrAwsPushExtension extends Extension
 
         if (isset($config['topic_arn'])) {
             $container->setParameter('mcfedr_aws_push.topic_arn', $config['topic_arn']);
+        }
+
+        if (isset($config['fcm']) && $config['fcm']) {
+            $container->setParameter('mcfedr_aws_push.push_platforms', [Message::PLATFORM_ADM, Message::PLATFORM_APNS, Message::PLATFORM_APNS_VOIP, Message::PLATFORM_FCM]);
         }
     }
 }

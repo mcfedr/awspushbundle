@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApiControllerTest extends WebTestCase
 {
@@ -56,11 +58,10 @@ class ApiControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testInvalidRegisterDevice()
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $client = self::createClient();
 
         $client->request('POST', '/devices', [], [], [
@@ -73,11 +74,10 @@ class ApiControllerTest extends WebTestCase
         ]));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testInvalidBroadcast()
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $client = self::createClient();
 
         $client->request('POST', '/broadcast', [], [], [
@@ -92,11 +92,10 @@ class ApiControllerTest extends WebTestCase
         ]));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     */
     public function testOtherUserBroadcast()
     {
+        $this->expectException(AccessDeniedHttpException::class);
+
         $client = self::createClient();
 
         $client->request('POST', '/broadcast', [], [], [
