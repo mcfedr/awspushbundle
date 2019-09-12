@@ -122,9 +122,10 @@ class MessageTest extends TestCase
     /**
      * @dataProvider text
      */
-    public function testTextMessageStructure($text)
+    public function testTextMessageStructure($text, $title)
     {
         $message = new Message($text);
+        $message->setTitle($title);
 
         $string = (string) $message;
         $data = json_decode($string, true);
@@ -155,6 +156,7 @@ class MessageTest extends TestCase
         $this->assertArrayHasKey('body', $apnsData['aps']['alert']);
 
         $this->assertEquals($text, $apnsData['aps']['alert']['body'], 'APNS.aps.alert.body should be the text of the message');
+        $this->assertEquals($title, $apnsData['aps']['alert']['title'], 'APNS.aps.alert.title should be the title of the message');
 
         $gcmData = json_decode($data['GCM'], true);
         $this->assertInternalType('array', $gcmData);
@@ -183,7 +185,7 @@ class MessageTest extends TestCase
     public function text()
     {
         return [
-            [Lorem::text(1000)],
+            [Lorem::text(1000), Lorem::text(50)],
         ];
     }
 
@@ -196,6 +198,9 @@ class MessageTest extends TestCase
         $message->setLocalizedKey($key);
         $message->setLocalizedArguments($args);
 
+        $message->setTitleLocalizedKey($key);
+        $message->setTitleLocalizedArguments($args);
+
         $string = (string) $message;
         $data = json_decode($string, true);
 
@@ -206,9 +211,11 @@ class MessageTest extends TestCase
         $this->assertCount(1, $apnsData['aps']);
         $this->assertArrayHasKey('alert', $apnsData['aps']);
         $this->assertInternalType('array', $apnsData['aps']['alert']);
-        $this->assertCount(2, $apnsData['aps']['alert']);
+        $this->assertCount(4, $apnsData['aps']['alert']);
         $this->assertEquals($key, $apnsData['aps']['alert']['loc-key'], 'APNS.aps.alert.loc-key should be the key of the message');
         $this->assertEquals($args, $apnsData['aps']['alert']['loc-args'], 'APNS.aps.alert.loc-args should be the args of the message');
+        $this->assertEquals($key, $apnsData['aps']['alert']['title-loc-key'], 'APNS.aps.alert.title-loc-key should be the args of the title');
+        $this->assertEquals($args, $apnsData['aps']['alert']['title-loc-args'], 'APNS.aps.alert.title-loc-args should be the args of the title');
 
         $gcmData = json_decode($data['GCM'], true);
         $this->assertCount(5, $gcmData);
@@ -240,6 +247,8 @@ class MessageTest extends TestCase
         $message = new Message($text);
         $message->setLocalizedKey($key);
 
+        $message->setTitleLocalizedKey($key);
+
         $string = (string) $message;
         $data = json_decode($string, true);
 
@@ -250,8 +259,9 @@ class MessageTest extends TestCase
         $this->assertCount(1, $apnsData['aps']);
         $this->assertArrayHasKey('alert', $apnsData['aps']);
         $this->assertInternalType('array', $apnsData['aps']['alert']);
-        $this->assertCount(1, $apnsData['aps']['alert']);
+        $this->assertCount(2, $apnsData['aps']['alert']);
         $this->assertEquals($key, $apnsData['aps']['alert']['loc-key'], 'APNS.aps.alert.loc-key should be the key of the message');
+        $this->assertEquals($key, $apnsData['aps']['alert']['title-loc-key'], 'APNS.aps.alert.title-loc-key should be the key of the title');
 
         $gcmData = json_decode($data['GCM'], true);
         $this->assertCount(5, $gcmData);
