@@ -5,7 +5,6 @@ A convenient bundle for registering devices and then pushing to them using amazo
 [![Latest Stable Version](https://poser.pugx.org/mcfedr/awspushbundle/v/stable.png)](https://packagist.org/packages/mcfedr/awspushbundle)
 [![License](https://poser.pugx.org/mcfedr/awspushbundle/license.png)](https://packagist.org/packages/mcfedr/awspushbundle)
 [![Build Status](https://travis-ci.org/mcfedr/awspushbundle.svg?branch=master)](https://travis-ci.org/mcfedr/awspushbundle)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ab82b189-3854-43e5-9762-45bb620bcd0e/mini.png)](https://insight.sensiolabs.com/projects/ab82b189-3854-43e5-9762-45bb620bcd0e)
 
 ## Install
 
@@ -32,6 +31,7 @@ Put something like this in your config. The arns in the platforms section should
             ios: 'arn:aws:sns:....'
             android: 'arn:aws:sns:....'
         topic_arn: 'arn:aws:sns:...'
+        fcm: true
         aws:
             credentials: 
                 key: 'my key'
@@ -41,6 +41,9 @@ Put something like this in your config. The arns in the platforms section should
 You can skip `credentials` if you have want the Aws SDK to get credentials indirectly, either from
 [environment](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#environment-credentials) or
 [ec2 role](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#using-iam-roles-for-amazon-ec2-instances).
+
+If you don't set the `fcm` flag then android messages will sent in a format compatible with GCM, i.e.
+the `notification` field will not be set. It is `false` by default for backwards compatibility of this bundle.
 
 ## Usage
 
@@ -79,7 +82,7 @@ devices to the topic.
 ## Text in notifications
 
 For GCM and ADM there is no 'standard' key for text data as there is for Apple pushes, so this bundle send text in a key
-called 'message'.
+called `message`.
 
 If localized text is sent the keys are
 * `message-loc-key`
@@ -123,6 +126,8 @@ There are some commands to help manage the devices
     This will subscribe all devices to a topic, useful when introducing a topic
 
 ## Api Controller
+
+**Optional.**
 
 There is a controller included which makes basic usage of the bundle very easy. You may or may not want to use it,
 you might find it most useful as an example.
@@ -182,6 +187,7 @@ parameter.
             }
         }
 
-## API documentation
+## More info
 
-You can see the full [API documentation](https://mcfedr.github.io/awspushbundle/) on github pages.
+- [Apple Push Notifcation Reference](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification)
+- [FCM](https://firebase.google.com/docs/cloud-messaging/http-server-ref)

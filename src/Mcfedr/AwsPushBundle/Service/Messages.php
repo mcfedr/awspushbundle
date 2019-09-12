@@ -33,17 +33,23 @@ class Messages
     private $debug;
 
     /**
-     * @param SnsClient       $client
-     * @param array           $platformARNS
-     * @param LoggerInterface $logger
-     * @param bool            $debug
+     * Overrides the default platforms settings in Messages.
+     *
+     * @var ?array
+     *
+     * @see Message::$platforms
      */
-    public function __construct(SnsClient $client, array $platformARNS, bool $debug, LoggerInterface $logger = null)
+    private $platforms;
+
+    public function __construct(SnsClient $client, array $platformARNS, bool $debug = false, LoggerInterface $logger = null, array $platforms = null)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;
         $this->logger = $logger;
         $this->debug = $debug;
+        if (null !== $platforms) {
+            $this->platforms = $platforms;
+        }
     }
 
     /**
@@ -93,6 +99,10 @@ class Messages
 
         if (!($message instanceof Message)) {
             $message = new Message($message);
+        }
+
+        if ($this->platforms !== null && !$message->isPlatformsCustomized()) {
+            $message->setPlatforms($this->platforms);
         }
 
         $this->sns->publish(
