@@ -43,6 +43,50 @@ class Message implements \JsonSerializable
     private $title = null;
 
     /**
+     * The key of a localized title string that will form the title displayed.
+     *
+     * @var ?string
+     */
+    private $titleLocalizedKey = null;
+
+    /**
+     * Arguments for the localized title.
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
+     * @var ?array
+     */
+    private $titleLocalizedArguments = null;
+
+    /**
+     * Additional information that explains the purpose of the notification.
+     *
+     * @var ?string
+     */
+    private $subTitle = null;
+
+    /**
+     * The key of a localized subtitle string that will form the title displayed.
+     *
+     * @var ?string
+     */
+    private $subTitleLocalizedKey = null;
+
+    /**
+     * Arguments for the localized subtitle.
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     *
+     * @var ?array
+     */
+    private $subTitleLocalizedArguments = null;
+
+    /**
+     * The notification type.
+     *
+     * @var ?string
+     */
+    private $category = null;
+
+    /**
      * This is notification priority for GCM should be 'high' or 'normal'. High priority is default.
      *
      * @var string
@@ -160,6 +204,16 @@ class Message implements \JsonSerializable
      */
     private $platforms = [self::PLATFORM_GCM, self::PLATFORM_APNS, self::PLATFORM_ADM];
 
+    /**
+     * An app-specific identifier for grouping related notifications.
+     */
+    private $threadId = null;
+
+    /**
+     * The notification service app extension flag.
+     */
+    private $mutableContent = null;
+
     public function __construct(?string $text = null)
     {
         $this->text = $text;
@@ -244,6 +298,89 @@ class Message implements \JsonSerializable
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * The key of a localized string that will form the title displayed.
+     */
+    public function getTitleLocalizedKey(): ?string
+    {
+        return $this->titleLocalizedKey;
+    }
+
+    public function setTitleLocalizedKey(?string $titleLocalizedKey): self
+    {
+        $this->titleLocalizedKey = $titleLocalizedKey;
+
+        return $this;
+    }
+
+    /**
+     * Arguments for the localized title
+     * If you are using iOS these should be strings only, plural localization doesn't work!
+     */
+    public function getTitleLocalizedArguments(): ?array
+    {
+        return $this->titleLocalizedArguments;
+    }
+
+    public function setTitleLocalizedArguments(?array $titleLocalizedArguments): self
+    {
+        $this->titleLocalizedArguments = $titleLocalizedArguments;
+
+        return $this;
+    }
+
+    public function getSubTitle(): ?string
+    {
+        return $this->subTitle;
+    }
+
+    public function setSubTitle(?string $subTitle): self
+    {
+        $this->subTitle = $subTitle;
+
+        return $this;
+    }
+
+    public function getSubTitleLocalizedKey(): ?string
+    {
+        return $this->subTitleLocalizedKey;
+    }
+
+    public function setSubTitleLocalizedKey(?string $subTitleLocalizedKey): self
+    {
+        $this->subTitleLocalizedKey = $subTitleLocalizedKey;
+
+        return $this;
+    }
+
+    public function getSubTitleLocalizedArguments(): ?string
+    {
+        return $this->subTitleLocalizedArguments;
+    }
+
+    public function setSubTitleLocalizedArguments(?array $subTitleLocalizedArguments): self
+    {
+        $this->subTitleLocalizedArguments = $subTitleLocalizedArguments;
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set notification type.
+     * This string must correspond to the identifier of one of the UNNotificationCategory objects.
+     */
+    public function setCategory(?string $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 
     public function getText(): ?string
@@ -449,6 +586,30 @@ class Message implements \JsonSerializable
         return $this;
     }
 
+    public function getThreadId(): ?string
+    {
+        return $this->threadId;
+    }
+
+    public function setThreadId(?string $threadId): self
+    {
+        $this->threadId = $threadId;
+
+        return $this;
+    }
+
+    public function getMutableContent(): ?int
+    {
+        return $this->mutableContent;
+    }
+
+    public function setMutableContent(?int $mutableContent): self
+    {
+        $this->mutableContent = $mutableContent;
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         $data = [
@@ -504,9 +665,28 @@ class Message implements \JsonSerializable
             }
         } elseif (null !== $text) {
             $apns['aps']['alert']['body'] = $text;
-            if (null !== $this->title) {
-                $apns['aps']['alert']['title'] = $this->title;
+        }
+
+        if (null !== $this->title) {
+            $apns['aps']['alert']['title'] = $this->title;
+        } elseif (null !== $this->titleLocalizedKey) {
+            $apns['aps']['alert']['title-loc-key'] = $this->titleLocalizedKey;
+            if (null !== $this->titleLocalizedArguments) {
+                $apns['aps']['alert']['title-loc-args'] = $this->titleLocalizedArguments;
             }
+        }
+
+        if (null !== $this->subTitle) {
+            $apns['aps']['alert']['subtitle'] = $this->subTitle;
+        } elseif (null !== $this->subTitleLocalizedKey) {
+            $apns['aps']['alert']['subtitle-loc-key'] = $this->subTitleLocalizedKey;
+            if (null !== $this->subTitleLocalizedArguments) {
+                $apns['aps']['alert']['subtitle-loc-args'] = $this->subTitleLocalizedArguments;
+            }
+        }
+
+        if (null !== $this->category) {
+            $apns['aps']['category'] = $this->category;
         }
 
         if ($this->isContentAvailable()) {
@@ -519,6 +699,14 @@ class Message implements \JsonSerializable
 
         if (null !== $this->sound) {
             $apns['aps']['sound'] = $this->sound;
+        }
+
+        if (null !== $this->threadId) {
+            $apns['aps']['thread-id'] = $this->threadId;
+        }
+
+        if (null !== $this->mutableContent) {
+            $apns['aps']['mutable-content'] = $this->mutableContent;
         }
 
         $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []);
