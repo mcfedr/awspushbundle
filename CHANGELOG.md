@@ -2,7 +2,7 @@
 
 # 6.15.0
 
-- Deprecated not setting FCM in config.
+- Replace `fcm` in the config with `pushPlatforms`.
 
 ## 6.14.0
 
