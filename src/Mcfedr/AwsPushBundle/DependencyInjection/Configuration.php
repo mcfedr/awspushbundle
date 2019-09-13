@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->variableNode('platforms')->end()
-                ->booleanNode('fcm')->defaultFalse()->end()
+                ->booleanNode('fcm')->end()
                 ->booleanNode('debug')->defaultFalse()->end()
                 ->scalarNode('topic_arn')->cannotBeEmpty()->end()
             ->end()

@@ -109,7 +109,7 @@ class ApiController
 
     /**
      * @Route("/broadcast", name="mcfedr_aws_push.broadcast", methods={"POST"})
-     * @Security("has_role('ROLE_MCFEDR_AWS_BROADCAST')")
+     * @Security("is_granted('ROLE_MCFEDR_AWS_BROADCAST')")
      */
     public function broadcastAction(Request $request): Response
     {

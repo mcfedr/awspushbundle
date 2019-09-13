@@ -49,7 +49,13 @@ class McfedrAwsPushExtension extends Extension
             $container->setParameter('mcfedr_aws_push.topic_arn', $config['topic_arn']);
         }
 
-        if (isset($config['fcm']) && $config['fcm']) {
+        if (!isset($config['fcm'])) {
+            @trigger_error('You must set mcfedr_aws_push.fcm, the default will change to `true` in the next version.', E_USER_DEPRECATED);
+
+            $config['fcm'] = false;
+        }
+
+        if ($config['fcm']) {
             $container->setParameter('mcfedr_aws_push.push_platforms', [Message::PLATFORM_ADM, Message::PLATFORM_APNS, Message::PLATFORM_APNS_VOIP, Message::PLATFORM_FCM]);
         }
     }

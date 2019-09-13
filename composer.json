@@ -43,7 +43,8 @@
         "symfony/expression-language": "^3.0|^4.0",
         "symfony/serializer": "^3.0|^4.0",
         "symfony/property-info": "^3.0|^4.0",
-        "symfony/yaml": "^3.0|^4.0"
+        "symfony/yaml": "^3.0|^4.0",
+        "symfony/phpunit-bridge": "*"
     },
     "autoload": {
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }
