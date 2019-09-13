@@ -10,6 +10,8 @@
     <php>
         <server name="KERNEL_DIR" value="tests/" />
         <server name="KERNEL_CLASS" value="TestKernel" />
+        <ini name="error_reporting" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
     </php>
 
     <filter>

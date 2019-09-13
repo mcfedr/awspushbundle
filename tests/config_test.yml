@@ -21,7 +21,7 @@ mcfedr_aws_push:
 #            secret: 'secret'
         region: 'region'
     topic_arn: 'topic'
-    fcm: false
+    pushPlatforms: [adm, apns, fcm]
 
 security:
     encoders:
