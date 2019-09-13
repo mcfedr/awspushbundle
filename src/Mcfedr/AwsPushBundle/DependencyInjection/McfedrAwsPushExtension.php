@@ -49,8 +49,20 @@ class McfedrAwsPushExtension extends Extension
             $container->setParameter('mcfedr_aws_push.topic_arn', $config['topic_arn']);
         }
 
-        if (isset($config['fcm']) && $config['fcm']) {
-            $container->setParameter('mcfedr_aws_push.push_platforms', [Message::PLATFORM_ADM, Message::PLATFORM_APNS, Message::PLATFORM_APNS_VOIP, Message::PLATFORM_FCM]);
+        if (isset($config['fcm'])) {
+            @trigger_error('You should use pushPlatforms instead of mcfedr_aws_push.fcm, it will be removed in the next version. It will be be ignored if pushPlatforms is set.', E_USER_DEPRECATED);
+
+            if (!isset($config['pushPlatforms'])) {
+                $config['pushPlatforms'] = [Message::PLATFORM_ADM, Message::PLATFORM_APNS, Message::PLATFORM_APNS_VOIP, Message::PLATFORM_FCM];
+            }
         }
+
+        if (!isset($config['pushPlatforms'])) {
+            @trigger_error(sprintf('You must set mcfedr_aws_push.pushPlatforms, the default will change from \'%s\' to \'%s\' in the next version.', implode(',', Message::DEFAULT_PLATFORMS), implode('', Message::DEFAULT_PLATFORMS_NEXT)), E_USER_DEPRECATED);
+
+            $config['pushPlatforms'] = Message::DEFAULT_PLATFORMS;
+        }
+
+        $container->setParameter('mcfedr_aws_push.push_platforms', $config['pushPlatforms']);
     }
 }

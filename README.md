@@ -31,7 +31,7 @@ Put something like this in your config. The arns in the platforms section should
             ios: 'arn:aws:sns:....'
             android: 'arn:aws:sns:....'
         topic_arn: 'arn:aws:sns:...'
-        fcm: true
+        pushPlatforms: [apns, fcm]
         aws:
             credentials: 
                 key: 'my key'
@@ -42,8 +42,8 @@ You can skip `credentials` if you have want the Aws SDK to get credentials indir
 [environment](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#environment-credentials) or
 [ec2 role](https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#using-iam-roles-for-amazon-ec2-instances).
 
-If you don't set the `fcm` flag then android messages will sent in a format compatible with GCM, i.e.
-the `notification` field will not be set. It is `false` by default for backwards compatibility of this bundle.
+If you don't set the `pushPlatforms` setting then android messages will sent in a format compatible with GCM, i.e.
+the `notification` field will not be set. This is for backwards compatibility of this bundle.
 
 ## Usage
 

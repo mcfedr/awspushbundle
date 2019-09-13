@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mcfedr\AwsPushBundle\DependencyInjection;
 
+use Mcfedr\AwsPushBundle\Message\Message;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -39,7 +40,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->variableNode('platforms')->end()
-                ->booleanNode('fcm')->defaultFalse()->end()
+                ->booleanNode('fcm')->end()
+                ->arrayNode('pushPlatforms')->enumPrototype()->values(Message::ALL_PLATFORMS)->end()->end()
                 ->booleanNode('debug')->defaultFalse()->end()
                 ->scalarNode('topic_arn')->cannotBeEmpty()->end()
             ->end()

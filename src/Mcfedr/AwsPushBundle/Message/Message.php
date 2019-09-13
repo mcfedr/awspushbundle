@@ -32,6 +32,10 @@ class Message implements \JsonSerializable
     const FCM_MAX_LENGTH = 4096;
     const GCM_MAX_LENGTH = 4096;
 
+    const DEFAULT_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_GCM];
+    const DEFAULT_PLATFORMS_NEXT = [self::PLATFORM_APNS, self::PLATFORM_FCM];
+    const ALL_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_FCM, self::PLATFORM_GCM];
+
     const PLATFORM_ADM = 'adm';
     const PLATFORM_APNS = 'apns';
     const PLATFORM_APNS_VOIP = 'apns_voip';
@@ -296,7 +300,7 @@ class Message implements \JsonSerializable
      * @see Message::PLATFORM_FCM
      * @see Message::PLATFORM_GCM
      */
-    private $platforms = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_GCM];
+    private $platforms = self::DEFAULT_PLATFORMS;
 
     /**
      * Marks that the platforms field has been set.

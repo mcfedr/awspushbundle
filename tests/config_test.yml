@@ -21,6 +21,7 @@ mcfedr_aws_push:
 #            secret: 'secret'
         region: 'region'
     topic_arn: 'topic'
+    pushPlatforms: [adm, apns, fcm]
 
 security:
     encoders:
@@ -41,3 +42,7 @@ monolog:
     handlers:
         main:
             type: console
+
+sensio_framework_extra:
+    router:
+        annotations: false
