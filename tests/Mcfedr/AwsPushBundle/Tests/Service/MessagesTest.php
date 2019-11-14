@@ -35,6 +35,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -44,6 +47,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('jsonSerialize')
             ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
 
         $messages->send($message, 'arn');
     }
@@ -59,6 +66,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -72,6 +82,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('isPlatformsCustomized')
             ->willReturn(false);
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
 
         $message->expects($this->once())
             ->method('setPlatforms')
@@ -91,6 +105,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -104,6 +121,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('isPlatformsCustomized')
             ->willReturn(true);
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
 
         $message->expects($this->never())
             ->method('setPlatforms');

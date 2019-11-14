@@ -110,6 +110,9 @@ class Messages
                 'TargetArn' => $endpointArn,
                 'Message' => $this->encodeMessage($message),
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->isContentAvailable() ? Message::PUSH_TYPE_BACKGROUND : $message->getPushType()],
+                ],
             ]
         );
     }
