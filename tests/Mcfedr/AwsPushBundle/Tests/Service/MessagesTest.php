@@ -131,4 +131,35 @@ class MessagesTest extends TestCase
 
         $messages->send($message, 'arn');
     }
+
+    public function testSendBackground()
+    {
+        $messages = new Messages($this->client, []);
+
+        $this->client
+            ->expects($this->once())
+            ->method('publish')
+            ->with([
+                'TargetArn' => 'arn',
+                'Message' => '"data"',
+                'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'background'],
+                ],
+            ]);
+
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $message->expects($this->once())
+            ->method('jsonSerialize')
+            ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('isContentAvailable')
+            ->willReturn(true);
+
+        $messages->send($message, 'arn');
+    }
 }
