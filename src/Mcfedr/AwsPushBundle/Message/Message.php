@@ -348,6 +348,8 @@ class Message implements \JsonSerializable
     {
         $this->contentAvailable = $contentAvailable;
 
+        $contentAvailable && $this->setPushType(self::PUSH_TYPE_BACKGROUND);
+
         return $this;
     }
 

@@ -157,8 +157,8 @@ class MessagesTest extends TestCase
             ->willReturn('data');
 
         $message->expects($this->once())
-            ->method('isContentAvailable')
-            ->willReturn(true);
+            ->method('getPushType')
+            ->willReturn('background');
 
         $messages->send($message, 'arn');
     }

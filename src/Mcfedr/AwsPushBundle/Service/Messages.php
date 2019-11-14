@@ -111,7 +111,7 @@ class Messages
                 'Message' => $this->encodeMessage($message),
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->isContentAvailable() ? Message::PUSH_TYPE_BACKGROUND : $message->getPushType()],
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->getPushType()],
                 ],
             ]
         );
