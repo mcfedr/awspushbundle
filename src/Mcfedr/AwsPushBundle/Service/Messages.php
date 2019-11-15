@@ -55,8 +55,7 @@ class Messages
     /**
      * Send a message to all devices on one or all platforms.
      *
-     * @param Message $message
-     * @param string  $platform
+     * @param string $platform
      *
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
@@ -80,7 +79,6 @@ class Messages
      * Send a message to an endpoint.
      *
      * @param Message|string $message
-     * @param string         $endpointArn
      *
      * @throws MessageTooLongException
      */
@@ -138,7 +136,6 @@ class Messages
      * Send a message to all devices on a platform.
      *
      * @param Message|string $message
-     * @param string         $platform
      */
     private function broadcastToPlatform($message, string $platform)
     {

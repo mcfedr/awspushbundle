@@ -638,9 +638,6 @@ class Message implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPlatformsCustomized(): bool
     {
         return $this->platformsCustomized;

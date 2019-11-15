@@ -28,7 +28,6 @@ class RemoveDisabledCommand extends Command
     private $logger;
 
     /**
-     * @param SnsClient                $sns
      * @param array                    $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
