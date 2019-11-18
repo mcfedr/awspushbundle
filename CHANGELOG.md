@@ -1,5 +1,9 @@
 # Changelog
 
+# 6.15.1
+
+- Added "apns-push-type" header for ios 13 voip pushes.
+
 # 6.15.0
 
 - Replace `fcm` in the config with `pushPlatforms`.
