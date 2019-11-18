@@ -49,6 +49,9 @@ class Message implements \JsonSerializable
     const PRIORITY_HIGH = 'high';
     const PRIORITY_NORMAL = 'normal';
 
+    const PUSH_TYPE_ALERT = 'alert';
+    const PUSH_TYPE_BACKGROUND = 'background';
+
     /**
      * The content of the alert message.
      * The text is automatically trimmed when sending to APNS, GCM and FCM.
@@ -303,6 +306,16 @@ class Message implements \JsonSerializable
     private $platforms = self::DEFAULT_PLATFORMS;
 
     /**
+     * APNS only. It will be in apns-push-type.
+     * One of those "alert", "background", "voip", "complication", "fileprovider", "mdm".
+     *
+     * @see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
+     *
+     * @var ?string
+     */
+    private $pushType = self::PUSH_TYPE_ALERT;
+
+    /**
      * Marks that the platforms field has been set.
      *
      * @var bool
@@ -334,6 +347,8 @@ class Message implements \JsonSerializable
     public function setContentAvailable(?bool $contentAvailable): self
     {
         $this->contentAvailable = $contentAvailable;
+
+        $contentAvailable && $this->setPushType(self::PUSH_TYPE_BACKGROUND);
 
         return $this;
     }
@@ -623,9 +638,6 @@ class Message implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPlatformsCustomized(): bool
     {
         return $this->platformsCustomized;
@@ -651,6 +663,18 @@ class Message implements \JsonSerializable
     public function setMutableContent(?bool $mutableContent): self
     {
         $this->mutableContent = $mutableContent;
+
+        return $this;
+    }
+
+    public function getPushType(): string
+    {
+        return $this->pushType;
+    }
+
+    public function setPushType($pushType): self
+    {
+        $this->pushType = $pushType;
 
         return $this;
     }

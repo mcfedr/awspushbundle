@@ -35,6 +35,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -44,6 +47,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('jsonSerialize')
             ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
 
         $messages->send($message, 'arn');
     }
@@ -59,6 +66,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -72,6 +82,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('isPlatformsCustomized')
             ->willReturn(false);
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
 
         $message->expects($this->once())
             ->method('setPlatforms')
@@ -91,6 +105,9 @@ class MessagesTest extends TestCase
                 'TargetArn' => 'arn',
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                ],
             ]);
 
         $message = $this->getMockBuilder(Message::class)
@@ -105,8 +122,43 @@ class MessagesTest extends TestCase
             ->method('isPlatformsCustomized')
             ->willReturn(true);
 
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
+
         $message->expects($this->never())
             ->method('setPlatforms');
+
+        $messages->send($message, 'arn');
+    }
+
+    public function testSendBackground()
+    {
+        $messages = new Messages($this->client, []);
+
+        $this->client
+            ->expects($this->once())
+            ->method('publish')
+            ->with([
+                'TargetArn' => 'arn',
+                'Message' => '"data"',
+                'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'background'],
+                ],
+            ]);
+
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $message->expects($this->once())
+            ->method('jsonSerialize')
+            ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('background');
 
         $messages->send($message, 'arn');
     }

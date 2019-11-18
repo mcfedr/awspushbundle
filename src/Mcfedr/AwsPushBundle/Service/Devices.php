@@ -20,10 +20,6 @@ class Devices
      */
     private $arns;
 
-    /**
-     * @param SnsClient $client
-     * @param array     $platformARNS
-     */
     public function __construct(SnsClient $client, array $platformARNS)
     {
         $this->sns = $client;

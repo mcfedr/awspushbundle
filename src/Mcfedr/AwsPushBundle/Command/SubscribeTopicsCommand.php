@@ -36,7 +36,6 @@ class SubscribeTopicsCommand extends Command
 
     /**
      * @param string                   $topicArn
-     * @param SnsClient                $sns
      * @param array                    $arns
      * @param \Psr\Log\LoggerInterface $logger
      */
