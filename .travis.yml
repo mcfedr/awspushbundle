@@ -5,15 +5,11 @@ matrix:
     - php: 7.2
       env: SYMFONY_VERSION='^5.0'
     - php: 7.2
-      env:
-        - SYMFONY_VERSION='^4.2'
-        - STAN='-sym4'
+      env: SYMFONY_VERSION='^4.2'
     - php: 7.3
       env: SYMFONY_VERSION='^5.0'
     - php: 7.3
-      env:
-        - SYMFONY_VERSION='^4.2'
-        - STAN='-sym4'
+      env: SYMFONY_VERSION='^4.2'
   fast_finish: true
 
 before_script:
