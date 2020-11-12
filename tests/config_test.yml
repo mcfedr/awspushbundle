@@ -3,7 +3,7 @@ framework:
     session:
         storage_id: session.storage.mock_file
     router:
-        resource: "%kernel.root_dir%/routing.yml"
+        resource: "%kernel.project_dir%/tests/routing.yml"
         strict_requirements: ~
     validation:      { enable_annotations: true }
     secret: 'fake_secret'
@@ -16,9 +16,9 @@ mcfedr_aws_push:
     platforms:
         test: 'platform'
     aws:
-#        credentials:
-#            key: 'key'
-#            secret: 'secret'
+        #        credentials:
+        #            key: 'key'
+        #            secret: 'secret'
         region: 'region'
     topic_arn: 'topic'
     pushPlatforms: [adm, apns, fcm]

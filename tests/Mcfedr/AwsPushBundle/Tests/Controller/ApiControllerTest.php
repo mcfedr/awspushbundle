@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ApiControllerTest extends WebTestCase
 {
@@ -63,6 +63,7 @@ class ApiControllerTest extends WebTestCase
         $this->expectException(BadRequestHttpException::class);
 
         $client = self::createClient();
+        $client->catchExceptions(false);
 
         $client->request('POST', '/devices', [], [], [
             'PHP_AUTH_USER' => 'admin',
@@ -79,6 +80,7 @@ class ApiControllerTest extends WebTestCase
         $this->expectException(BadRequestHttpException::class);
 
         $client = self::createClient();
+        $client->catchExceptions(false);
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
@@ -94,9 +96,10 @@ class ApiControllerTest extends WebTestCase
 
     public function testOtherUserBroadcast()
     {
-        $this->expectException(AccessDeniedHttpException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $client = self::createClient();
+        $client->catchExceptions(false);
 
         $client->request('POST', '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'other',
