@@ -1,5 +1,10 @@
 # Changelog
 
+# 6.16.0
+
+- Add support for Symfony 5
+- Drop support for Symfony 3
+
 # 6.15.1
 
 - Added "apns-push-type" header for ios 13 voip pushes.
