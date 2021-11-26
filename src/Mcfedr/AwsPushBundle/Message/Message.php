@@ -679,7 +679,7 @@ class Message implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = [
             'default' => $this->text,
