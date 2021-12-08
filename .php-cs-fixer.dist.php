@@ -3,14 +3,17 @@
 $finder = PhpCsFixer\Finder::create()
     ->in(['src', 'tests']);
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+
+return $config
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => true,
         'yoda_style' => false,
-        'declare_strict_types' => true
+        'declare_strict_types' => true,
+        'native_constant_invocation' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder);

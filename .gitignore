@@ -1,6 +1,8 @@
 /vendor/
 /tests/cache/
 /tests/logs/
-/.php_cs.cache
+/.php-cs-fixer.cache
 /.phpunit.result.cache
 /var/
+/.idea/
+/composer.lock
