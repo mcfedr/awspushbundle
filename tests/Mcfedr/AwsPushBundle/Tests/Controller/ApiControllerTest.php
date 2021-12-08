@@ -15,12 +15,12 @@ class ApiControllerTest extends WebTestCase
         $client = self::createClient();
 
         $snsMock = $this->getMockBuilder('Aws\Sns\SnsClient')
-            ->setMethods(['createPlatformEndpoint'])
+            ->addMethods(['createPlatformEndpoint'])
             ->disableOriginalConstructor()
             ->getMock();
         $snsMock->expects($this->once())
             ->method('createPlatformEndpoint')
-            ->willReturn('some:arn');
+            ->willReturn(['EndpointArn' => 'some:arn']);
 
         $client->getContainer()->set('mcfedr_aws_push.sns_client', $snsMock);
 
