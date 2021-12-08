@@ -12,34 +12,20 @@ use Psr\Log\LoggerInterface;
 
 class Messages
 {
-    /**
-     * @var SnsClient
-     */
-    private $sns;
+    private SnsClient $sns;
 
-    /**
-     * @var array
-     */
-    private $arns;
+    private array $arns;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ?LoggerInterface $logger;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     /**
      * Overrides the default platforms settings in Messages.
      *
-     * @var ?array
-     *
      * @see Message::$platforms
      */
-    private $platforms;
+    private ?array $platforms = null;
 
     public function __construct(SnsClient $client, array $platformARNS, bool $debug = false, LoggerInterface $logger = null, array $platforms = null)
     {
@@ -60,7 +46,7 @@ class Messages
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
      */
-    public function broadcast(Message $message, ?string $platform = null)
+    public function broadcast(Message $message, ?string $platform = null): void
     {
         if (null !== $platform && !isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
@@ -82,7 +68,7 @@ class Messages
      *
      * @throws MessageTooLongException
      */
-    public function send($message, string $endpointArn)
+    public function send($message, string $endpointArn): void
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
@@ -137,7 +123,7 @@ class Messages
      *
      * @param Message|string $message
      */
-    private function broadcastToPlatform($message, string $platform)
+    private function broadcastToPlatform($message, string $platform): void
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(

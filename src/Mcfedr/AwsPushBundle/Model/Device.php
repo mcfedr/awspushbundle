@@ -9,16 +9,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class Device
 {
     /**
-     * @var string
      * @NotBlank()
      */
-    private $deviceId;
+    private string $deviceId;
 
     /**
-     * @var string
      * @NotBlank()
      */
-    private $platform;
+    private string $platform;
 
     public function getDeviceId(): string
     {

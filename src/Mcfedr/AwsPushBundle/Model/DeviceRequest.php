@@ -9,11 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class DeviceRequest
 {
     /**
-     * @var Device
      * @Assert\NotBlank()
      * @Assert\Valid()
      */
-    private $device;
+    private Device $device;
 
     public function getDevice(): Device
     {
