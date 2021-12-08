@@ -18,24 +18,18 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('mcfedr_aws_push');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('mcfedr_aws_push');
-        }
-
-        $rootNode
+        $treeBuilder
+            ->getRootNode()
             ->children()
                 ->arrayNode('aws')
                     ->children()
                         ->variableNode('credentials')->end()
-                        ->scalarNode('key')->cannotBeEmpty()->setDeprecated('The "%node%" option is deprecated. Use "credentials" instead.')->end()
-                        ->scalarNode('secret')->cannotBeEmpty()->setDeprecated('The "%node%" option is deprecated. Use "credentials" instead.')->end()
+                        ->scalarNode('key')->cannotBeEmpty()->setDeprecated('mcfedr/awspushbundle', '6.10.0', 'The "%node%" option is deprecated. Use "credentials" instead.')->end()
+                        ->scalarNode('secret')->cannotBeEmpty()->setDeprecated('mcfedr/awspushbundle', '6.10.0', 'The "%node%" option is deprecated. Use "credentials" instead.')->end()
                         ->scalarNode('region')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
