@@ -1,0 +1,52 @@
+framework:
+    test: ~
+    session:
+        storage_factory_id: session.storage.factory.mock_file
+    router:
+        resource: "%kernel.project_dir%/tests/routing.yml"
+        strict_requirements: ~
+    validation:      { enable_annotations: true }
+    secret: 'fake_secret'
+    serializer:
+        enabled: true
+    property_info:
+        enabled: true
+    annotations:
+        enabled: true
+    property_access:
+        magic_call: true
+
+mcfedr_aws_push:
+    platforms:
+        test: 'platform'
+    aws:
+        #        credentials:
+        #            key: 'key'
+        #            secret: 'secret'
+        region: 'region'
+    topic_arn: 'topic'
+    pushPlatforms: [adm, apns, fcm]
+
+security:
+    enable_authenticator_manager: true
+    password_hashers:
+        Symfony\Component\Security\Core\User\InMemoryUser: plaintext
+    providers:
+        in_memory:
+            memory:
+                users:
+                    admin: { password: password, roles: 'ROLE_MCFEDR_AWS_BROADCAST' }
+                    other: { password: password, roles: 'ROLE_OTHER' }
+    firewalls:
+        default:
+            pattern: ^/
+            http_basic: ~
+
+monolog:
+    handlers:
+        main:
+            type: console
+
+sensio_framework_extra:
+    router:
+        annotations: false

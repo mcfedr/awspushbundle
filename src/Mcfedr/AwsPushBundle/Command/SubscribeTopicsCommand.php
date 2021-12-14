@@ -14,32 +14,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SubscribeTopicsCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $topicArn;
+    protected static $defaultName = 'mcfedr:aws:subscribe';
 
-    /**
-     * @var SnsClient
-     */
-    private $sns;
+    private string $topicArn;
 
-    /**
-     * @var array
-     */
-    private $arns;
+    private SnsClient $sns;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $arns;
 
-    /**
-     * @param string                   $topicArn
-     * @param array                    $arns
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public function __construct($topicArn, SnsClient $sns, $arns, LoggerInterface $logger = null)
+    private ?LoggerInterface $logger;
+
+    public function __construct(string $topicArn, SnsClient $sns, array $arns, LoggerInterface $logger = null)
     {
         $this->topicArn = $topicArn;
         $this->sns = $sns;
@@ -49,10 +34,9 @@ class SubscribeTopicsCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('mcfedr:aws:subscribe')
             ->setDescription('Subscribe existing devices to the topic')
             ->addOption(
                 'topic',
@@ -63,7 +47,7 @@ class SubscribeTopicsCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             foreach ($this->arns as $platform => $arn) {
@@ -74,9 +58,11 @@ class SubscribeTopicsCommand extends Command
                 'exception' => $e,
             ]);
         }
+
+        return 0;
     }
 
-    private function subscribePlatform(string $platform, string $topic)
+    private function subscribePlatform(string $platform, string $topic): void
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform],

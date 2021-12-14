@@ -10,17 +10,13 @@ use Symfony\Component\Validator\Constraints\Valid;
 
 class Broadcast
 {
-    /**
-     * @var string
-     */
-    private $platform;
+    private string $platform;
 
     /**
-     * @var Message
      * @Valid()
      * @NotBlank()
      */
-    private $message;
+    private Message $message;
 
     public function getMessage(): Message
     {

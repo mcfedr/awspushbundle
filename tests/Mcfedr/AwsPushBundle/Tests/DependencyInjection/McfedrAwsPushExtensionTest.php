@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Mcfedr\AwsPushBundle\Tests\DependencyInjection\McfedrAwsPushExtension;
+namespace Mcfedr\AwsPushBundle\Tests\DependencyInjection;
 
 use Aws\Sns\SnsClient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class McfedrAwsPushExtensionTest extends WebTestCase
 {
-    public function testRegisterDevice()
+    public function testSnsClientDeclared(): void
     {
         $client = self::createClient();
 

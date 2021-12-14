@@ -12,10 +12,10 @@ class Message implements \JsonSerializable
      * @deprecated use NO_COLLAPSE
      * @see NO_COLLAPSE
      */
-    const GCM_NO_COLLAPSE = 'do_not_collapse';
-    const NO_COLLAPSE = 'do_not_collapse';
+    public const GCM_NO_COLLAPSE = 'do_not_collapse';
+    public const NO_COLLAPSE = 'do_not_collapse';
 
-    const ADM_MAX_LENGTH = 6144;
+    public const ADM_MAX_LENGTH = 6144;
     /**
      * This has changed over time.
      *
@@ -23,34 +23,34 @@ class Message implements \JsonSerializable
      * For iOS 8 2KiB
      * For iOS 6- 256B
      */
-    const APNS_MAX_LENGTH = 4096;
-    const APNS_VOIP_MAX_LENGTH = 5120;
+    public const APNS_MAX_LENGTH = 4096;
+    public const APNS_VOIP_MAX_LENGTH = 5120;
     /**
      * This is a bit hard to be exact about,
      * But seems to be the limit for data and notification fields combined.
      */
-    const FCM_MAX_LENGTH = 4096;
-    const GCM_MAX_LENGTH = 4096;
+    public const FCM_MAX_LENGTH = 4096;
+    public const GCM_MAX_LENGTH = 4096;
 
-    const DEFAULT_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_GCM];
-    const DEFAULT_PLATFORMS_NEXT = [self::PLATFORM_APNS, self::PLATFORM_FCM];
-    const ALL_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_FCM, self::PLATFORM_GCM];
+    public const DEFAULT_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_GCM];
+    public const DEFAULT_PLATFORMS_NEXT = [self::PLATFORM_APNS, self::PLATFORM_FCM];
+    public const ALL_PLATFORMS = [self::PLATFORM_ADM, self::PLATFORM_APNS, self::PLATFORM_APNS_VOIP, self::PLATFORM_FCM, self::PLATFORM_GCM];
 
-    const PLATFORM_ADM = 'adm';
-    const PLATFORM_APNS = 'apns';
-    const PLATFORM_APNS_VOIP = 'apns_voip';
-    const PLATFORM_FCM = 'fcm';
+    public const PLATFORM_ADM = 'adm';
+    public const PLATFORM_APNS = 'apns';
+    public const PLATFORM_APNS_VOIP = 'apns_voip';
+    public const PLATFORM_FCM = 'fcm';
     /**
      * @deprecated use PLATFORM_FCM
      * @see PLATFORM_FCM
      */
-    const PLATFORM_GCM = 'gcm';
+    public const PLATFORM_GCM = 'gcm';
 
-    const PRIORITY_HIGH = 'high';
-    const PRIORITY_NORMAL = 'normal';
+    public const PRIORITY_HIGH = 'high';
+    public const PRIORITY_NORMAL = 'normal';
 
-    const PUSH_TYPE_ALERT = 'alert';
-    const PUSH_TYPE_BACKGROUND = 'background';
+    public const PUSH_TYPE_ALERT = 'alert';
+    public const PUSH_TYPE_BACKGROUND = 'background';
 
     /**
      * The content of the alert message.
@@ -679,6 +679,7 @@ class Message implements \JsonSerializable
         return $this;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
@@ -790,7 +791,7 @@ class Message implements \JsonSerializable
             $apns['aps']['mutable-content'] = 1;
         }
 
-        $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ? $this->apnsData : []);
+        $merged = $this->arrayMergeDeep($apns, $this->custom, $this->apnsData ?: []);
 
         // Force aps to be an object, because it shouldnt get encoded as [] but as {}
         if (!\count($merged['aps'])) {
@@ -825,7 +826,7 @@ class Message implements \JsonSerializable
     {
         $fcm = [];
 
-        $data = $this->arrayMergeDeep([], $this->custom, $this->fcmData ? $this->fcmData : []);
+        $data = $this->arrayMergeDeep([], $this->custom, $this->fcmData ?: []);
         if (\count($data)) {
             $fcm['data'] = $data;
         }
@@ -865,7 +866,7 @@ class Message implements \JsonSerializable
             $fcm['notification'] = $notification;
         }
 
-        $fcm = $this->arrayMergeDeep($fcm, $this->fcmTopLevelData ? $this->fcmTopLevelData : []);
+        $fcm = $this->arrayMergeDeep($fcm, $this->fcmTopLevelData ?: []);
 
         // Force to be an object, because it shouldn't get encoded as [] but as {}
         if (!isset($fcm['data']) && !isset($fcm['notification'])) {
@@ -908,7 +909,7 @@ class Message implements \JsonSerializable
     {
         $data = $this->getAndroidJsonInner($text);
 
-        $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ? $this->admData : []);
+        $merged = $this->arrayMergeDeep($data, $this->custom, $this->admData ?: []);
 
         // Force to be an object, because it shouldnt get encoded as [] but as {}
         if (!\count($merged)) {
@@ -944,7 +945,7 @@ class Message implements \JsonSerializable
     {
         $data = $this->getAndroidJsonInner($text);
 
-        $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ? $this->gcmData : []);
+        $merged = $this->arrayMergeDeep($data, $this->custom, $this->gcmData ?: []);
 
         // Force to be an object, because it shouldnt get encoded as [] but as {}
         if (!\count($merged)) {

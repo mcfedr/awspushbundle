@@ -9,11 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class BroadcastRequest
 {
     /**
-     * @var Broadcast
      * @Assert\NotBlank()
      * @Assert\Valid()
      */
-    private $broadcast;
+    private Broadcast $broadcast;
 
     public function getBroadcast(): Broadcast
     {

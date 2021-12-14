@@ -12,26 +12,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class EnableAllCommand extends Command
 {
-    /**
-     * @var SnsClient
-     */
-    private $sns;
+    protected static $defaultName = 'mcfedr:aws:enable';
 
-    /**
-     * @var array
-     */
-    private $arns;
+    private SnsClient $sns;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $arns;
 
-    /**
-     * @param array                    $arns
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public function __construct(SnsClient $sns, $arns, LoggerInterface $logger = null)
+    private ?LoggerInterface $logger;
+
+    public function __construct(SnsClient $sns, array $arns, LoggerInterface $logger = null)
     {
         parent::__construct();
 
@@ -40,25 +29,26 @@ class EnableAllCommand extends Command
         $this->logger = $logger;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('mcfedr:aws:enable')
             ->setDescription('Reenable all devices');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->arns as $platform => $arn) {
             $this->logger && $this->logger->info("Enabling $platform");
             $this->enablePlatform($platform);
         }
+
+        return 0;
     }
 
     /**
      * Enable all devices registered on platform.
      */
-    private function enablePlatform(string $platform)
+    private function enablePlatform(string $platform): void
     {
         foreach ($this->sns->getPaginator('ListEndpointsByPlatformApplication', [
             'PlatformApplicationArn' => $this->arns[$platform],

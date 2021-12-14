@@ -10,15 +10,9 @@ use Mcfedr\AwsPushBundle\Exception\PlatformNotConfiguredException;
 
 class Devices
 {
-    /**
-     * @var SnsClient
-     */
-    private $sns;
+    private SnsClient $sns;
 
-    /**
-     * @var array
-     */
-    private $arns;
+    private array $arns;
 
     public function __construct(SnsClient $client, array $platformARNS)
     {
@@ -82,7 +76,7 @@ class Devices
     /**
      * Unregister a device, using its endpoint ARN.
      */
-    public function unregisterDevice(string $endpoint)
+    public function unregisterDevice(string $endpoint): void
     {
         $this->sns->deleteEndpoint(
             [

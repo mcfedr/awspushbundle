@@ -14,30 +14,14 @@ use Psr\Log\LoggerInterface;
  */
 class Topics
 {
-    /**
-     * @var SnsClient
-     */
-    private $sns;
+    private SnsClient $sns;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ?LoggerInterface $logger;
 
-    /**
-     * @var Messages
-     */
-    private $messages;
+    private Messages $messages;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param $debug
-     */
     public function __construct(SnsClient $client, Messages $messages, bool $debug, LoggerInterface $logger = null)
     {
         $this->sns = $client;
@@ -73,7 +57,7 @@ class Topics
      *
      * @deprecated use SnsClient directly to subscribe
      */
-    public function deleteTopic(string $topicArn)
+    public function deleteTopic(string $topicArn): void
     {
         $this->sns->deleteTopic(
             [
@@ -91,7 +75,7 @@ class Topics
      * @deprecated use SnsClient directly to subscribe
      * @see SnsClient::subscribe
      */
-    public function registerDeviceOnTopic(string $deviceArn, string $topicArn)
+    public function registerDeviceOnTopic(string $deviceArn, string $topicArn): void
     {
         $this->sns->subscribe(
             [
@@ -108,7 +92,7 @@ class Topics
      * @deprecated Use Messages send method and pass the topicArn as the destination
      * @see Messages::send
      */
-    public function broadcast(Message $message, string $topicArn)
+    public function broadcast(Message $message, string $topicArn): void
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(

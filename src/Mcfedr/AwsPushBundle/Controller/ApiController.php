@@ -26,26 +26,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ApiController
 {
-    /** @var Devices */
-    private $devices;
+    private Devices $devices;
 
-    /** @var Messages */
-    private $messages;
+    private Messages $messages;
 
-    /** @var SnsClient */
-    private $snsClient;
+    private SnsClient $snsClient;
 
-    /** @var ?string */
-    private $topicArn;
+    private ?string $topicArn;
 
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /** @var ?LoggerInterface */
-    private $logger;
+    private ?LoggerInterface $logger;
 
     public function __construct(Devices $devices, Messages $messages, SnsClient $snsClient, ?string $topicArn, SerializerInterface $serializer, ValidatorInterface $validator, ?LoggerInterface $logger)
     {
