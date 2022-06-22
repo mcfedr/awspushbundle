@@ -701,7 +701,7 @@ class Message implements \JsonSerializable
     }
 
     #[\ReturnTypeWillChange]
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
         $data = [
             'default' => $this->text,
