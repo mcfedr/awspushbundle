@@ -1666,4 +1666,29 @@ class MessageTest extends TestCase
         $this->assertEquals([Message::PLATFORM_FCM], $message->getPlatforms());
         $this->assertTrue($message->isPlatformsCustomized());
     }
+
+    public function testApnsSound(): void
+    {
+        $message = new Message(Lorem::text(1000));
+        $message->setApnsSound([
+            'critical' => 1,
+            'name' => 'sound.caf',
+            'volume' => 1,
+        ]);
+
+        $message->setSound('sound.caf');
+
+        $string = (string) $message;
+        $data = json_decode($string, true);
+
+        $gcmData = json_decode($data['GCM'], true);
+        $this->assertEquals($gcmData['data']['sound'], 'sound.caf');
+
+        $apnsData = json_decode($data['APNS'], true);
+        $this->assertIsArray($apnsData['aps']['sound']);
+        $this->assertEquals($apnsData['aps']['sound']['name'], 'sound.caf');
+
+        $admData = json_decode($data['ADM'], true);
+        $this->assertEquals($admData['data']['sound'], 'sound.caf');
+    }
 }
