@@ -188,6 +188,15 @@ class Message implements \JsonSerializable
     private $sound;
 
     /**
+     * Use these keys to configure the sound for a critical alert.
+     * APNS only. It will be in aps.sound.
+     * https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2990112.
+     *
+     * @var ?array
+     */
+    private $apnsSound;
+
+    /**
      * The background notification flag.
      * Including this key means that when your app is launched in the background or resumed.
      * APNS only. It will be in aps.content-available.
@@ -373,6 +382,18 @@ class Message implements \JsonSerializable
     public function setSound(?string $sound): self
     {
         $this->sound = $sound;
+
+        return $this;
+    }
+
+    public function getApnsSound(): ?array
+    {
+        return $this->apnsSound;
+    }
+
+    public function setApnsSound(?array $apnsSound): self
+    {
+        $this->apnsSound = $apnsSound;
 
         return $this;
     }
@@ -783,6 +804,10 @@ class Message implements \JsonSerializable
             $apns['aps']['sound'] = $this->sound;
         }
 
+        if (null !== $this->apnsSound) {
+            $apns['aps']['sound'] = $this->apnsSound;
+        }
+
         if (null !== $this->threadId) {
             $apns['aps']['thread-id'] = $this->threadId;
         }
@@ -1013,7 +1038,7 @@ class Message implements \JsonSerializable
         $innerData = $inner($this->text);
         $innerJson = json_encode($innerData, JSON_UNESCAPED_UNICODE);
         if (($innerJsonLength = \strlen($innerJson)) > $limit) {
-            //Note that strlen returns the byte length of the string
+            // Note that strlen returns the byte length of the string
             if ($this->allowTrimming && $this->text && ($textLength = \strlen($this->text)) > ($cut = $innerJsonLength - $limit)) {
                 $innerData = $inner(mb_strcut($this->text, 0, $textLength - $cut - 3, 'utf8').'...');
             } else {
