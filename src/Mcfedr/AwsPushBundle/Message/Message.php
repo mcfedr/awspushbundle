@@ -700,6 +700,9 @@ class Message implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array
+     */
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
