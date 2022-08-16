@@ -36,7 +36,7 @@ class MessagesTest extends TestCase
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => Message::PUSH_TYPE_ALERT],
                 ],
             ]);
 
@@ -50,7 +50,7 @@ class MessagesTest extends TestCase
 
         $message->expects($this->once())
             ->method('getPushType')
-            ->willReturn('alert');
+            ->willReturn(Message::PUSH_TYPE_ALERT);
 
         $messages->send($message, 'arn');
     }
@@ -67,7 +67,7 @@ class MessagesTest extends TestCase
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => Message::PUSH_TYPE_ALERT],
                 ],
             ]);
 
@@ -85,7 +85,7 @@ class MessagesTest extends TestCase
 
         $message->expects($this->once())
             ->method('getPushType')
-            ->willReturn('alert');
+            ->willReturn(Message::PUSH_TYPE_ALERT);
 
         $message->expects($this->once())
             ->method('setPlatforms')
@@ -106,7 +106,7 @@ class MessagesTest extends TestCase
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => Message::PUSH_TYPE_ALERT],
                 ],
             ]);
 
@@ -124,7 +124,7 @@ class MessagesTest extends TestCase
 
         $message->expects($this->once())
             ->method('getPushType')
-            ->willReturn('alert');
+            ->willReturn(Message::PUSH_TYPE_ALERT);
 
         $message->expects($this->never())
             ->method('setPlatforms');
@@ -144,7 +144,7 @@ class MessagesTest extends TestCase
                 'Message' => '"data"',
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'background'],
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => Message::PUSH_TYPE_BACKGROUND],
                 ],
             ]);
 
@@ -158,7 +158,7 @@ class MessagesTest extends TestCase
 
         $message->expects($this->once())
             ->method('getPushType')
-            ->willReturn('background');
+            ->willReturn(Message::PUSH_TYPE_BACKGROUND);
 
         $messages->send($message, 'arn');
     }
