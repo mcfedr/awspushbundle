@@ -49,6 +49,10 @@ class MessagesTest extends TestCase
             ->willReturn('data');
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn('alert');
 
@@ -82,6 +86,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('isPlatformsCustomized')
             ->willReturn(false);
+
+        $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
 
         $message->expects($this->once())
             ->method('getPushType')
@@ -123,6 +131,10 @@ class MessagesTest extends TestCase
             ->willReturn(true);
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn('alert');
 
@@ -157,9 +169,14 @@ class MessagesTest extends TestCase
             ->willReturn('data');
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn('background');
 
         $messages->send($message, 'arn');
     }
+
 }
