@@ -92,30 +92,13 @@ class Messages
         $this->sns->publish(
             [
                 'TargetArn' => $endpointArn,
-                'Message' => $this->encodeMessage($message),
+                'Message' => json_encode($message, JSON_UNESCAPED_UNICODE),
                 'MessageStructure' => 'json',
                 'MessageAttributes' => [
                     'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->getPushType()],
                 ],
             ]
         );
-    }
-
-    /**
-     * @throws MessageTooLongException
-     */
-    private function encodeMessage(Message $message): string
-    {
-        try {
-            $json = json_encode($message, JSON_UNESCAPED_UNICODE);
-
-            return $json;
-        } catch (\Exception $e) {
-            if ($e->getPrevious() instanceof MessageTooLongException) {
-                throw $e->getPrevious();
-            }
-            throw $e;
-        }
     }
 
     /**

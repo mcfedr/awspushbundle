@@ -20,14 +20,7 @@ class MessageTest extends TestCase
         $this->expectException(MessageTooLongException::class);
         $message->setAllowTrimming(false);
 
-        try {
-            echo json_encode($message);
-        } catch (\Exception $e) {
-            if ($e->getPrevious() instanceof MessageTooLongException) {
-                throw $e->getPrevious();
-            }
-            throw $e;
-        }
+        json_encode($message);
     }
 
     /**
