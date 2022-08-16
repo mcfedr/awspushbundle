@@ -741,7 +741,7 @@ class Message implements \JsonSerializable
      */
     private function getApnsJson(int $length, string $message): string
     {
-        return json_encode($this->getTrimmedData([$this, 'getApnsJsonInner'], $length, $message), JSON_UNESCAPED_UNICODE);
+        return json_encode($this->getTrimmedData([$this, 'getApnsJsonInner'], $length, $message), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -839,7 +839,7 @@ class Message implements \JsonSerializable
             'time_to_live' => $this->ttl,
             'delay_while_idle' => $this->delayWhileIdle,
             'priority' => $this->priority,
-        ], $this->getTrimmedData([$this, 'getFcmJsonInner'], static::FCM_MAX_LENGTH, 'You message for FCM is too long')), JSON_UNESCAPED_UNICODE);
+        ], $this->getTrimmedData([$this, 'getFcmJsonInner'], static::FCM_MAX_LENGTH, 'You message for FCM is too long')), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -913,7 +913,7 @@ class Message implements \JsonSerializable
 
         foreach ($adm['data'] as $key => $value) {
             if (!\is_string($value)) {
-                $adm['data']["{$key}_json"] = json_encode($value);
+                $adm['data']["{$key}_json"] = json_encode($value, JSON_THROW_ON_ERROR);
                 unset($adm['data'][$key]);
             }
         }
@@ -922,7 +922,7 @@ class Message implements \JsonSerializable
             $adm['consolidationKey'] = $this->collapseKey;
         }
 
-        return json_encode($adm, JSON_UNESCAPED_UNICODE);
+        return json_encode($adm, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -958,7 +958,7 @@ class Message implements \JsonSerializable
             'delay_while_idle' => $this->delayWhileIdle,
             'priority' => $this->priority,
             'data' => $this->getTrimmedData([$this, 'getGcmJsonInner'], static::GCM_MAX_LENGTH, 'You message for GCM is too long'),
-        ], JSON_UNESCAPED_UNICODE);
+        ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -1036,7 +1036,7 @@ class Message implements \JsonSerializable
     private function getTrimmedData(callable $inner, int $limit, string $error)
     {
         $innerData = $inner($this->text);
-        $innerJson = json_encode($innerData, JSON_UNESCAPED_UNICODE);
+        $innerJson = json_encode($innerData, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         if (($innerJsonLength = \strlen($innerJson)) > $limit) {
             // Note that strlen returns the byte length of the string
             if ($this->allowTrimming && $this->text && ($textLength = \strlen($this->text)) > ($cut = $innerJsonLength - $limit)) {
