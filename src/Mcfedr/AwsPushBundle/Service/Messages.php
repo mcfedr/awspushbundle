@@ -25,7 +25,7 @@ class Messages
      *
      * @see Message::$platforms
      */
-    private ?array $platforms = null;
+    private ?array $platforms;
 
     public function __construct(SnsClient $client, array $platformARNS, bool $debug = false, LoggerInterface $logger = null, array $platforms = null)
     {
@@ -33,15 +33,11 @@ class Messages
         $this->arns = $platformARNS;
         $this->logger = $logger;
         $this->debug = $debug;
-        if (null !== $platforms) {
-            $this->platforms = $platforms;
-        }
+        $this->platforms = $platforms;
     }
 
     /**
      * Send a message to all devices on one or all platforms.
-     *
-     * @param string $platform
      *
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
