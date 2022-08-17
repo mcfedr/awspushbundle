@@ -85,14 +85,20 @@ class Messages
             $message->setPlatforms($this->platforms);
         }
 
+        $messageAttributes = [
+            'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->getPushType()],
+        ];
+
+        if ($message->getCollapseKey() != Message::NO_COLLAPSE) {
+            $messageAttributes['AWS.SNS.MOBILE.APNS.COLLAPSE_ID'] = ['DataType' => 'String', 'StringValue' => $message->getCollapseKey()];
+        }
+
         $this->sns->publish(
             [
                 'TargetArn' => $endpointArn,
                 'Message' => json_encode($message, JSON_UNESCAPED_UNICODE),
                 'MessageStructure' => 'json',
-                'MessageAttributes' => [
-                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->getPushType()],
-                ],
+                'MessageAttributes' => $messageAttributes,
             ]
         );
     }

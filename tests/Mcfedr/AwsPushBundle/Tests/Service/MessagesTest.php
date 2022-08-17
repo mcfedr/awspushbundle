@@ -49,6 +49,10 @@ class MessagesTest extends TestCase
             ->willReturn('data');
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn(Message::PUSH_TYPE_ALERT);
 
@@ -82,6 +86,10 @@ class MessagesTest extends TestCase
         $message->expects($this->once())
             ->method('isPlatformsCustomized')
             ->willReturn(false);
+
+        $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
 
         $message->expects($this->once())
             ->method('getPushType')
@@ -123,6 +131,10 @@ class MessagesTest extends TestCase
             ->willReturn(true);
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn(Message::PUSH_TYPE_ALERT);
 
@@ -157,9 +169,52 @@ class MessagesTest extends TestCase
             ->willReturn('data');
 
         $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
             ->method('getPushType')
             ->willReturn(Message::PUSH_TYPE_BACKGROUND);
 
         $messages->send($message, 'arn');
     }
+
+    public function testSendWithCollapseKey()
+    {
+        $messages = new Messages($this->client, []);
+
+        $collapseKey = uniqid();
+
+        $this->client
+            ->expects($this->once())
+            ->method('publish')
+            ->with([
+                'TargetArn' => 'arn',
+                'Message' => '"data"',
+                'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => 'alert'],
+                    'AWS.SNS.MOBILE.APNS.COLLAPSE_ID' => ['DataType' => 'String', 'StringValue' => $collapseKey],
+                ],
+            ]);
+
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $message->expects($this->any())
+            ->method('getCollapseKey')
+            ->willReturn($collapseKey);
+
+        $message->expects($this->once())
+            ->method('jsonSerialize')
+            ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn('alert');
+
+        $messages->send($message, 'arn');
+    }
+
 }
