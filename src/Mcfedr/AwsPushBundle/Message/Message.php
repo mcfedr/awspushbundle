@@ -264,7 +264,8 @@ class Message implements \JsonSerializable
     private $gcmData;
 
     /**
-     * GCM, FCM and ADM only.
+     * The collapseKey will be sent for GCM, FCM and ADM
+     * and if set, apns-collapse-id is sent for APNS.
      *
      * @var string
      */
