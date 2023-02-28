@@ -6,14 +6,14 @@ namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('kidslox:account:mcfedr:aws:enable')]
 class EnableAllCommand extends Command
 {
-    protected static $defaultName = 'mcfedr:aws:enable';
-
     private SnsClient $sns;
 
     private array $arns;
