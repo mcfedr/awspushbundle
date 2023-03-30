@@ -724,7 +724,7 @@ class Message implements \JsonSerializable
         }
 
         if (\in_array(self::PLATFORM_FCM, $this->platforms)) {
-            $data['FCM'] = $this->getFcmJson();
+            $data['GCM'] = $this->getFcmJson();
         } elseif (\in_array(self::PLATFORM_GCM, $this->platforms)) {
             $data['GCM'] = $this->getGcmJson();
         }
