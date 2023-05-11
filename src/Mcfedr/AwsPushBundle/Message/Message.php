@@ -332,6 +332,11 @@ class Message implements \JsonSerializable
      */
     private $platformsCustomized = false;
 
+    /**
+     * @var ?string the APNS topic header
+     */
+    private $apnsTopic;
+
     public function __construct(?string $text = null)
     {
         $this->text = $text;
@@ -701,6 +706,18 @@ class Message implements \JsonSerializable
         return $this;
     }
 
+    public function getApnsTopic(): ?string
+    {
+        return $this->apnsTopic;
+    }
+
+    public function setApnsTopic(?string $apnsTopic): self
+    {
+        $this->apnsTopic = $apnsTopic;
+
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -1033,9 +1050,9 @@ class Message implements \JsonSerializable
     /**
      * Using a inner function gets the data, and trys again if its too long by trimming the text.
      *
-     * @throws MessageTooLongException
-     *
      * @return mixed
+     *
+     * @throws MessageTooLongException
      */
     private function getTrimmedData(callable $inner, int $limit, string $error)
     {
