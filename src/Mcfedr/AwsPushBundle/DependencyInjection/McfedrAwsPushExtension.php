@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class McfedrAwsPushExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();

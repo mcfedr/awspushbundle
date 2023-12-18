@@ -11,11 +11,11 @@ use Mcfedr\AwsPushBundle\Model\DeviceRequest;
 use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -51,9 +51,7 @@ class ApiController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("/devices", name="mcfedr_aws_push.register", methods={"POST"})
-     */
+    #[Route(path: '/devices', name: 'mcfedr_aws_push.register', methods: ['POST'])]
     public function registerDeviceAction(Request $request): Response
     {
         /** @var DeviceRequest $deviceRequest */
@@ -65,7 +63,7 @@ class ApiController
         $device = $deviceRequest->getDevice();
 
         try {
-            if (($arn = $this->devices->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
+            if ($arn = $this->devices->registerDevice($device->getDeviceId(), $device->getPlatform())) {
                 $this->logger && $this->logger->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
@@ -100,10 +98,8 @@ class ApiController
         return new Response('Unknown error', 500);
     }
 
-    /**
-     * @Route("/broadcast", name="mcfedr_aws_push.broadcast", methods={"POST"})
-     * @Security("is_granted('ROLE_MCFEDR_AWS_BROADCAST')")
-     */
+    #[Route(path: '/broadcast', name: 'mcfedr_aws_push.broadcast', methods: ['POST'])]
+    #[IsGranted('ROLE_MCFEDR_AWS_BROADCAST')]
     public function broadcastAction(Request $request): Response
     {
         /** @var BroadcastRequest $broadcastRequest */

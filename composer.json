@@ -4,10 +4,10 @@
     "description": "A set of services to simplify using Aws to send push notifications",
     "keywords": ["symfony", "push", "notification", "bundle", "gcm", "c2dm", "ios", "apns", "sns", "aws", "amazon", "fcm"],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.0",
-        "symfony/framework-bundle": "^5.3|^6.0",
+        "symfony/framework-bundle": "^6.2",
         "symfony/polyfill-mbstring": "^1.1"
     },
     "suggest": {
@@ -34,18 +34,18 @@
     "require-dev": {
         "fakerphp/faker": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.3",
-        "phpunit/phpunit": "^9.5",
-        "sensio/framework-extra-bundle": "^5.3|^6.0",
-        "symfony/browser-kit": "^5.3|^6.0",
-        "symfony/console": "^5.3|^6.0",
-        "symfony/expression-language": "^5.3|^6.0",
+        "phpunit/phpunit": "^9.6",
+        "rector/rector": "^0.18",
+        "symfony/browser-kit": "^6.2",
+        "symfony/console": "^6.2",
+        "symfony/expression-language": "^6.2",
         "symfony/monolog-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^5.3|^6.0",
-        "symfony/property-info": "^5.3|^6.0",
-        "symfony/security-bundle": "^5.3|^6.0",
-        "symfony/serializer": "^5.3|^6.0",
-        "symfony/validator": "^5.3|^6.0",
-        "symfony/yaml": "^5.3|^6.0"
+        "symfony/phpunit-bridge": "^6.2",
+        "symfony/property-info": "^6.2",
+        "symfony/security-bundle": "^6.2",
+        "symfony/serializer": "^6.2",
+        "symfony/validator": "^6.2",
+        "symfony/yaml": "^6.2"
     },
     "autoload": {
         "psr-4": { "Mcfedr\\AwsPushBundle\\": "src/Mcfedr/AwsPushBundle" }

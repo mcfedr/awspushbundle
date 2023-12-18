@@ -216,5 +216,4 @@ class MessagesTest extends TestCase
 
         $messages->send($message, 'arn');
     }
-
 }

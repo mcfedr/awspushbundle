@@ -297,7 +297,6 @@ class Message implements \JsonSerializable
      * @see Message::APNS_MAX_LENGTH
      * @see Message::FCM_MAX_LENGTH
      * @see Message::GCM_MAX_LENGTH
-
      * @see Message::ADM_MAX_LENGTH
      */
     private $allowTrimming = true;
@@ -332,7 +331,7 @@ class Message implements \JsonSerializable
      */
     private $platformsCustomized = false;
 
-    public function __construct(?string $text = null)
+    public function __construct(string $text = null)
     {
         $this->text = $text;
     }
@@ -524,14 +523,14 @@ class Message implements \JsonSerializable
         return $this->localizedArguments;
     }
 
-    public function setLocalizedArguments(?array $localizedArguments = null): self
+    public function setLocalizedArguments(array $localizedArguments = null): self
     {
         $this->localizedArguments = $localizedArguments;
 
         return $this;
     }
 
-    public function setLocalizedText(?string $key, ?array $arguments = null): self
+    public function setLocalizedText(?string $key, array $arguments = null): self
     {
         $this->setLocalizedKey($key);
         $this->setLocalizedArguments($arguments);
@@ -750,8 +749,6 @@ class Message implements \JsonSerializable
 
     /**
      * Get the correct apple push notification server data.
-     *
-     * @return mixed
      */
     private function getApnsJsonInner(?string $text)
     {
@@ -848,8 +845,6 @@ class Message implements \JsonSerializable
 
     /**
      * Gets the data part of the FCM message.
-     *
-     * @return mixed
      */
     private function getFcmJsonInner(?string $text)
     {
@@ -931,8 +926,6 @@ class Message implements \JsonSerializable
 
     /**
      * Gets the data part of the GCM message.
-     *
-     * @return mixed
      */
     private function getAdmJsonInner(?string $text)
     {
@@ -967,8 +960,6 @@ class Message implements \JsonSerializable
 
     /**
      * Gets the data part of the GCM message.
-     *
-     * @return mixed
      */
     private function getGcmJsonInner(?string $text)
     {
@@ -1034,8 +1025,6 @@ class Message implements \JsonSerializable
      * Using a inner function gets the data, and trys again if its too long by trimming the text.
      *
      * @throws MessageTooLongException
-     *
-     * @return mixed
      */
     private function getTrimmedData(callable $inner, int $limit, string $error)
     {
