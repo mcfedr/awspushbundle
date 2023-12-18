@@ -216,4 +216,44 @@ class MessagesTest extends TestCase
 
         $messages->send($message, 'arn');
     }
+    public function testSendWithAdditionalAttributes()
+    {
+        $messages = new Messages($this->client, []);
+
+        $this->client
+            ->expects($this->once())
+            ->method('publish')
+            ->with([
+                'TargetArn' => 'arn',
+                'Message' => '"data"',
+                'MessageStructure' => 'json',
+                'MessageAttributes' => [
+                    'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => Message::PUSH_TYPE_ALERT],
+                    'AWS.SNS.MOBILE.APNS.TOPIC' => ['DataType' => 'String', 'StringValue' => 'com.app.topic'],
+                ],
+            ]);
+
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $message->expects($this->once())
+            ->method('jsonSerialize')
+            ->willReturn('data');
+
+        $message->expects($this->once())
+            ->method('getCollapseKey')
+            ->willReturn(Message::NO_COLLAPSE);
+
+        $message->expects($this->once())
+            ->method('getPushType')
+            ->willReturn(Message::PUSH_TYPE_ALERT);
+
+        $message->expects($this->once())
+            ->method('getApnsTopic')
+            ->willReturn('com.app.topic');
+
+        $messages->send($message, 'arn');
+    }
+
 }

@@ -89,6 +89,10 @@ class Messages
             'AWS.SNS.MOBILE.APNS.PUSH_TYPE' => ['DataType' => 'String', 'StringValue' => $message->getPushType()],
         ];
 
+        if ($topic = $message->getApnsTopic()) {
+            $messageAttributes['AWS.SNS.MOBILE.APNS.TOPIC'] = ['DataType' => 'String', 'StringValue' => $topic];
+        }
+
         if ($message->getCollapseKey() != Message::NO_COLLAPSE) {
             $messageAttributes['AWS.SNS.MOBILE.APNS.COLLAPSE_ID'] = ['DataType' => 'String', 'StringValue' => $message->getCollapseKey()];
         }

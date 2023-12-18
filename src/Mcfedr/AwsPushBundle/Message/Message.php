@@ -331,7 +331,12 @@ class Message implements \JsonSerializable
      */
     private $platformsCustomized = false;
 
-    public function __construct(string $text = null)
+    /**
+     * @var ?string the APNS topic header
+     */
+    private $apnsTopic;
+
+    public function __construct(?string $text = null)
     {
         $this->text = $text;
     }
