@@ -170,9 +170,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('collapse_key', $fcmData);
@@ -184,7 +184,7 @@ class MessageTest extends TestCase
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(1, $fcmData['notification']);
         $this->assertArrayHasKey('body', $fcmData['notification']);
-        $this->assertEquals($text, $fcmData['notification']['body'], 'FCM.notification.body should be the text of the message');
+        $this->assertEquals($text, $fcmData['notification']['body'], 'GCM.notification.body should be the text of the message');
     }
 
     public function text(): array
@@ -258,18 +258,18 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(3, $fcmData['notification']);
-        $this->assertEquals($text, $fcmData['notification']['body'], 'FCM.notification.body should be the text of the message');
-        $this->assertEquals($key, $fcmData['notification']['body_loc_key'], 'FCM.notification.body_loc_key should be the text of the message');
-        $this->assertEquals($args, $fcmData['notification']['body_loc_args'], 'FCM.notification.body_loc_args should be the text of the message');
+        $this->assertEquals($text, $fcmData['notification']['body'], 'GCM.notification.body should be the text of the message');
+        $this->assertEquals($key, $fcmData['notification']['body_loc_key'], 'GCM.notification.body_loc_key should be the text of the message');
+        $this->assertEquals($args, $fcmData['notification']['body_loc_args'], 'GCM.notification.body_loc_args should be the text of the message');
     }
 
     public function localized(): array
@@ -341,17 +341,17 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(2, $fcmData['notification']);
-        $this->assertEquals($text, $fcmData['notification']['body'], 'FCM.notification.body should be the text of the message');
-        $this->assertEquals($key, $fcmData['notification']['body_loc_key'], 'FCM.notification.body_loc_key should be the text of the message');
+        $this->assertEquals($text, $fcmData['notification']['body'], 'GCM.notification.body should be the text of the message');
+        $this->assertEquals($key, $fcmData['notification']['body_loc_key'], 'GCM.notification.body_loc_key should be the text of the message');
     }
 
     public function localizedNoArgs(): array
@@ -441,16 +441,16 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(1, $fcmData['notification']);
-        $this->assertEquals($title, $fcmData['notification']['title'], 'FCM.notification.title should be the text of the message');
+        $this->assertEquals($title, $fcmData['notification']['title'], 'GCM.notification.title should be the text of the message');
     }
 
     public function title(): array
@@ -546,9 +546,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
@@ -559,8 +559,8 @@ class MessageTest extends TestCase
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(2, $fcmData['notification']);
-        $this->assertEquals($titleKey, $fcmData['notification']['title_loc_key'], 'FCM.data.title_loc_key should be the text of the message');
-        $this->assertEquals($titleArgs, $fcmData['notification']['title_loc_args'], 'FCM.data.title_loc_args should be the text of the message');
+        $this->assertEquals($titleKey, $fcmData['notification']['title_loc_key'], 'GCM.data.title_loc_key should be the text of the message');
+        $this->assertEquals($titleArgs, $fcmData['notification']['title_loc_args'], 'GCM.data.title_loc_args should be the text of the message');
     }
 
     public function localizedTitle(): array
@@ -641,16 +641,16 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(1, $fcmData['notification']);
-        $this->assertEquals($category, $fcmData['notification']['android_channel_id'], 'FCM.notification.android_channel_id should be the text of the message');
+        $this->assertEquals($category, $fcmData['notification']['android_channel_id'], 'GCM.notification.android_channel_id should be the text of the message');
     }
 
     public function category(): array
@@ -728,9 +728,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -816,16 +816,16 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('notification', $fcmData);
 
         $this->assertIsArray($fcmData['notification']);
         $this->assertCount(1, $fcmData['notification']);
-        $this->assertEquals($sound, $fcmData['notification']['sound'], 'FCM.notification.sound should be the text of the message');
+        $this->assertEquals($sound, $fcmData['notification']['sound'], 'GCM.notification.sound should be the text of the message');
     }
 
     public function sound(): array
@@ -900,9 +900,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -977,9 +977,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1060,9 +1060,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1139,9 +1139,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1215,9 +1215,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1290,9 +1290,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1362,9 +1362,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1436,9 +1436,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(6, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1512,9 +1512,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('data', $fcmData);
@@ -1583,9 +1583,9 @@ class MessageTest extends TestCase
         $this->assertIsArray($data);
         $this->assertCount(2, $data);
         $this->assertArrayHasKey('default', $data);
-        $this->assertArrayHasKey('FCM', $data);
+        $this->assertArrayHasKey('GCM', $data);
 
-        $fcmData = json_decode($data['FCM'], true);
+        $fcmData = json_decode($data['GCM'], true);
         $this->assertIsArray($fcmData);
         $this->assertCount(5, $fcmData);
         $this->assertArrayHasKey('collapse_key', $fcmData);
