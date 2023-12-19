@@ -336,7 +336,7 @@ class Message implements \JsonSerializable
      */
     private $apnsTopic;
 
-    public function __construct(string $text = null)
+    public function __construct(?string $text = null)
     {
         $this->text = $text;
     }
@@ -528,14 +528,14 @@ class Message implements \JsonSerializable
         return $this->localizedArguments;
     }
 
-    public function setLocalizedArguments(array $localizedArguments = null): self
+    public function setLocalizedArguments(?array $localizedArguments = null): self
     {
         $this->localizedArguments = $localizedArguments;
 
         return $this;
     }
 
-    public function setLocalizedText(?string $key, array $arguments = null): self
+    public function setLocalizedText(?string $key, ?array $arguments = null): self
     {
         $this->setLocalizedKey($key);
         $this->setLocalizedArguments($arguments);
@@ -701,6 +701,18 @@ class Message implements \JsonSerializable
     public function setPushType($pushType): self
     {
         $this->pushType = $pushType;
+
+        return $this;
+    }
+
+    public function getApnsTopic(): ?string
+    {
+        return $this->apnsTopic;
+    }
+
+    public function setApnsTopic(?string $apnsTopic): self
+    {
+        $this->apnsTopic = $apnsTopic;
 
         return $this;
     }

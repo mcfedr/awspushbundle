@@ -29,10 +29,6 @@ class EnableAllCommand extends Command
         $this->logger = $logger;
     }
 
-    protected function configure(): void
-    {
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->arns as $platform => $arn) {
@@ -40,7 +36,7 @@ class EnableAllCommand extends Command
             $this->enablePlatform($platform);
         }
 
-        return \Symfony\Component\Console\Command\Command::SUCCESS;
+        return Command::SUCCESS;
     }
 
     /**

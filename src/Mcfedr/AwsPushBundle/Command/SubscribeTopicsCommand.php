@@ -58,7 +58,7 @@ class SubscribeTopicsCommand extends Command
             ]);
         }
 
-        return \Symfony\Component\Console\Command\Command::SUCCESS;
+        return Command::SUCCESS;
     }
 
     private function subscribePlatform(string $platform, string $topic): void
