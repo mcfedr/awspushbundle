@@ -42,7 +42,7 @@ class Messages
      * @throws PlatformNotConfiguredException
      * @throws MessageTooLongException
      */
-    public function broadcast(Message $message, string $platform = null): void
+    public function broadcast(Message $message, ?string $platform = null): void
     {
         if (null !== $platform && !isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");
@@ -112,7 +112,7 @@ class Messages
      *
      * @param Message|string $message
      */
-    private function broadcastToPlatform($message, ?string $platform): void
+    private function broadcastToPlatform($message, string $platform): void
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
