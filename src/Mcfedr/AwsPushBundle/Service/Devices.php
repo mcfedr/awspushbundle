@@ -32,7 +32,7 @@ class Devices
      * @throws PlatformNotConfiguredException
      * @throws \Exception
      */
-    public function registerDevice(string $deviceId, string $platform, string $userData = null): string
+    public function registerDevice(string $deviceId, string $platform, ?string $userData = null): string
     {
         if (!isset($this->arns[$platform])) {
             throw new PlatformNotConfiguredException("There is no configured ARN for $platform");

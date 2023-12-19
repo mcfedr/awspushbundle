@@ -112,7 +112,7 @@ class Messages
      *
      * @param Message|string $message
      */
-    private function broadcastToPlatform($message, string $platform): void
+    private function broadcastToPlatform($message, ?string $platform): void
     {
         if ($this->debug) {
             $this->logger && $this->logger->notice(
