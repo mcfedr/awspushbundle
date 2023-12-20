@@ -11,7 +11,8 @@ use Mcfedr\AwsPushBundle\Model\DeviceRequest;
 use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -24,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * provided by this bundle.
  * In some simple cases it may be enough to use this controller.
  */
-class ApiController
+class ApiController extends AbstractController
 {
     private Devices $devices;
 
@@ -51,9 +52,7 @@ class ApiController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("/devices", name="mcfedr_aws_push.register", methods={"POST"})
-     */
+    #[Route(path: '/devices', name: 'mcfedr_aws_push.register', methods: ['POST'])]
     public function registerDeviceAction(Request $request): Response
     {
         /** @var DeviceRequest $deviceRequest */
@@ -65,7 +64,7 @@ class ApiController
         $device = $deviceRequest->getDevice();
 
         try {
-            if (($arn = $this->devices->registerDevice($device->getDeviceId(), $device->getPlatform()))) {
+            if ($arn = $this->devices->registerDevice($device->getDeviceId(), $device->getPlatform())) {
                 $this->logger && $this->logger->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
@@ -100,12 +99,11 @@ class ApiController
         return new Response('Unknown error', 500);
     }
 
-    /**
-     * @Route("/broadcast", name="mcfedr_aws_push.broadcast", methods={"POST"})
-     * @Security("is_granted('ROLE_MCFEDR_AWS_BROADCAST')")
-     */
+    #[Route(path: '/broadcast', name: 'mcfedr_aws_push.broadcast', methods: ['POST'])]
     public function broadcastAction(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_MCFEDR_AWS_BROADCAST');
+
         /** @var BroadcastRequest $broadcastRequest */
         $broadcastRequest = $this->serializer->deserialize($request->getContent(), BroadcastRequest::class, 'json');
         $errors = $this->validator->validate($broadcastRequest);

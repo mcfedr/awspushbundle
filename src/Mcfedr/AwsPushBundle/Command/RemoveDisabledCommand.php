@@ -6,14 +6,14 @@ namespace Mcfedr\AwsPushBundle\Command;
 
 use Aws\Sns\SnsClient;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('kidslox:account:mcfedr:aws:remove', 'Remove disabled devices')]
 class RemoveDisabledCommand extends Command
 {
-    protected static $defaultName = 'mcfedr:aws:remove';
-
     private SnsClient $sns;
 
     private array $arns;
@@ -29,12 +29,6 @@ class RemoveDisabledCommand extends Command
         $this->logger = $logger;
     }
 
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Remove disabled devices');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->arns as $platform => $arn) {
@@ -42,7 +36,7 @@ class RemoveDisabledCommand extends Command
             $this->removeFromPlatform($platform);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

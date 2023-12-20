@@ -12,10 +12,8 @@ class Broadcast
 {
     private string $platform;
 
-    /**
-     * @Valid()
-     * @NotBlank()
-     */
+    #[Valid]
+    #[NotBlank]
     private Message $message;
 
     public function getMessage(): Message

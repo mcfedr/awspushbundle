@@ -8,10 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DeviceRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Valid()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Valid]
     private Device $device;
 
     public function getDevice(): Device
