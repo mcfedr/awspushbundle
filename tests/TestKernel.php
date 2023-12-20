@@ -19,5 +19,6 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config_test.yml');
+        $loader->load(__DIR__.(self::VERSION_ID >= 60200 ? '/config_test_62.yml' : '/config_test.yml'));
     }
 }

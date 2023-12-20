@@ -11,11 +11,12 @@ use Mcfedr\AwsPushBundle\Model\DeviceRequest;
 use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * provided by this bundle.
  * In some simple cases it may be enough to use this controller.
  */
-class ApiController
+class ApiController extends AbstractController
 {
     private Devices $devices;
 
@@ -99,9 +100,10 @@ class ApiController
     }
 
     #[Route(path: '/broadcast', name: 'mcfedr_aws_push.broadcast', methods: ['POST'])]
-    #[IsGranted('ROLE_MCFEDR_AWS_BROADCAST')]
     public function broadcastAction(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_MCFEDR_AWS_BROADCAST');
+
         /** @var BroadcastRequest $broadcastRequest */
         $broadcastRequest = $this->serializer->deserialize($request->getContent(), BroadcastRequest::class, 'json');
         $errors = $this->validator->validate($broadcastRequest);
