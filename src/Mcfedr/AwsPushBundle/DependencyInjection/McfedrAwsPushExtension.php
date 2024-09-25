@@ -7,8 +7,8 @@ namespace Mcfedr\AwsPushBundle\DependencyInjection;
 use Mcfedr\AwsPushBundle\Message\Message;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -55,7 +55,7 @@ class McfedrAwsPushExtension extends Extension
         }
 
         if (!isset($config['pushPlatforms'])) {
-            @trigger_error(sprintf('You must set mcfedr_aws_push.pushPlatforms, the default will change from \'%s\' to \'%s\' in the next version.', implode(',', Message::DEFAULT_PLATFORMS), implode('', Message::DEFAULT_PLATFORMS_NEXT)), E_USER_DEPRECATED);
+            @trigger_error(\sprintf('You must set mcfedr_aws_push.pushPlatforms, the default will change from \'%s\' to \'%s\' in the next version.', implode(',', Message::DEFAULT_PLATFORMS), implode('', Message::DEFAULT_PLATFORMS_NEXT)), E_USER_DEPRECATED);
 
             $config['pushPlatforms'] = Message::DEFAULT_PLATFORMS;
         }

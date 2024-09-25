@@ -27,7 +27,7 @@ class Messages
      */
     private ?array $platforms;
 
-    public function __construct(SnsClient $client, array $platformARNS, bool $debug = false, LoggerInterface $logger = null, array $platforms = null)
+    public function __construct(SnsClient $client, array $platformARNS, bool $debug = false, ?LoggerInterface $logger = null, ?array $platforms = null)
     {
         $this->sns = $client;
         $this->arns = $platformARNS;

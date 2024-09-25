@@ -20,7 +20,7 @@ class RemoveDisabledCommand extends Command
 
     private ?LoggerInterface $logger;
 
-    public function __construct(SnsClient $sns, array $arns, LoggerInterface $logger = null)
+    public function __construct(SnsClient $sns, array $arns, ?LoggerInterface $logger = null)
     {
         parent::__construct();
 

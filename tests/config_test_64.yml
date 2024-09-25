@@ -2,11 +2,15 @@ framework:
     test: ~
     session:
         storage_factory_id: session.storage.factory.mock_file
+        handler_id: session.handler.native_file
+        cookie_secure: auto
+        cookie_samesite: lax
     router:
-        resource: "%kernel.project_dir%/tests/routing.yml"
+        resource: "%kernel.project_dir%/tests/routing_62.yml"
         strict_requirements: ~
         utf8: true
-    validation: { enable_annotations: true }
+    validation:
+        email_validation_mode: html5
     secret: 'fake_secret'
     serializer:
         enabled: true
@@ -14,6 +18,10 @@ framework:
         enabled: true
     property_access:
         magic_call: true
+    php_errors:
+        log: true
+    http_method_override: true
+    handle_all_throwables: false
 
 
 mcfedr_aws_push:
@@ -28,7 +36,6 @@ mcfedr_aws_push:
     pushPlatforms: [adm, apns, fcm]
 
 security:
-    enable_authenticator_manager: true
     password_hashers:
         Symfony\Component\Security\Core\User\InMemoryUser: plaintext
     providers:

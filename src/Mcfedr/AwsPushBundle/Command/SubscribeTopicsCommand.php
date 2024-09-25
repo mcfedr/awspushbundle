@@ -24,7 +24,7 @@ class SubscribeTopicsCommand extends Command
 
     private ?LoggerInterface $logger;
 
-    public function __construct(string $topicArn, SnsClient $sns, array $arns, LoggerInterface $logger = null)
+    public function __construct(string $topicArn, SnsClient $sns, array $arns, ?LoggerInterface $logger = null)
     {
         $this->topicArn = $topicArn;
         $this->sns = $sns;

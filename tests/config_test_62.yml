@@ -8,6 +8,7 @@ framework:
     router:
         resource: "%kernel.project_dir%/tests/routing_62.yml"
         strict_requirements: ~
+        utf8: true
     validation:
         email_validation_mode: html5
     secret: 'fake_secret'
@@ -20,7 +21,6 @@ framework:
     php_errors:
         log: true
     http_method_override: true
-    handle_all_throwables: false
 
 
 mcfedr_aws_push:
@@ -35,6 +35,7 @@ mcfedr_aws_push:
     pushPlatforms: [adm, apns, fcm]
 
 security:
+    enable_authenticator_manager: true
     password_hashers:
         Symfony\Component\Security\Core\User\InMemoryUser: plaintext
     providers:

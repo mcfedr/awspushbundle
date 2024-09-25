@@ -12,7 +12,6 @@ use Mcfedr\AwsPushBundle\Service\Devices;
 use Mcfedr\AwsPushBundle\Service\Messages;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -90,7 +89,7 @@ class ApiController extends AbstractController
             return new Response('Unknown platform', 400);
         } catch (\Exception $e) {
             $this->logger && $this->logger->error('Exception registering device', [
-               'e' => $e,
+                'e' => $e,
                 'device' => $device->getDeviceId(),
                 'platform' => $device->getPlatform(),
             ]);
