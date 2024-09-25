@@ -22,7 +22,7 @@ class Topics
 
     private bool $debug;
 
-    public function __construct(SnsClient $client, Messages $messages, bool $debug, LoggerInterface $logger = null)
+    public function __construct(SnsClient $client, Messages $messages, bool $debug, ?LoggerInterface $logger = null)
     {
         $this->sns = $client;
         $this->logger = $logger;

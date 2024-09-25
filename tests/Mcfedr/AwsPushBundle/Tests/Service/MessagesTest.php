@@ -216,6 +216,7 @@ class MessagesTest extends TestCase
 
         $messages->send($message, 'arn');
     }
+
     public function testSendWithAdditionalAttributes()
     {
         $messages = new Messages($this->client, []);
@@ -255,5 +256,4 @@ class MessagesTest extends TestCase
 
         $messages->send($message, 'arn');
     }
-
 }

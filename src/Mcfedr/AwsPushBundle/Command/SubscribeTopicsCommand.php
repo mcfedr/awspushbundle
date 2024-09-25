@@ -7,15 +7,15 @@ namespace Mcfedr\AwsPushBundle\Command;
 use Aws\Sns\Exception\SnsException;
 use Aws\Sns\SnsClient;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('kidslox:account:mcfedr:aws:subscribe', 'Subscribe existing devices to the topic')]
 class SubscribeTopicsCommand extends Command
 {
-    protected static $defaultName = 'mcfedr:aws:subscribe';
-
     private string $topicArn;
 
     private SnsClient $sns;
@@ -24,7 +24,7 @@ class SubscribeTopicsCommand extends Command
 
     private ?LoggerInterface $logger;
 
-    public function __construct(string $topicArn, SnsClient $sns, array $arns, LoggerInterface $logger = null)
+    public function __construct(string $topicArn, SnsClient $sns, array $arns, ?LoggerInterface $logger = null)
     {
         $this->topicArn = $topicArn;
         $this->sns = $sns;
@@ -37,7 +37,6 @@ class SubscribeTopicsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Subscribe existing devices to the topic')
             ->addOption(
                 'topic',
                 null,
@@ -59,7 +58,7 @@ class SubscribeTopicsCommand extends Command
             ]);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function subscribePlatform(string $platform, string $topic): void
