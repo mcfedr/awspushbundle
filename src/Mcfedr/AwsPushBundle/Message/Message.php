@@ -6,7 +6,7 @@ namespace Mcfedr\AwsPushBundle\Message;
 
 use Mcfedr\AwsPushBundle\Exception\MessageTooLongException;
 
-class Message implements \JsonSerializable
+class Message implements \JsonSerializable, \Stringable
 {
     /**
      * @deprecated use NO_COLLAPSE
@@ -748,9 +748,9 @@ class Message implements \JsonSerializable
         return $data;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return json_encode($this);
+        return \json_encode($this, JSON_THROW_ON_ERROR);
     }
 
     /**
