@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand('kidslox:account:mcfedr:aws:remove', 'Remove disabled devices')]
+#[AsCommand('mcfedr:aws:remove', 'Remove disabled devices')]
 class RemoveDisabledCommand extends Command
 {
     private SnsClient $sns;

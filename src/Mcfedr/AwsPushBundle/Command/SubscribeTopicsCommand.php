@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand('kidslox:account:mcfedr:aws:subscribe', 'Subscribe existing devices to the topic')]
+#[AsCommand('mcfedr:aws:subscribe', 'Subscribe existing devices to the topic')]
 class SubscribeTopicsCommand extends Command
 {
     private string $topicArn;
