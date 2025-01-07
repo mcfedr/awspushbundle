@@ -32,7 +32,7 @@ class RemoveDisabledCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->arns as $platform => $arn) {
-            $this->logger && $this->logger->info("Removing from $platform");
+            $this->logger?->info("Removing from $platform");
             $this->removeFromPlatform($platform);
         }
 
@@ -55,9 +55,9 @@ class RemoveDisabledCommand extends Command
                                 'EndpointArn' => $endpoint['EndpointArn'],
                             ]
                         );
-                        $this->logger && $this->logger->info("Removed {$endpoint['EndpointArn']}");
+                        $this->logger?->info("Removed {$endpoint['EndpointArn']}");
                     } catch (\Exception $e) {
-                        $this->logger && $this->logger->error(
+                        $this->logger?->error(
                             "Failed to remove endpoint {$endpoint['EndpointArn']}",
                             [
                                 'exception' => $e,
