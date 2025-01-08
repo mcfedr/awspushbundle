@@ -64,7 +64,7 @@ class ApiController extends AbstractController
 
         try {
             if ($arn = $this->devices->registerDevice($device->getDeviceId(), $device->getPlatform())) {
-                $this->logger && $this->logger->info('Device registered', [
+                $this->logger?->info('Device registered', [
                     'arn' => $arn,
                     'device' => $device->getDeviceId(),
                     'platform' => $device->getPlatform(),
@@ -81,14 +81,14 @@ class ApiController extends AbstractController
                 return new Response('Device registered', 200);
             }
         } catch (PlatformNotConfiguredException $e) {
-            $this->logger && $this->logger->error('Unknown platform', [
+            $this->logger?->error('Unknown platform', [
                 'e' => $e,
                 'platform' => $device->getPlatform(),
             ]);
 
             return new Response('Unknown platform', 400);
         } catch (\Exception $e) {
-            $this->logger && $this->logger->error('Exception registering device', [
+            $this->logger?->error('Exception registering device', [
                 'e' => $e,
                 'device' => $device->getDeviceId(),
                 'platform' => $device->getPlatform(),
@@ -120,7 +120,7 @@ class ApiController extends AbstractController
 
             return new Response('Message sent', 200);
         } catch (PlatformNotConfiguredException $e) {
-            $this->logger && $this->logger->error('Unknown platform', [
+            $this->logger?->error('Unknown platform', [
                 'e' => $e,
             ]);
 

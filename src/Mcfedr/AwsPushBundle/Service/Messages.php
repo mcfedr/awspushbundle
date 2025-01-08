@@ -67,7 +67,7 @@ class Messages
     public function send($message, string $endpointArn): void
     {
         if ($this->debug) {
-            $this->logger && $this->logger->notice(
+            $this->logger?->notice(
                 "Message would have been sent to $endpointArn",
                 [
                     'Message' => $message,
@@ -115,7 +115,7 @@ class Messages
     private function broadcastToPlatform($message, string $platform): void
     {
         if ($this->debug) {
-            $this->logger && $this->logger->notice(
+            $this->logger?->notice(
                 "Message would have been sent to $platform",
                 [
                     'Message' => $message,
@@ -133,7 +133,7 @@ class Messages
                     try {
                         $this->send($message, $endpoint['EndpointArn']);
                     } catch (\Exception $e) {
-                        $this->logger && $this->logger->error(
+                        $this->logger?->error(
                             "Failed to push to {$endpoint['EndpointArn']}",
                             [
                                 'Message' => $message,
@@ -143,7 +143,7 @@ class Messages
                         );
                     }
                 } else {
-                    $this->logger && $this->logger->info(
+                    $this->logger?->info(
                         "Disabled endpoint {$endpoint['EndpointArn']}",
                         [
                             'Message' => $message,

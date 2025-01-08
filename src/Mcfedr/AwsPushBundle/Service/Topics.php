@@ -95,7 +95,7 @@ class Topics
     public function broadcast(Message $message, string $topicArn): void
     {
         if ($this->debug) {
-            $this->logger && $this->logger->notice(
+            $this->logger?->notice(
                 "Message would have been sent to $topicArn",
                 [
                     'Message' => $message,

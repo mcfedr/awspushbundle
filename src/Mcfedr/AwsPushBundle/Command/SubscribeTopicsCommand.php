@@ -53,7 +53,7 @@ class SubscribeTopicsCommand extends Command
                 $this->subscribePlatform($platform, $input->getOption('topic'));
             }
         } catch (SnsException $e) {
-            $this->logger && $this->logger->error('Failed to create topic', [
+            $this->logger?->error('Failed to create topic', [
                 'exception' => $e,
             ]);
         }
@@ -67,7 +67,7 @@ class SubscribeTopicsCommand extends Command
             'PlatformApplicationArn' => $this->arns[$platform],
         ]) as $endpointsResult) {
             foreach ($endpointsResult['Endpoints'] as $endpoint) {
-                $this->logger && $this->logger->info('Subscribing device to topic', [
+                $this->logger?->info('Subscribing device to topic', [
                     'device' => $endpoint['EndpointArn'],
                     'topic' => $topic,
                     'platform' => $platform,
@@ -79,7 +79,7 @@ class SubscribeTopicsCommand extends Command
                         'Endpoint' => $endpoint['EndpointArn'],
                     ]);
                 } catch (SnsException $e) {
-                    $this->logger && $this->logger->info('Error subscribing device to topic', [
+                    $this->logger?->info('Error subscribing device to topic', [
                         'device' => $endpoint['EndpointArn'],
                         'topic' => $topic,
                         'platform' => $platform,

@@ -32,7 +32,7 @@ class EnableAllCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->arns as $platform => $arn) {
-            $this->logger && $this->logger->info("Enabling $platform");
+            $this->logger?->info("Enabling $platform");
             $this->enablePlatform($platform);
         }
 
@@ -58,9 +58,9 @@ class EnableAllCommand extends Command
                                 ],
                             ]
                         );
-                        $this->logger && $this->logger->info("Enabled {$endpoint['EndpointArn']}");
+                        $this->logger?->info("Enabled {$endpoint['EndpointArn']}");
                     } catch (\Exception $e) {
-                        $this->logger && $this->logger->error(
+                        $this->logger?->error(
                             "Failed to push set attributes on {$endpoint['EndpointArn']}",
                             [
                                 'exception' => $e,
