@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand('kidslox:account:mcfedr:aws:enable', 'Reenable all devices')]
+#[AsCommand('mcfedr:aws:enable', 'Reenable all devices')]
 class EnableAllCommand extends Command
 {
     private SnsClient $sns;
