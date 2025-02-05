@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 
 class Broadcast
 {
-    private string $platform;
+    private ?string $platform = null;
 
     #[Valid]
     #[NotBlank]

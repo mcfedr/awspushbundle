@@ -58,10 +58,8 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.message.
      * For APNS it will be in aps.alert.body.
      * For FCM it will be in notification.body.
-     *
-     * @var ?string
      */
-    private $text;
+    private ?string $text = null;
 
     /**
      * The key of a localized string that will form the message displayed.
@@ -69,10 +67,8 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.message-loc-key.
      * For APNS it will be in aps.alert.loc-key.
      * For FCM it will be in or notification.body_loc_key.
-     *
-     * @var ?string
      */
-    private $localizedKey;
+    private ?string $localizedKey = null;
 
     /**
      * Arguments for the localized message
@@ -80,20 +76,16 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.message-loc-args.
      * For APNS it will be in aps.alert.loc-args.
      * For FCM it will be in notification.body_loc_args.
-     *
-     * @var ?array
      */
-    private $localizedArguments;
+    private ?array $localizedArguments = null;
 
     /**
      * The title of the notification.
      * For ADM and GCM it will be in data.title.
      * For APNS it will be in aps.alert.title.
      * For FCM it will be in in notification.title.
-     *
-     * @var ?string
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * The key of a localized title string that will form the title displayed.
@@ -101,10 +93,8 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.title-loc-key.
      * For APNS it will be in aps.alert.title-loc-key.
      * For FCM it will be in notification.title_loc_key.
-     *
-     * @var ?string
      */
-    private $titleLocalizedKey;
+    private ?string $titleLocalizedKey = null;
 
     /**
      * Arguments for the localized title.
@@ -112,20 +102,16 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.title-loc-args.
      * For APNS it will be in aps.alert.title-loc-args.
      * For FCM it will be in notification.title_loc_args.
-     *
-     * @var ?array
      */
-    private $titleLocalizedArguments;
+    private ?array $titleLocalizedArguments = null;
 
     /**
      * Additional information that explains the purpose of the notification.
      * For ADM and GCM it will be in data.subtitle.
      * For APNS it will be in aps.alert.subtitle.
      * For FCM it will be ignored.
-     *
-     * @var ?string
      */
-    private $subtitle;
+    private ?string $subtitle = null;
 
     /**
      * The key of a localized subtitle string that will form the title displayed.
@@ -133,10 +119,8 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.subtitle-loc-key.
      * For APNS it will be in aps.alert.subtitle-loc-key.
      * For FCM it will be ignored.
-     *
-     * @var ?string
      */
-    private $subtitleLocalizedKey;
+    private ?string $subtitleLocalizedKey = null;
 
     /**
      * Arguments for the localized subtitle.
@@ -144,37 +128,29 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be in data.subtitle-loc-args.
      * For APNS it will be in aps.alert.subtitle-loc-args.
      * For FCM it will be ignored.
-     *
-     * @var ?array
      */
-    private $subtitleLocalizedArguments;
+    private ?array $subtitleLocalizedArguments = null;
 
     /**
      * The notification’s type.
      * For ADM and GCM it will be ignored.
      * For APNS it will be in aps.category.
      * For FCM it will be in notification.android_channel_id.
-     *
-     * @var ?string
      */
-    private $category;
+    private ?string $category = null;
 
     /**
      * This is notification priority for GCM should be 'high' or 'normal'.
      * High priority is default.
      * GCM and FCM only.
-     *
-     * @var string
      */
-    private $priority = self::PRIORITY_HIGH;
+    private string $priority = self::PRIORITY_HIGH;
 
     /**
      * The number to display in a badge on your app’s icon.
      * APNS only. It will be in aps.badge.
-     *
-     * @var ?int
      */
-    private $badge;
+    private ?int $badge = null;
 
     /**
      * The name of a sound file in your app’s main bundle or in the
@@ -182,94 +158,70 @@ class Message implements \JsonSerializable
      * For ADM and GCM it will be data.sound.
      * For APNS. It will be in aps.sound.
      * For FCM it will be in notification.sound.
-     *
-     * @var ?string
      */
-    private $sound;
+    private ?string $sound = null;
 
     /**
      * Use these keys to configure the sound for a critical alert.
      * APNS only. It will be in aps.sound.
      * https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2990112.
-     *
-     * @var ?array
      */
-    private $apnsSound;
+    private ?array $apnsSound = null;
 
     /**
      * The background notification flag.
      * Including this key means that when your app is launched in the background or resumed.
      * APNS only. It will be in aps.content-available.
-     *
-     * @var ?bool
      */
-    private $contentAvailable;
+    private ?bool $contentAvailable = null;
 
     /**
      * An app-specific identifier for grouping related notifications.
      * APNS only. Tt will be in aps.thread-id.
-     *
-     * @var ?string
      */
-    private $threadId;
+    private ?string $threadId = null;
 
     /**
      * The notification service app extension flag.
      * APNS only. It will be in aps.mutable-content.
-     *
-     * @var ?bool
      */
-    private $mutableContent;
+    private ?bool $mutableContent = null;
 
     /**
      * This is the data to send to all services, it will be deep merged with the other data.
-     *
-     * @var array
      */
-    private $custom = [];
+    private array $custom = [];
 
     /**
      * If set, will be sent to ADM, deep merged with ['message' => $text] in the data field.
-     *
-     * @var ?array
      */
-    private $admData;
+    private ?array $admData = null;
 
     /**
      * If set, will be sent to APNS, deep merged as the top level with ['aps' => ...].
-     *
-     * @var ?array
      */
-    private $apnsData;
+    private ?array $apnsData = null;
 
     /**
      * If set, will be sent to FCM, deep merged with data field.
-     *
-     * @var ?array
      */
-    private $fcmData;
+    private ?array $fcmData = null;
 
     /**
      * If set, will be sent to FCM, deep merged at the top level with ['data' => ..., 'notification' => ...].
-     *
-     * @var ?array
      */
-    private $fcmTopLevelData;
+    private ?array $fcmTopLevelData = null;
 
     /**
      * If set, will be sent to GCM, deep merged with ['message' => $text] in the data field.
-     *
-     * @var ?array
      */
-    private $gcmData;
+    private ?array $gcmData = null;
 
     /**
      * The collapseKey will be sent for GCM, FCM and ADM
      * and if set, apns-collapse-id is sent for APNS.
-     *
-     * @var string
      */
-    private $collapseKey = self::NO_COLLAPSE;
+    private string $collapseKey = self::NO_COLLAPSE;
 
     /**
      * GCM, FCM and ADM only.
@@ -279,32 +231,26 @@ class Message implements \JsonSerializable
      *
      * @var ?int number of seconds that the server should retain the message
      */
-    private $ttl;
+    private ?int $ttl = null;
 
     /**
      * GCM and FCM only.
-     *
-     * @var bool
      */
-    private $delayWhileIdle = false;
+    private bool $delayWhileIdle = false;
 
     /**
      * If set then the text content of the message will be trimmed where\
      * necessary to fit in the length limits of each platform.
-     *
-     * @var bool
      *
      * @see Message::APNS_MAX_LENGTH
      * @see Message::FCM_MAX_LENGTH
      * @see Message::GCM_MAX_LENGTH
      * @see Message::ADM_MAX_LENGTH
      */
-    private $allowTrimming = true;
+    private bool $allowTrimming = true;
 
     /**
      * Platforms that this message will create JSON for, and throw errors for.
-     *
-     * @var array
      *
      * @see Message::PLATFORM_ADM
      * @see Message::PLATFORM_APNS
@@ -312,29 +258,25 @@ class Message implements \JsonSerializable
      * @see Message::PLATFORM_FCM
      * @see Message::PLATFORM_GCM
      */
-    private $platforms = self::DEFAULT_PLATFORMS;
+    private array $platforms = self::DEFAULT_PLATFORMS;
 
     /**
      * APNS only. It will be in apns-push-type.
      * One of those "alert", "background", "voip", "complication", "fileprovider", "mdm".
      *
      * @see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
-     *
-     * @var ?string
      */
-    private $pushType = self::PUSH_TYPE_ALERT;
+    private string $pushType = self::PUSH_TYPE_ALERT;
 
     /**
      * Marks that the platforms field has been set.
-     *
-     * @var bool
      */
-    private $platformsCustomized = false;
+    private bool $platformsCustomized = false;
 
     /**
-     * @var ?string the APNS topic header
+     * the APNS topic header
      */
-    private $apnsTopic;
+    private ?string $apnsTopic = null;
 
     public function __construct(?string $text = null)
     {
@@ -463,7 +405,7 @@ class Message implements \JsonSerializable
         return $this;
     }
 
-    public function getSubtitleLocalizedArguments(): ?string
+    public function getSubtitleLocalizedArguments(): ?array
     {
         return $this->subtitleLocalizedArguments;
     }
