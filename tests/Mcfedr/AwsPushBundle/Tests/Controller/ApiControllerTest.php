@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
 
+use Aws\Sns\SnsClient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -14,7 +15,7 @@ class ApiControllerTest extends WebTestCase
     {
         $client = self::createClient();
 
-        $snsMock = $this->getMockBuilder('Aws\Sns\SnsClient')
+        $snsMock = $this->getMockBuilder(SnsClient::class)
             ->addMethods(['createPlatformEndpoint'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -35,7 +36,7 @@ class ApiControllerTest extends WebTestCase
     public function testBroadcast()
     {
         $client = self::createClient();
-        $snsMock = $this->getMockBuilder('Aws\Sns\SnsClient')
+        $snsMock = $this->getMockBuilder(SnsClient::class)
             ->setMethods(['publish'])
             ->disableOriginalConstructor()
             ->getMock();
