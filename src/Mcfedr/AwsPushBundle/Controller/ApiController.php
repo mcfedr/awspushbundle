@@ -51,7 +51,7 @@ class ApiController extends AbstractController
         $this->logger = $logger;
     }
 
-    #[Route(path: '/devices', name: 'mcfedr_aws_push.register', methods: ['POST'])]
+    #[Route(path: '/devices', name: 'mcfedr_aws_push.register', methods: [Request::METHOD_POST])]
     public function registerDeviceAction(Request $request): Response
     {
         /** @var DeviceRequest $deviceRequest */
@@ -98,7 +98,7 @@ class ApiController extends AbstractController
         return new Response('Unknown error', 500);
     }
 
-    #[Route(path: '/broadcast', name: 'mcfedr_aws_push.broadcast', methods: ['POST'])]
+    #[Route(path: '/broadcast', name: 'mcfedr_aws_push.broadcast', methods: [Request::METHOD_POST])]
     public function broadcastAction(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MCFEDR_AWS_BROADCAST');

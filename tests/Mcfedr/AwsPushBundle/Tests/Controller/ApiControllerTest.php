@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mcfedr\AwsPushBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -24,7 +25,7 @@ class ApiControllerTest extends WebTestCase
 
         $client->getContainer()->set('mcfedr_aws_push.sns_client', $snsMock);
 
-        $client->request('POST', '/devices', [], [], [], json_encode([
+        $client->request(Request::METHOD_POST, '/devices', [], [], [], json_encode([
             'device' => [
                 'platform' => 'test',
                 'deviceId' => 'abcd',
@@ -44,7 +45,7 @@ class ApiControllerTest extends WebTestCase
 
         $client->getContainer()->set('mcfedr_aws_push.sns_client', $snsMock);
 
-        $client->request('POST', '/broadcast', [], [], [
+        $client->request(Request::METHOD_POST, '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'password',
         ], json_encode([
@@ -65,7 +66,7 @@ class ApiControllerTest extends WebTestCase
         $client = self::createClient();
         $client->catchExceptions(false);
 
-        $client->request('POST', '/devices', [], [], [
+        $client->request(Request::METHOD_POST, '/devices', [], [], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'password',
         ], json_encode([
@@ -82,7 +83,7 @@ class ApiControllerTest extends WebTestCase
         $client = self::createClient();
         $client->catchExceptions(false);
 
-        $client->request('POST', '/broadcast', [], [], [
+        $client->request(Request::METHOD_POST, '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'password',
         ], json_encode([
@@ -101,7 +102,7 @@ class ApiControllerTest extends WebTestCase
         $client = self::createClient();
         $client->catchExceptions(false);
 
-        $client->request('POST', '/broadcast', [], [], [
+        $client->request(Request::METHOD_POST, '/broadcast', [], [], [
             'PHP_AUTH_USER' => 'other',
             'PHP_AUTH_PW' => 'password',
         ], json_encode([
