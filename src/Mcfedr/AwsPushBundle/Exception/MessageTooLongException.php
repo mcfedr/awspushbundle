@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Mcfedr\AwsPushBundle\Exception;
 
-class MessageTooLongException extends \Exception
+class MessageTooLongException extends \Exception implements ExceptionInterface
 {
 }
