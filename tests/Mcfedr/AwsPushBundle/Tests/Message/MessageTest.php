@@ -31,7 +31,7 @@ class MessageTest extends TestCase
         $this->assertNotEmpty(json_encode($message));
     }
 
-    public function tooLongMessage(): array
+    public static function tooLongMessage(): array
     {
         $adm = new Message(Lorem::text(7000));
         $adm->setPlatforms([Message::PLATFORM_ADM]);
@@ -66,7 +66,7 @@ class MessageTest extends TestCase
         $this->assertNotEmpty(json_encode($message));
     }
 
-    public function shortMessage(): array
+    public static function shortMessage(): array
     {
         $adm = new Message(Lorem::text(5050));
         $adm->setPlatforms([Message::PLATFORM_ADM]);
@@ -187,7 +187,7 @@ class MessageTest extends TestCase
         $this->assertEquals($text, $fcmData['notification']['body'], 'FCM.notification.body should be the text of the message');
     }
 
-    public function text(): array
+    public static function text(): array
     {
         return [
             [Lorem::text(1000)],
@@ -272,7 +272,7 @@ class MessageTest extends TestCase
         $this->assertEquals($args, $fcmData['notification']['body_loc_args'], 'FCM.notification.body_loc_args should be the text of the message');
     }
 
-    public function localized(): array
+    public static function localized(): array
     {
         return [
             [
@@ -354,7 +354,7 @@ class MessageTest extends TestCase
         $this->assertEquals($key, $fcmData['notification']['body_loc_key'], 'FCM.notification.body_loc_key should be the text of the message');
     }
 
-    public function localizedNoArgs(): array
+    public static function localizedNoArgs(): array
     {
         return [
             [
@@ -453,7 +453,7 @@ class MessageTest extends TestCase
         $this->assertEquals($title, $fcmData['notification']['title'], 'FCM.notification.title should be the text of the message');
     }
 
-    public function title(): array
+    public static function title(): array
     {
         return [
             [
@@ -563,7 +563,7 @@ class MessageTest extends TestCase
         $this->assertEquals($titleArgs, $fcmData['notification']['title_loc_args'], 'FCM.data.title_loc_args should be the text of the message');
     }
 
-    public function localizedTitle(): array
+    public static function localizedTitle(): array
     {
         return [
             [
@@ -653,7 +653,7 @@ class MessageTest extends TestCase
         $this->assertEquals($category, $fcmData['notification']['android_channel_id'], 'FCM.notification.android_channel_id should be the text of the message');
     }
 
-    public function category(): array
+    public static function category(): array
     {
         return [
             [
@@ -739,7 +739,7 @@ class MessageTest extends TestCase
         $this->assertCount(0, $fcmData['data']);
     }
 
-    public function badge(): array
+    public static function badge(): array
     {
         return [
             [
@@ -828,7 +828,7 @@ class MessageTest extends TestCase
         $this->assertEquals($sound, $fcmData['notification']['sound'], 'FCM.notification.sound should be the text of the message');
     }
 
-    public function sound(): array
+    public static function sound(): array
     {
         return [
             [
@@ -988,7 +988,7 @@ class MessageTest extends TestCase
         $this->assertCount(0, $fcmData['data']);
     }
 
-    public function threadId(): array
+    public static function threadId(): array
     {
         return [
             [
@@ -1592,7 +1592,7 @@ class MessageTest extends TestCase
         $this->assertEquals($collapseKey, $fcmData['collapse_key']);
     }
 
-    public function collapseKey(): array
+    public static function collapseKey(): array
     {
         return [
             [Lorem::text(1000)],
@@ -1641,7 +1641,7 @@ class MessageTest extends TestCase
         $this->assertEquals($ttl, $admData['expiresAfter']);
     }
 
-    public function ttl(): array
+    public static function ttl(): array
     {
         return [
             [Base::numberBetween(60, 2678400)],
