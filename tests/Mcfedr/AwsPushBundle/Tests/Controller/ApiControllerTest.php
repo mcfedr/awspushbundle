@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ApiControllerTest extends WebTestCase
 {
-    public function testRegisterDevice()
+    public function testRegisterDevice(): void
     {
         $client = self::createClient();
 
@@ -33,7 +33,7 @@ class ApiControllerTest extends WebTestCase
         ]));
     }
 
-    public function testBroadcast()
+    public function testBroadcast(): void
     {
         $client = self::createClient();
         $snsMock = $this->getMockBuilder(SnsClient::class)
@@ -59,7 +59,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    public function testInvalidRegisterDevice()
+    public function testInvalidRegisterDevice(): void
     {
         $this->expectException(BadRequestHttpException::class);
 
@@ -76,7 +76,7 @@ class ApiControllerTest extends WebTestCase
         ]));
     }
 
-    public function testInvalidBroadcast()
+    public function testInvalidBroadcast(): void
     {
         $this->expectException(BadRequestHttpException::class);
 
@@ -95,7 +95,7 @@ class ApiControllerTest extends WebTestCase
         ]));
     }
 
-    public function testOtherUserBroadcast()
+    public function testOtherUserBroadcast(): void
     {
         $this->expectException(AccessDeniedException::class);
 

@@ -24,7 +24,7 @@ class MessagesTest extends TestCase
             ->getMock();
     }
 
-    public function testSend()
+    public function testSend(): void
     {
         $messages = new Messages($this->client, []);
 
@@ -59,7 +59,7 @@ class MessagesTest extends TestCase
         $messages->send($message, 'arn');
     }
 
-    public function testSendPlatforms()
+    public function testSendPlatforms(): void
     {
         $messages = new Messages($this->client, [], false, null, [Message::PLATFORM_FCM]);
 
@@ -102,7 +102,7 @@ class MessagesTest extends TestCase
         $messages->send($message, 'arn');
     }
 
-    public function testSendPlatformsCustomized()
+    public function testSendPlatformsCustomized(): void
     {
         $messages = new Messages($this->client, [], false, null, [Message::PLATFORM_FCM]);
 
@@ -144,7 +144,7 @@ class MessagesTest extends TestCase
         $messages->send($message, 'arn');
     }
 
-    public function testSendBackground()
+    public function testSendBackground(): void
     {
         $messages = new Messages($this->client, []);
 
@@ -179,7 +179,7 @@ class MessagesTest extends TestCase
         $messages->send($message, 'arn');
     }
 
-    public function testSendWithCollapseKey()
+    public function testSendWithCollapseKey(): void
     {
         $messages = new Messages($this->client, []);
 
@@ -217,7 +217,7 @@ class MessagesTest extends TestCase
         $messages->send($message, 'arn');
     }
 
-    public function testSendWithAdditionalAttributes()
+    public function testSendWithAdditionalAttributes(): void
     {
         $messages = new Messages($this->client, []);
 
